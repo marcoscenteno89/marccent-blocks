@@ -7,13 +7,12 @@
  *   editor and for sites whose visitors switch styles (the theme button).
  * - styles/icons: every Font Awesome icon, for the editor (a page gets only its own: build/icons.php).
  * - icons.php: every icon's rule by name and the icons the scripts can render; theme-defaults.json: the package's
- *   theme defaults, so PHP can paint the starting colors.
+ *   theme defaults, so PHP can paint the starting colors; marccent-theme.json: the package's version.
  *
  * So marccent-theme's components run outside Next: next/link, next/navigation and next/image resolve to small shims
- * (src/shims), and lib/theme.defaults.json to src/runtime/defaults.js (the package's defaults with this site's on
- * top: window.marccentDefaults, printed by marccent-blocks.php from the marccent_defaults option). marccent-theme
- * ships JSX source; it's a file: link, so it resolves to its real path outside node_modules and the default babel rule
- * compiles it.
+ * (src/shims). The site's starting theme reaches the package as window.marccentDefaults (printed by inc/assets.php
+ * from the marccent_defaults option), which its lib/defaults.js merges over its own. marccent-theme is a release
+ * (package.json: github:…#v<version>) and ships JSX source, so babel compiles it too, though it's in node_modules.
  */
 const fs = require( 'fs' );
 const path = require( 'path' );
@@ -22,7 +21,6 @@ const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const fa = require( './tools/font-awesome' );
 
 const shim = ( name ) => path.resolve( __dirname, 'src/shims', name );
-const DEFAULTS = path.resolve( __dirname, 'src/runtime/defaults.js' );
 const PACKAGE = path.dirname( require.resolve( 'marccent-theme/package.json' ) );
 const FA_BASE = fa.base();
 
@@ -44,6 +42,8 @@ class FrontEndData {
 					+ `return array( 'all' => ${ phpArray( all ) }, 'runtime' => ${ phpArray( fa.used( code, all ) ) } );\n`;
 				compilation.emitAsset( 'icons.php', new webpack.sources.RawSource( php ) );
 				compilation.emitAsset( 'theme-defaults.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'lib/theme.defaults.json' ) ) ) );
+				const { version } = JSON.parse( fs.readFileSync( path.join( PACKAGE, 'package.json' ), 'utf8' ) );
+				compilation.emitAsset( 'marccent-theme.json', new webpack.sources.RawSource( JSON.stringify( { version } ) ) );
 			} );
 		} );
 	}
@@ -57,6 +57,10 @@ const withPostcss = ( rule ) => ( {
 		? { ...u, options: { ...u.options, postcssOptions: { config: POSTCSS } } }
 		: u ) : rule.use,
 } );
+
+// The JS rules leave node_modules alone, but marccent-theme there is JSX source: babel compiles it too.
+const OUR_SOURCE = /node_modules\/(?!marccent-theme\/)/;
+const withTheme = ( rule ) => ( String( rule.exclude ) === '/node_modules/' ? { ...rule, exclude: OUR_SOURCE } : rule );
 
 const phpString = ( s ) => `'${ String( s ).replace( /\\/g, '\\\\' ).replace( /'/g, "\\'" ) }'`;
 const phpArray = ( v ) => Array.isArray( v )
@@ -73,7 +77,7 @@ module.exports = {
 		'designs/all': path.join( PACKAGE, 'styles/designs.css' ),
 		...designs,
 	},
-	module: { ...defaultConfig.module, rules: defaultConfig.module.rules.map( withPostcss ) },
+	module: { ...defaultConfig.module, rules: defaultConfig.module.rules.map( withPostcss ).map( withTheme ) },
 	resolve: {
 		...defaultConfig.resolve,
 		alias: {
@@ -85,11 +89,6 @@ module.exports = {
 	},
 	plugins: [
 		...defaultConfig.plugins,
-		new webpack.NormalModuleReplacementPlugin( /theme\.defaults\.json$/, ( res ) => {
-			if ( res.context.startsWith( PACKAGE ) && ! res.context.includes( 'node_modules' ) ) {
-				res.request = DEFAULTS;
-			}
-		} ),
 		// The theme's icons.css takes all of Font Awesome; here it gets the base, and each page its own icons.
 		// (css-loader's request carries its loaders before the path: only the path changes.)
 		new webpack.NormalModuleReplacementPlugin( /fontawesome-free\/css\/all\.css$/, ( res ) => {

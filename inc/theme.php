@@ -1,8 +1,8 @@
 <?php
 /**
  * The site's starting theme: the package's defaults (build/theme-defaults.json, from marccent-theme's
- * lib/theme.defaults.json) with the site's on top (the marccent_defaults option), as src/runtime/defaults.js merges
- * them for the runtime. The server paints it on <html> (colors, mode, design style, hover, glass), so the page is
+ * lib/theme.defaults.json) with the site's on top (the marccent_defaults option), as the package's lib/defaults.js
+ * merges them in the browser (window.marccentDefaults). The server paints it on <html> (colors, mode, design style, hover, glass), so the page is
  * right on the first paint and needs no script for it; the runtime, where a page loads it, then applies a visitor's
  * saved theme.
  */
@@ -14,6 +14,16 @@ defined( 'ABSPATH' ) || exit;
  * JSON in the marccent_defaults option, e.g.
  *   {"palette":"brand","isDark":false,"design":"professional","palettes":[{"id":"brand","primary":"#046bd2","secondary":"#1e293b"}]}
  */
+/*
+ * The marccent-theme release this build was made from (package.json pins it: github:…#v<version>), so the theme,
+ * Local and Content can check the one copy every Marccent plugin shares.
+ */
+function marccent_blocks_theme_version(): string {
+	static $version = null;
+	$version ??= json_decode( (string) @file_get_contents( MARCCENT_BLOCKS_DIR . '/build/marccent-theme.json' ), true )['version'] ?? '';
+	return $version;
+}
+
 function marccent_blocks_defaults(): array {
 	$defaults = json_decode( (string) get_option( 'marccent_defaults', '{}' ), true );
 	return is_array( $defaults ) ? $defaults : array();
@@ -21,7 +31,8 @@ function marccent_blocks_defaults(): array {
 
 /*
  * Development (WP_DEBUG on): every page load shows the site as it is now. Pages aren't cached by the browser, and
- * the runtime doesn't restore a visitor's saved theme (src/runtime/defaults.js), so a changed default shows at once.
+ * the runtime doesn't restore a visitor's saved theme (window.marccentDev; the package's lib/defaults.js), so a
+ * changed default shows at once.
  */
 function marccent_blocks_dev(): bool {
 	return defined( 'WP_DEBUG' ) && WP_DEBUG;
@@ -33,7 +44,7 @@ add_action( 'template_redirect', function () {
 	}
 } );
 
-// The package's defaults with the site's on top; a site's palettes go before the package's (src/runtime/defaults.js).
+// The package's defaults with the site's on top; a site's palettes go before the package's (as lib/defaults.js does).
 function marccent_blocks_theme(): array {
 	static $theme = null;
 	if ( null === $theme ) {
