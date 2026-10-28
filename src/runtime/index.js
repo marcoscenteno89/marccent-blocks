@@ -27,11 +27,34 @@ const ISLANDS = {
 	carousel: lazy( () => import( /* webpackChunkName: "island-carousel" */ './islands/carousel' ) ),
 };
 
-// An island's props, and its server-rendered children as HTML (a carousel's slides: the [data-slot] element's).
+/*
+ * Props come from the page's markup, and anyone who can edit a post can write a data-island element by hand, so every
+ * URL in them (href, src, logo, image, at any depth) must be a web, mail or phone link, or relative: any other scheme
+ * (javascript:, data:…) becomes "#". The browser ignores control characters and spaces inside a scheme, so they're
+ * dropped before it's read.
+ */
+const URL_KEYS = new Set( [ 'href', 'src', 'logo', 'image' ] );
+const SAFE_SCHEMES = new Set( [ 'http', 'https', 'mailto', 'tel' ] );
+const safeUrl = ( value ) => {
+	const scheme = String( value ).replace( /[\u0000-\u0020]/g, '' ).match( /^([a-z][a-z0-9+.-]*):/i )?.[ 1 ].toLowerCase();
+	return ! scheme || SAFE_SCHEMES.has( scheme ) ? value : '#';
+};
+const cleanProps = ( value, key ) => {
+	if ( Array.isArray( value ) ) {
+		return value.map( ( v ) => cleanProps( v ) );
+	}
+	if ( value && typeof value === 'object' ) {
+		return Object.fromEntries( Object.entries( value ).map( ( [ k, v ] ) => [ k, cleanProps( v, k ) ] ) );
+	}
+	return typeof value === 'string' && URL_KEYS.has( key ) ? safeUrl( value ) : value;
+};
+
+// An island's props (URLs made safe, above), and its server-rendered children as HTML (a carousel's slides: the
+// [data-slot] element's).
 const readIsland = ( el ) => {
 	let props = {};
 	try {
-		props = JSON.parse( el.dataset.props || '{}' );
+		props = cleanProps( JSON.parse( el.dataset.props || '{}' ) );
 	} catch {}
 	const slot = el.querySelector( ':scope [data-slot]' );
 	const html = slot ? [ ...slot.children ].map( ( c ) => c.outerHTML ) : [];

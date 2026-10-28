@@ -31,7 +31,7 @@ $props   = array(
 	'social'      => $social,
 	'cta'         => $attributes['ctaLabel'] ? array(
 		'label' => $attributes['ctaLabel'],
-		'href'  => $attributes['ctaHref'],
+		'href'  => esc_url_raw( $attributes['ctaHref'] ),
 		'icon'  => $attributes['ctaIcon'],
 	) : null,
 	'themeButton' => (bool) $attributes['themeButton'],
