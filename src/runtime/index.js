@@ -39,14 +39,19 @@ const safeUrl = ( value ) => {
 	const scheme = String( value ).replace( /[\u0000-\u0020]/g, '' ).match( /^([a-z][a-z0-9+.-]*):/i )?.[ 1 ].toLowerCase();
 	return ! scheme || SAFE_SCHEMES.has( scheme ) ? value : '#';
 };
+// Under a URL key only a string passes (checked); anything else (an object a link would read a pathname from, an
+// array) becomes "#" before it's looked into.
 const cleanProps = ( value, key ) => {
+	if ( URL_KEYS.has( key ) ) {
+		return typeof value === 'string' ? safeUrl( value ) : '#';
+	}
 	if ( Array.isArray( value ) ) {
 		return value.map( ( v ) => cleanProps( v ) );
 	}
 	if ( value && typeof value === 'object' ) {
 		return Object.fromEntries( Object.entries( value ).map( ( [ k, v ] ) => [ k, cleanProps( v, k ) ] ) );
 	}
-	return typeof value === 'string' && URL_KEYS.has( key ) ? safeUrl( value ) : value;
+	return value;
 };
 
 // An island's props (URLs made safe, above), and its server-rendered children as HTML (a carousel's slides: the
