@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/carousel",
+	"title": "Carousel",
+	"category": "marccent",
+	"icon": "slides",
+	"description": "Its blocks side by side, swiped or stepped with the pager (previous | 2 / 8 | next) or the keyboard. Each block is one slide.",
+	"keywords": [ "slider", "swiper", "gallery", "slides" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"slideWidth": { "type": "string", "default": "17rem" },
+		"label": { "type": "string", "default": "Carousel" }
+	},
+	"supports": { "anchor": true, "html": false },
+	"editorScript": "file:./index.js"
+}

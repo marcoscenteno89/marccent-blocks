@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/navbar",
+	"title": "Navbar",
+	"category": "marccent",
+	"icon": "menu",
+	"description": "The site's header bar: logo, the main menu (Appearance → Menus, the Primary location), social links, a call-to-action button and the theme button with its mini editor.",
+	"keywords": [ "header", "menu", "navigation" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"showName": { "type": "boolean", "default": true },
+		"social": { "type": "string", "default": "" },
+		"ctaLabel": { "type": "string", "default": "" },
+		"ctaHref": { "type": "string", "default": "" },
+		"ctaIcon": { "type": "string", "default": "phone" },
+		"themeButton": { "type": "boolean", "default": true }
+	},
+	"supports": { "html": false, "multiple": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

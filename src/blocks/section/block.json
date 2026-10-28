@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/section",
+	"title": "Section",
+	"category": "marccent",
+	"icon": "align-wide",
+	"description": "A full-width band of the page: its background (a color, or an image under a shade), and its content capped to the page width.",
+	"keywords": [ "container", "band", "hero", "background" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"tagName": { "type": "string", "default": "section" },
+		"width": { "type": "string", "default": "wrap" },
+		"padY": { "type": "string", "default": "pad-y-lg" },
+		"gap": { "type": "string", "default": "" },
+		"surface": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": false },
+		"minHeight": { "type": "string", "default": "" },
+		"imageId": { "type": "number" },
+		"imageUrl": { "type": "string" },
+		"imageAlt": { "type": "string", "default": "" },
+		"shade": { "type": "number", "default": 50 }
+	},
+	"supports": { "anchor": true, "html": false, "align": false },
+	"editorScript": "file:./index.js"
+}

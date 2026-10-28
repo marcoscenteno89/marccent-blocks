@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/animation",
+	"title": "Animated band",
+	"category": "marccent",
+	"icon": "art",
+	"description": "A full-width band with a live canvas animation behind its content (blob, wave, snow…), drawn in the theme's colors.",
+	"keywords": [ "canvas", "background", "animation", "hero" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"name": { "type": "string", "default": "network-loop" },
+		"minHeight": { "type": "string", "default": "60vh" },
+		"fps": { "type": "number" },
+		"colors": { "type": "string", "default": "" },
+		"surface": { "type": "string", "default": "" }
+	},
+	"supports": { "anchor": true, "html": false },
+	"editorScript": "file:./index.js"
+}

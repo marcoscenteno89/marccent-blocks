@@ -1,0 +1,32 @@
+{
+  "name": "marccent-blocks",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gutenberg blocks and the front-end runtime of the Marccent theme (marccent-theme) for WordPress.",
+  "author": "Marcos Centeno",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "wp-scripts build --webpack-copy-php",
+    "start": "wp-scripts start --webpack-copy-php",
+    "serialize": "wp-scripts test-unit-js --config tools/jest.config.js"
+  },
+  "dependencies": {
+    "marccent-theme": "file:../../../../marccent-theme"
+  },
+  "devDependencies": {
+    "@wordpress/block-editor": "^19.0.0",
+    "@wordpress/block-library": "^12.0.0",
+    "@wordpress/blocks": "^17.0.0",
+    "@wordpress/components": "^43.0.0",
+    "@wordpress/i18n": "^7.0.0",
+    "@wordpress/scripts": "^31.0.0",
+    "@wordpress/server-side-render": "^7.0.0"
+  },
+  "overrides": {
+    "@wordpress/private-apis": "3.0.0",
+    "@wordpress/data": "11.0.0",
+    "@wordpress/compose": "9.0.0",
+    "@wordpress/element": "10.0.0",
+    "@wordpress/hooks": "5.0.0"
+  }
+}

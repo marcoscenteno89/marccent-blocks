@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/card",
+	"title": "Card",
+	"category": "marccent",
+	"icon": "id-alt",
+	"description": "A raised box for a feature, a service or a contact detail: its blocks stacked inside, with a hover effect.",
+	"keywords": [ "box", "panel", "feature", "service" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"surface": { "type": "string", "default": "bg border" },
+		"pad": { "type": "string", "default": "pad" },
+		"gap": { "type": "string", "default": "gap-sm" },
+		"hover": { "type": "string", "default": "hover-holographic" },
+		"center": { "type": "boolean", "default": false },
+		"round": { "type": "boolean", "default": true },
+		"rows": { "type": "number", "default": 0 }
+	},
+	"supports": { "anchor": true, "html": false },
+	"editorScript": "file:./index.js"
+}

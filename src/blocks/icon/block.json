@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/icon",
+	"title": "Icon",
+	"category": "marccent",
+	"icon": "star-filled",
+	"description": "A Font Awesome icon, on its own or in a colored shape (the brand's gradient hexagon).",
+	"keywords": [ "font awesome", "symbol", "shape" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"icon": { "type": "string", "default": "star" },
+		"family": { "type": "string", "default": "fa-solid" },
+		"shape": { "type": "string", "default": "shape-hexagon" },
+		"surface": { "type": "string", "default": "bg-gradient" },
+		"size": { "type": "string", "default": "3.25rem" },
+		"label": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js"
+}

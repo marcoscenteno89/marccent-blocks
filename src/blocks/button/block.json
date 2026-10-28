@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/button",
+	"title": "Button",
+	"category": "marccent",
+	"icon": "button",
+	"description": "The theme's button: an icon and a label, in a color and with a hover effect. Without an icon it's a text link.",
+	"keywords": [ "link", "cta", "call to action" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"href": { "type": "string", "default": "" },
+		"icon": { "type": "string", "default": "arrow-right" },
+		"color": { "type": "string", "default": "primary" },
+		"hover": { "type": "string", "default": "" },
+		"newTab": { "type": "boolean", "default": false },
+		"trace": { "type": "boolean", "default": false }
+	},
+	"supports": { "anchor": true, "html": false },
+	"editorScript": "file:./index.js"
+}
