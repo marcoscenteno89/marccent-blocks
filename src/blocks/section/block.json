@@ -22,5 +22,6 @@
 		"shade": { "type": "number", "default": 50 }
 	},
 	"supports": { "anchor": true, "html": false, "align": false },
-	"editorScript": "file:./index.js"
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
 }

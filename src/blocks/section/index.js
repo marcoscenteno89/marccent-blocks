@@ -1,13 +1,14 @@
 /*
  * Section: a full-width band (.wrap.wrap-fluid, padding the sides) and inside it the content, capped to the page width (.wrap) in a
  * 1-column grid, like the Next site's Full sections. With an image the band is a .stack: the image, a shade over it
- * and the content on top, all in one cell (the theme's replacement for absolute overlays).
+ * and the content on top, all in one cell (the theme's replacement for absolute overlays). The server writes it on the page (render.php).
  */
 import { register } from '../../shared/register';
-import { InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import { InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { Button, PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import { SURFACES, WIDTHS, PADS_Y, GAPS, cx } from '../../shared/options';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 // The band pads the sides (.wrap); the content's .wrap inside it is narrower by that padding (layout.css).
 const outer = ( a ) => cx( 'wrap wrap-fluid', a.imageUrl ? 'stack' : a.surface );
@@ -68,17 +69,4 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 	);
 };
 
-const save = ( { attributes: a } ) => {
-	const Tag = a.tagName;
-	// Block props first: the inner blocks' props serialize the children, which resets what useBlockProps.save reads.
-	const blockProps = useBlockProps.save( { className: outer( a ), style: outerStyle( a ) } );
-	const innerProps = useInnerBlocksProps.save( { className: inner( a ), style: innerStyle( a ) } );
-	return (
-		<Tag { ...blockProps }>
-			<Background a={ a } />
-			<div { ...innerProps } />
-		</Tag>
-	);
-};
-
-register( metadata, { edit: Edit, save } );
+register( metadata, { edit: Edit, save: () => <InnerBlocks.Content />, deprecated } );

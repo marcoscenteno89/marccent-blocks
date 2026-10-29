@@ -18,5 +18,6 @@
 		"rows": { "type": "number", "default": 0 }
 	},
 	"supports": { "anchor": true, "html": false },
-	"editorScript": "file:./index.js"
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
 }

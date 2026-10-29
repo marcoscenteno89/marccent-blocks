@@ -4,7 +4,7 @@
  * var(--fa) }, sizes, animations) and each family's @font-face.
  *
  * - base(): writes src/generated/fa-base.css: the families' @font-face and the base, without the icon rules. The
- *   theme's icons.css imports it in place of all.css (webpack.config.js).
+ *   theme's styles/fontawesome.css resolves to it (webpack.config.js).
  * - icons(): every icon's rule body by name, for marccent-blocks.php to print only the page's (build/icons.php).
  * - used( code, all ): the icon names a compiled script mentions as strings ("bars-staggered", "xmark"): the icons
  *   the islands' components can render that aren't in the server's markup.

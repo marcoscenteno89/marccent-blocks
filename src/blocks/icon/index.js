@@ -1,6 +1,7 @@
 /*
  * Icon: the theme's Icon (components/ui/icon.js), alone or centered in a shape of the given width, like the home
- * page's features (a gradient hexagon). Names are Font Awesome's without the prefix: "star", "map-pin".
+ * page's features (a gradient hexagon). Names are Font Awesome's without the prefix: "star", "map-pin". The server
+ * writes it on the page (render.php).
  */
 import { register } from '../../shared/register';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
@@ -8,6 +9,7 @@ import { ExternalLink, PanelBody, SelectControl, TextControl } from '@wordpress/
 import { Icon } from 'marccent-theme/components/ui/icon';
 import { SHAPES, SURFACES, cx } from '../../shared/options';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 const FAMILIES = [ { label: 'Solid', value: 'fa-solid' }, { label: 'Regular', value: 'fa-regular' }, { label: 'Brands', value: 'fa-brands' } ];
 
@@ -39,6 +41,4 @@ const Edit = ( { attributes: a, setAttributes: set } ) => (
 	</>
 );
 
-const save = ( { attributes: a } ) => <div { ...useBlockProps.save( boxProps( a ) ) }><Glyph a={ a } /></div>;
-
-register( metadata, { edit: Edit, save } );
+register( metadata, { edit: Edit, save: () => null, deprecated } );

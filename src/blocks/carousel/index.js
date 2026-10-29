@@ -1,11 +1,13 @@
 /*
- * Carousel: saved as an island (data-island="carousel", runtime/islands/carousel.js): its slides as plain HTML in
- * [data-slot], shown in a row until the runtime replaces them with the theme's Carousel (Swiper and its pager).
+ * Carousel: written by the server (render.php) as an island (data-island="carousel", runtime/islands/carousel.js):
+ * its slides as plain HTML in [data-slot], shown in a row until the runtime replaces them with the theme's Carousel
+ * (Swiper and its pager).
  */
 import { register } from '../../shared/register';
-import { InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import { InnerBlocks, InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, TextControl } from '@wordpress/components';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 const outer = ( a ) => ( {
 	'data-island': 'carousel',
@@ -31,8 +33,4 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 	);
 };
 
-const save = ( { attributes: a } ) => (
-	<div { ...useBlockProps.save( outer( a ) ) }><div { ...useInnerBlocksProps.save( { 'data-slot': '' } ) } /></div>
-);
-
-register( metadata, { edit: Edit, save } );
+register( metadata, { edit: Edit, save: () => <InnerBlocks.Content />, deprecated } );

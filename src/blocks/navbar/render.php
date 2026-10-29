@@ -38,15 +38,14 @@ $props   = array(
 );
 
 // The markup the island's components render (NavBar, Menu, Button, ToggleButton), so swapping it in shifts nothing.
-$icon = function ( string $icon ): string {
-	$classes = str_starts_with( $icon, 'fa-' ) ? $icon : "fa-solid fa-$icon";
-	return sprintf( '<i data-component="icon" class="%s btn-icon" aria-hidden="true"></i>', esc_attr( $classes ) );
-};
-$button = function ( string $class, string $name, string $label, string $href ) use ( $icon ): string {
-	$external = preg_match( '#^https?:#', $href ) && ! str_starts_with( $href, home_url() ) ? ' target="_blank" rel="noopener noreferrer"' : '';
-	return sprintf( '<a data-component="button" class="btn %1$s" aria-label="%2$s" title="%2$s" href="%3$s"%4$s>%5$s<span class="btn-text">%6$s</span></a>',
-		esc_attr( $class ), esc_attr( $label ), esc_url( $href ), $external, $icon( $name ), esc_html( $label ) );
-};
+// Buttons and icons are the theme's (inc/markup.php).
+$button = fn( string $class, string $name, string $label, string $href ): string => marccent_blocks_button( array(
+	'label'   => $label,
+	'href'    => $href,
+	'icon'    => $name,
+	'classes' => $class,
+	'newTab'  => preg_match( '#^https?:#', $href ) && ! str_starts_with( $href, home_url() ),
+) );
 $links = function ( $items ) use ( &$links ) {
 	foreach ( $items as $item ) {
 		if ( ! empty( $item['children'] ) ) {
@@ -73,7 +72,7 @@ $links = function ( $items ) use ( &$links ) {
 					<span class="fw-bold"><?php echo esc_html( $props['brand']['name'] ); ?></span>
 				<?php endif; ?>
 			</a>
-			<button type="button" data-component="toggle-button" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><?php echo $icon( 'bars-staggered' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
+			<button type="button" data-component="toggle-button" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><?php echo marccent_blocks_icon( 'bars-staggered', 'btn-icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
 			<div id="site-nav" class="nav-collapse">
 				<nav data-component="menu" class="menu grid gap-0 auto-cols divide" style="--cols: <?php echo count( $items ); ?>" aria-label="Main"><?php $links( $items ); ?></nav>
 				<?php if ( $social || $props['cta'] ) : ?>
@@ -90,7 +89,7 @@ $links = function ( $items ) use ( &$links ) {
 				<?php endif; ?>
 			</div>
 			<?php if ( $props['themeButton'] ) : ?>
-				<button type="button" data-component="toggle-button" data-name="theme" class="btn hover-expand col-last" aria-label="Theme" title="Theme" aria-expanded="false" aria-controls="theme-panel"><?php echo $icon( 'brush' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span class="btn-text">Theme</span></button>
+				<button type="button" data-component="toggle-button" data-name="theme" class="btn hover-expand col-last" aria-label="Theme" title="Theme" aria-expanded="false" aria-controls="theme-panel"><?php echo marccent_blocks_icon( 'brush', 'btn-icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span class="btn-text">Theme</span></button>
 			<?php endif; ?>
 		</div>
 	</header>

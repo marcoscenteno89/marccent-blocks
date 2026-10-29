@@ -1,10 +1,11 @@
-// Runs serialize.test.js: blocks to post content with the blocks' own save(), in jsdom (npm run serialize).
+// Runs serialize.test.js (npm run serialize: blocks to post content with the blocks' own save()) or deprecated.test.js
+// (npm run test:blocks: posts saved by older versions still open as valid blocks), in jsdom.
 const path = require( 'path' );
 const plugin = path.resolve( __dirname, '..' );
 
 module.exports = {
 	rootDir: plugin,
-	testMatch: [ '<rootDir>/tools/serialize.test.js' ],
+	testMatch: [ `<rootDir>/tools/${ process.env.MARCCENT_TEST || 'serialize' }.test.js` ],
 	testEnvironment: 'jsdom',
 	// CommonJS builds of the dependencies (jsdom's default, the browser condition, picks ES module ones).
 	testEnvironmentOptions: { customExportConditions: [ 'node', 'require', 'default' ] },
@@ -13,9 +14,6 @@ module.exports = {
 	transformIgnorePatterns: [],
 	moduleNameMapper: {
 		'\\.css$': '<rootDir>/tools/style-stub.js',
-		'^next/link$': '<rootDir>/src/shims/next-link.js',
-		'^next/navigation$': '<rootDir>/src/shims/next-navigation.js',
-		'^next/image$': '<rootDir>/src/shims/next-image.js',
 	},
 	setupFiles: [ '<rootDir>/tools/setup.js' ],
 };

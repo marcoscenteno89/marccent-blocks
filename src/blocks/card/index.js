@@ -3,13 +3,14 @@
  * Its blocks stack inside (an icon, a heading, text, a button…).
  * Rows (2+) makes it .sub rows-N: it spans N rows of the grid it sits in and its blocks snap to them, so the headings,
  * text and buttons of cards side by side line up. The grid's gap then spaces its blocks, so its own gap is dropped.
- * Rows 0 saves the plain markup, so cards saved before the option stay valid.
+ * The server writes it on the page (render.php).
  */
 import { register } from '../../shared/register';
-import { InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import { InnerBlocks, InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, ToggleControl } from '@wordpress/components';
 import { SURFACES, PADS, GAPS, HOVERS, cx } from '../../shared/options';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 const layout = ( a ) => ( a.rows ? `sub rows-${ a.rows }` : cx( 'grid cols-1 content-start', a.gap ) );
 const classes = ( a ) => cx( a.surface, a.round && 'round', a.pad, layout( a ), a.hover, a.center && 'text-center justify-center' );
@@ -37,6 +38,4 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 	);
 };
 
-const save = ( { attributes: a } ) => <article { ...useInnerBlocksProps.save( useBlockProps.save( { className: classes( a ) } ) ) } />;
-
-register( metadata, { edit: Edit, save } );
+register( metadata, { edit: Edit, save: () => <InnerBlocks.Content />, deprecated } );

@@ -17,5 +17,6 @@
 		"label": { "type": "string", "default": "" }
 	},
 	"supports": { "html": false },
-	"editorScript": "file:./index.js"
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
 }

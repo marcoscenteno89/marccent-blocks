@@ -1,13 +1,14 @@
 /*
  * Grid: the theme's .grid (layout.css). Equal columns: --cols per row, never narrower than --min, so they wrap to
  * fewer on narrow screens by themselves. The uneven layouts (layout-2-1…) are one column until their container is
- * wide enough. Each inner block is one cell.
+ * wide enough. Each inner block is one cell. The server writes it on the page (render.php).
  */
 import { register } from '../../shared/register';
-import { InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import { InnerBlocks, InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import { LAYOUTS, GAPS, ALIGN_ITEMS, cx } from '../../shared/options';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 const EQUAL = [ 'cols', 'fixed' ];
 
@@ -44,6 +45,4 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 	);
 };
 
-const save = ( { attributes: a } ) => <div { ...useInnerBlocksProps.save( useBlockProps.save( { className: classes( a ), style: style( a ) } ) ) } />;
-
-register( metadata, { edit: Edit, save } );
+register( metadata, { edit: Edit, save: () => <InnerBlocks.Content />, deprecated } );

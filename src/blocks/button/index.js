@@ -1,5 +1,6 @@
 /*
- * Button: the theme's Button (components/ui/button.js) itself, saved as static HTML: a link when it has a URL. The
+ * Button: the theme's Button (components/ui/button.js) in the editor; on the page the server writes it (render.php,
+ * marccent_blocks_button in inc/markup.php, checked against the theme's markup reference): a link when it has a URL. The
  * icon is a Font Awesome name ("phone") or full classes ("fa-brands fa-facebook"); none makes it a text link.
  * trace adds the outline the stroke hovers draw (hover-trace, hover-dash).
  */
@@ -9,6 +10,7 @@ import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress
 import { Button } from 'marccent-theme/components/ui/button';
 import { BUTTON_COLORS, HOVERS, cx } from '../../shared/options';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 const linkProps = ( a ) => ( a.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {} );
 
@@ -34,10 +36,4 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 	);
 };
 
-const save = ( { attributes: a } ) => (
-	<Button icon={ a.icon || false } href={ a.href || undefined } trace={ a.trace } { ...linkProps( a ) } { ...useBlockProps.save( { className: cx( a.color, a.hover ) } ) }>
-		{ a.label }
-	</Button>
-);
-
-register( metadata, { edit: Edit, save } );
+register( metadata, { edit: Edit, save: () => null, deprecated } );

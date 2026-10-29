@@ -9,10 +9,11 @@
  * - icons.php: every icon's rule by name and the icons the scripts can render; theme-defaults.json: the package's
  *   theme defaults, so PHP can paint the starting colors; marccent-theme.json: the package's version.
  *
- * So marccent-theme's components run outside Next: next/link, next/navigation and next/image resolve to small shims
- * (src/shims). The site's starting theme reaches the package as window.marccentDefaults (printed by inc/assets.php
- * from the marccent_defaults option), which its lib/defaults.js merges over its own. marccent-theme is a release
- * (package.json: github:…#v<version>) and ships JSX source, so babel compiles it too, though it's in node_modules.
+ * marccent-theme's components import no router (their links are plain <a>s unless a host hands them one), so they
+ * build as they are. The site's starting theme reaches the package as window.marccentDefaults (printed by
+ * inc/assets.php from the marccent_defaults option), which its lib/defaults.js merges over its own. marccent-theme is
+ * a release (package.json: github:…#v<version>) and ships JSX source, so babel compiles it too, though it's in
+ * node_modules.
  */
 const fs = require( 'fs' );
 const path = require( 'path' );
@@ -20,7 +21,6 @@ const webpack = require( 'webpack' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const fa = require( './tools/font-awesome' );
 
-const shim = ( name ) => path.resolve( __dirname, 'src/shims', name );
 const PACKAGE = path.dirname( require.resolve( 'marccent-theme/package.json' ) );
 const FA_BASE = fa.base();
 
@@ -82,24 +82,18 @@ module.exports = {
 		...defaultConfig.resolve,
 		alias: {
 			...defaultConfig.resolve.alias,
-			'next/link': shim( 'next-link.js' ),
-			'next/navigation': shim( 'next-navigation.js' ),
-			'next/image': shim( 'next-image.js' ),
+			// The theme brings all of Font Awesome in one file (styles/fontawesome.css); here it's the base, and each
+			// page gets its own icons.
+			[ path.join( PACKAGE, 'styles/fontawesome.css' ) ]: FA_BASE,
 		},
 	},
 	plugins: [
 		...defaultConfig.plugins,
-		// The theme's icons.css takes all of Font Awesome; here it gets the base, and each page its own icons.
-		// (css-loader's request carries its loaders before the path: only the path changes.)
-		new webpack.NormalModuleReplacementPlugin( /fontawesome-free\/css\/all\.css$/, ( res ) => {
-			if ( res.context.startsWith( path.join( PACKAGE, 'styles' ) ) ) {
-				res.request = res.request.replace( /[^!]*$/, FA_BASE );
-			}
-		} ),
-		// A component's own stylesheet (button.js imports styles/components/button.css) is already in styles/core.
+		// A component's own stylesheet (button.js imports styles/components/button.css) is already in styles/core:
+		// left out, or each island's chunk would load a second copy.
 		new webpack.NormalModuleReplacementPlugin( /styles\/components\/[^/]+\.css$/, ( res ) => {
 			if ( res.context.startsWith( path.join( PACKAGE, 'components' ) ) ) {
-				res.request = shim( 'empty.js' );
+				res.request = path.resolve( __dirname, 'src/shims/empty.js' );
 			}
 		} ),
 		new FrontEndData(),

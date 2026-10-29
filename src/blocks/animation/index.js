@@ -1,21 +1,18 @@
 /*
  * Animated band: the Next site's CanvasBand (components/layout/canvas-band.js). A .stack: the canvas host
  * (data-component="animation", which the runtime's CanvasScanner fills with the named animation, only while on
- * screen and not for reduced motion) and the content centered over it. The editor shows the band without the canvas.
+ * screen and not for reduced motion) and the content centered over it, written by the server (render.php). The editor
+ * shows the band without the canvas.
  */
 import { register } from '../../shared/register';
-import { InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import { InnerBlocks, InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, TextControl } from '@wordpress/components';
 import { ANIMATIONS, SURFACES, cx } from '../../shared/options';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 const outer = ( a ) => ( { className: cx( 'wrap wrap-fluid pad-0 stack', a.surface ), style: { minHeight: a.minHeight || undefined } } );
 const content = { className: 'col-center pad text-center', style: { position: 'relative', gridTemplateColumns: 'minmax(0, 1fr)' } };
-
-const Canvas = ( { a } ) => (
-	<div data-component="animation" data-name={ a.name } data-fps={ a.fps || undefined } data-colors={ a.colors || undefined }
-		className="bg w-100 h-100" aria-hidden="true" />
-);
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const props = useInnerBlocksProps( content, { template: [ [ 'core/heading', { level: 2, placeholder: 'Over the animation' } ] ] } );
@@ -38,11 +35,4 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 	);
 };
 
-const save = ( { attributes: a } ) => (
-	<section { ...useBlockProps.save( outer( a ) ) }>
-		<Canvas a={ a } />
-		<div { ...useInnerBlocksProps.save( content ) } />
-	</section>
-);
-
-register( metadata, { edit: Edit, save } );
+register( metadata, { edit: Edit, save: () => <InnerBlocks.Content />, deprecated } );
