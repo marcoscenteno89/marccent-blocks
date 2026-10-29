@@ -1,6 +1,6 @@
 <?php
 /**
- * The server's Button and Icon (inc/markup.php) against the theme's markup reference
+ * The server's Button, Icon, Section, Grid, Card and NavBar (inc/markup.php) against the theme's markup reference
  * (node_modules/marccent-theme/markup/reference.json): every case rendered here must be the same HTML as the theme's
  * components render, ignoring the order of attributes and of classes, and whitespace between tags. Without WordPress:
  * the few functions inc/markup.php uses are stood in for below.
@@ -22,14 +22,26 @@ function esc_url( $s ) {
 function wp_strip_all_tags( $s ) {
 	return trim( strip_tags( (string) $s ) );
 }
+function safecss_filter_attr( $css ) {
+	return (string) $css;
+}
 
 require __DIR__ . '/../inc/markup.php';
 
-// Each case's fields (the theme's markup/cases.json) as the server takes them: a button's label as the editor stores
-// it (RichText: HTML, so "<" is "&lt;").
+// The extra classes, as a block's wrapper adds its className.
+function with_classes( string $classes ): callable {
+	return fn( $attrs ) => marccent_blocks_attributes( array( 'class' => marccent_blocks_cx( $attrs['class'] ?? '', $classes ) ) + $attrs );
+}
+
+// Each case's fields (the theme's markup/cases.json) as the server takes them (a block's attributes): a button's label
+// as the editor stores it (RichText: HTML, so "<" is "&lt;").
 $render = array(
-	'button' => fn( $f ) => marccent_blocks_button( array( 'label' => htmlspecialchars( $f['label'] ) ) + $f ),
-	'icon'   => fn( $f ) => marccent_blocks_icon( $f['name'], $f['classes'], $f['family'] ),
+	'button'  => fn( $f ) => marccent_blocks_button( array( 'label' => htmlspecialchars( $f['label'] ) ) + $f ),
+	'icon'    => fn( $f ) => marccent_blocks_icon( $f['name'], $f['classes'], $f['family'] ),
+	'section' => fn( $f ) => marccent_blocks_section( array( 'tagName' => $f['tag'], 'imageUrl' => $f['image'] ) + $f, $f['content'], with_classes( $f['classes'] ) ),
+	'grid'    => fn( $f ) => marccent_blocks_grid( $f, $f['content'], with_classes( $f['classes'] ) ),
+	'card'    => fn( $f ) => marccent_blocks_card( $f, $f['content'], with_classes( $f['classes'] ) ),
+	'nav'     => fn( $f ) => marccent_blocks_navbar( $f['brand'], $f['items'] ),
 );
 
 // An element as a comparable tree: its name, attributes sorted (classes too), and its children; blank text dropped.
@@ -44,6 +56,8 @@ function tree( DOMNode $node ) {
 			$classes = preg_split( '/\s+/', trim( $value ), -1, PREG_SPLIT_NO_EMPTY );
 			sort( $classes );
 			$value = implode( ' ', $classes );
+		} elseif ( 'style' === $a->name ) { // "a: b; c: d" as "a:b;c:d"
+			$value = implode( ';', array_filter( array_map( fn( $d ) => preg_replace( '/\s*:\s*/', ':', trim( $d ), 1 ), explode( ';', $value ) ) ) );
 		}
 		$attrs[ strtolower( $a->name ) ] = $value;
 	}

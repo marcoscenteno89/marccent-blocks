@@ -1,6 +1,6 @@
 {
   "name": "marccent-blocks",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "description": "Gutenberg blocks and the front-end runtime of the Marccent theme (marccent-theme) for WordPress.",
   "author": "Marcos Centeno",
@@ -14,7 +14,7 @@
     "test": "npm run test:markup && npm run test:blocks"
   },
   "dependencies": {
-    "marccent-theme": "github:marcoscenteno89/marccent-theme#v0.3.0"
+    "marccent-theme": "github:marcoscenteno89/marccent-theme#v0.3.1"
   },
   "devDependencies": {
     "@wordpress/block-editor": "^19.0.0",

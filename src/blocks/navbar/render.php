@@ -37,8 +37,8 @@ $props   = array(
 	'themeButton' => (bool) $attributes['themeButton'],
 );
 
-// The markup the island's components render (NavBar, Menu, Button, ToggleButton), so swapping it in shifts nothing.
-// Buttons and icons are the theme's (inc/markup.php).
+// The markup the island's components render (NavBar, Menu, Button, ToggleButton), so swapping it in shifts nothing:
+// the theme's (inc/markup.php).
 $button = fn( string $class, string $name, string $label, string $href ): string => marccent_blocks_button( array(
 	'label'   => $label,
 	'href'    => $href,
@@ -46,51 +46,17 @@ $button = fn( string $class, string $name, string $label, string $href ): string
 	'classes' => $class,
 	'newTab'  => preg_match( '#^https?:#', $href ) && ! str_starts_with( $href, home_url() ),
 ) );
-$links = function ( $items ) use ( &$links ) {
-	foreach ( $items as $item ) {
-		if ( ! empty( $item['children'] ) ) {
-			printf( '<details data-component="menu-dropdown" class="menu-dropdown"><summary class="menu-link"><span class="text-truncate">%s</span></summary><div class="menu-panel bg border round shadow pad grid cols-1 gap-sm">', esc_html( $item['name'] ) );
-			$links( $item['children'] );
-			echo '</div></details>';
-		} else {
-			printf( '<a data-component="menu-link" class="menu-link" href="%s"><span class="text-truncate">%s</span></a>', esc_url( $item['href'] ), esc_html( $item['name'] ) );
-		}
-	}
-};
+$end = '';
+foreach ( $social as $s ) {
+	$end .= $button( 'secondary hover-expand', $s['icon'], $s['name'], $s['href'] );
+}
+if ( $props['cta'] ) {
+	$end .= $button( 'primary', $props['cta']['icon'], $props['cta']['label'], $props['cta']['href'] );
+}
+$end  = $end ? '<nav aria-label="Social" class="nav-end grid auto-cols items-center gap-sm">' . $end . '</nav>' : '';
+$top  = $props['themeButton'] ? '<div id="theme-panel" class="collapse"><div><div class="pad-y-sm"><div class="wrap pad-0 grid cols-1 justify-end"></div></div></div></div>' : '';
+$last = $props['themeButton'] ? '<button type="button" data-component="toggle-button" data-name="theme" class="btn hover-expand col-last" aria-label="Theme" title="Theme" aria-expanded="false" aria-controls="theme-panel">' . marccent_blocks_icon( 'brush', 'btn-icon' ) . '<span class="btn-text">Theme</span></button>' : '';
 ?>
 <div <?php echo get_block_wrapper_attributes( array( 'data-island' => 'navbar', 'data-props' => wp_json_encode( $props ) ) ); ?>>
-	<header data-component="nav-bar" class="nav wrap wrap-fluid pad-y-sm bg border-bottom sticky-top grid cols-1 gap-sm">
-		<?php if ( $props['themeButton'] ) : ?>
-			<div id="theme-panel" class="collapse"><div><div class="pad-y-sm"><div class="wrap pad-0 grid cols-1 justify-end"></div></div></div></div>
-		<?php endif; ?>
-		<div class="wrap pad-0 grid layout-ends items-center gap-sm">
-			<a href="<?php echo esc_url( $props['brand']['href'] ); ?>" class="menu-link grid auto-cols items-center gap-sm" aria-label="<?php echo esc_attr( $props['brand']['name'] . ', home' ); ?>">
-				<?php if ( $props['brand']['logo'] ) : ?>
-					<img src="<?php echo esc_url( $props['brand']['logo'] ); ?>" alt="<?php echo esc_attr( $props['brand']['name'] ); ?>" width="<?php echo (int) $logo[1]; ?>" height="<?php echo (int) $logo[2]; ?>" style="height: 2.5rem; width: auto">
-				<?php endif; ?>
-				<?php if ( $props['brand']['showName'] ) : ?>
-					<span class="fw-bold"><?php echo esc_html( $props['brand']['name'] ); ?></span>
-				<?php endif; ?>
-			</a>
-			<button type="button" data-component="toggle-button" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav"><?php echo marccent_blocks_icon( 'bars-staggered', 'btn-icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
-			<div id="site-nav" class="nav-collapse">
-				<nav data-component="menu" class="menu grid gap-0 auto-cols divide" style="--cols: <?php echo count( $items ); ?>" aria-label="Main"><?php $links( $items ); ?></nav>
-				<?php if ( $social || $props['cta'] ) : ?>
-					<nav aria-label="Social" class="nav-end grid auto-cols items-center gap-sm">
-						<?php
-						foreach ( $social as $s ) {
-							echo $button( 'secondary hover-expand', $s['icon'], $s['name'], $s['href'] ); // phpcs:ignore WordPress.Security.EscapeOutput
-						}
-						if ( $props['cta'] ) {
-							echo $button( 'primary', $props['cta']['icon'], $props['cta']['label'], $props['cta']['href'] ); // phpcs:ignore WordPress.Security.EscapeOutput
-						}
-						?>
-					</nav>
-				<?php endif; ?>
-			</div>
-			<?php if ( $props['themeButton'] ) : ?>
-				<button type="button" data-component="toggle-button" data-name="theme" class="btn hover-expand col-last" aria-label="Theme" title="Theme" aria-expanded="false" aria-controls="theme-panel"><?php echo marccent_blocks_icon( 'brush', 'btn-icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span class="btn-text">Theme</span></button>
-			<?php endif; ?>
-		</div>
-	</header>
+	<?php echo marccent_blocks_navbar( $props['brand'], $items, $end, $last, $top ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 </div>

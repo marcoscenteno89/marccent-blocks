@@ -13,8 +13,8 @@ import deprecated from './deprecated';
 const EQUAL = [ 'cols', 'fixed' ];
 
 const classes = ( a ) => cx(
-	'grid',
-	a.layout === 'cols' ? `cols-${ a.cols }` : a.layout === 'fixed' ? `fixed cols-${ a.cols }` : a.layout,
+	a.layout === 'row-wrap' ? 'row-wrap' : 'grid',
+	a.layout === 'cols' ? `cols-${ a.cols }` : a.layout === 'fixed' ? `fixed cols-${ a.cols }` : a.layout !== 'row-wrap' && a.layout,
 	a.gap, a.alignItems, a.center && 'cols-center justify-center text-center'
 );
 const style = ( a ) => ( a.min && EQUAL.includes( a.layout ) ? { '--min': a.min } : undefined );

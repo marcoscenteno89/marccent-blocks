@@ -30,7 +30,7 @@ const Background = ( { a } ) => a.imageUrl && (
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const Tag = a.tagName;
-	const blockProps = useBlockProps( { className: outer( a ), style: outerStyle( a ) } );
+	const blockProps = useBlockProps( { className: outer( a ), style: outerStyle( a ), 'data-theme': a.mode || undefined } );
 	const innerProps = useInnerBlocksProps( { className: inner( a ), style: innerStyle( a ) }, {
 		template: [ [ 'core/heading', { placeholder: 'Section title' } ], [ 'core/paragraph' ] ],
 	} );
@@ -46,6 +46,8 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 					<SelectControl label="HTML element" value={ a.tagName } options={ [ 'section', 'div', 'header', 'footer', 'aside' ].map( ( t ) => ( { label: t, value: t } ) ) } onChange={ ( tagName ) => set( { tagName } ) } />
 				</PanelBody>
 				<PanelBody title="Background">
+					<SelectControl label="Mode" help="Light or dark here, whatever the page's." value={ a.mode }
+						options={ [ { label: 'The page\'s', value: '' }, { label: 'Light', value: 'light' }, { label: 'Dark', value: 'dark' } ] } onChange={ ( mode ) => set( { mode } ) } />
 					<SelectControl label="Color" help={ a.imageUrl ? 'Over an image, the color goes on the content box.' : undefined } value={ a.surface } options={ SURFACES } onChange={ ( surface ) => set( { surface } ) } />
 					<MediaUploadCheck>
 						<MediaUpload allowedTypes={ [ 'image' ] } value={ a.imageId }

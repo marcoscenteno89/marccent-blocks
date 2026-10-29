@@ -14,6 +14,7 @@
 		"padY": { "type": "string", "default": "pad-y-lg" },
 		"gap": { "type": "string", "default": "" },
 		"surface": { "type": "string", "default": "" },
+		"mode": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": false },
 		"minHeight": { "type": "string", "default": "" },
 		"imageId": { "type": "number" },
