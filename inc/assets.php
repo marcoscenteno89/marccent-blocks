@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 // What the page uses so far.
 function &marccent_blocks_page(): array {
-	static $page = array( 'icons' => array(), 'designs' => array(), 'islands' => array(), 'canvas' => false, 'themeButton' => false );
+	static $page = array( 'icons' => array(), 'designs' => array(), 'islands' => array(), 'canvas' => false, 'themeButton' => false, 'engine' => false );
 	return $page;
 }
 
@@ -44,6 +44,8 @@ add_filter( 'render_block', function ( $html, $block ) {
 	$page['designs'] += array_fill_keys( $designs[1], true );
 	$page['islands'] += array_fill_keys( $islands[1], true );
 	$page['canvas']   = $page['canvas'] || preg_match( '/\bdata-component="[^"]*\banimation\b/', $html );
+	// Theme markup the engine wires up (tooltips, popovers, dialogs, file drops, code…) needs the runtime too.
+	$page['engine']   = $page['engine'] || preg_match( '/\bdata-component="[^"]*\b(?:tooltip|popover|modal|drawer|file-drop|code|toggle-button|toggle-panel|nav-bar|app-shell|menu)\b|\bdata-opens=|\bclass="[^"]*\bhover-(?:tilt|spotlight|magnet)\b/', $html );
 	if ( 'marccent/navbar' === $block['blockName'] && ( $block['attrs']['themeButton'] ?? true ) ) {
 		$page['themeButton'] = true;
 	}
@@ -70,7 +72,7 @@ add_action( 'init', function () {
 function marccent_blocks_enqueue( bool $late = false ): void {
 	static $printed = array();
 	$page    = marccent_blocks_page();
-	$runtime = $page['islands'] || $page['canvas'] || $page['themeButton'];
+	$runtime = $page['islands'] || $page['canvas'] || $page['themeButton'] || ! empty( $page['engine'] );
 
 	wp_enqueue_style( 'marccent' );
 

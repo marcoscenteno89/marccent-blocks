@@ -9,6 +9,10 @@
  * JSON in data-props. Each is filled by its component from ISLANDS through a portal of this one root, so they all
  * share one ThemeProvider (and one theme: the header's theme editor and the page always agree). A component loads
  * only once a page has its island.
+ *
+ * Everything else with a data-component (the theme's markup in a Custom HTML block, a pattern, another plugin's
+ * output) is wired up by the theme's plain-JS engine (marccent-theme/core/enhance.js), which leaves the islands to
+ * React.
  */
 import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
@@ -17,6 +21,8 @@ import { ThemeProvider } from 'marccent-theme/lib/context';
 import { SiteTheme, ScopeThemes } from 'marccent-theme/components/theme/core';
 import { Goo } from 'marccent-theme/components/ui/goo';
 import { PauseOffscreen } from 'marccent-theme/components/pause-offscreen';
+import { enhance } from 'marccent-theme/core/enhance';
+import 'marccent-theme/core/components';
 
 const named = ( load, name ) => lazy( () => load().then( ( m ) => ( { default: m[ name ] } ) ) );
 const CanvasScanner = named( () => import( /* webpackChunkName: "canvas-scanner" */ 'marccent-theme/components/visuals/canvas-scanner' ), 'CanvasScanner' );
@@ -89,6 +95,7 @@ const start = () => {
 	const themeButton = islands.some( ( i ) => i.props.themeButton );
 	const canvases = !! document.querySelector( '[data-component~="animation"]' );
 	const goo = themeButton || !! document.querySelector( '.hover-goo, [data-hover="goo"]' );
+	enhance();
 	const host = document.createElement( 'div' );
 	host.id = 'marccent-runtime';
 	document.body.append( host );
