@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Marccent Blocks
  * Description: The Marccent theme (marccent-theme) in WordPress: its styles, its live theme engine (palettes, light / dark, design styles) and its components as blocks.
- * Version: 0.4.1
+ * Version: 0.4.2
  * Requires at least: 6.6
  * Requires PHP: 8.0
  * Author: Marcos Centeno
