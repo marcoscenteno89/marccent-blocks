@@ -68,7 +68,8 @@ function marccent_blocks_design(): string {
 /*
  * The colors the runtime puts on <html> (marccent-theme's core/apply.js and lib/theme-scope.js paletteVars), worked out
  * the same way: the palette in use, its shades (the color itself while the package's SHADES is off), the text on each
- * fill (dark on a light one, by perceived brightness, HSP) and the page's dark and light; then the defaults' vars,
+ * fill (dark or light, whichever has the higher WCAG contrast with it) and the page's dark and light; then the
+ * defaults' vars,
  * which go with the default design.
  */
 function marccent_blocks_theme_vars(): array {
@@ -82,15 +83,24 @@ function marccent_blocks_theme_vars(): array {
 	$palette ??= $t['palettes'][0] ?? null;
 	$vars      = array();
 	if ( $palette ) {
-		$hsp     = function ( string $hex ): float {
+		// WCAG relative luminance of a hex color.
+		$luminance = function ( string $hex ): float {
 			$hex = ltrim( $hex, '#' );
 			if ( strlen( $hex ) <= 4 ) {
 				$hex = implode( '', array_map( fn( $c ) => $c . $c, str_split( $hex ) ) );
 			}
-			[ $r, $g, $b ] = array_map( 'hexdec', str_split( substr( $hex, 0, 6 ), 2 ) );
-			return sqrt( .299 * $r * $r + .587 * $g * $g + .114 * $b * $b );
+			$lin = function ( string $pair ): float {
+				$v = hexdec( $pair ) / 255;
+				return $v <= .03928 ? $v / 12.92 : ( ( $v + .055 ) / 1.055 ) ** 2.4;
+			};
+			[ $r, $g, $b ] = array_map( $lin, str_split( substr( $hex, 0, 6 ), 2 ) );
+			return .2126 * $r + .7152 * $g + .0722 * $b;
 		};
-		$on   = fn( ...$colors ) => array_sum( array_map( $hsp, $colors ) ) / count( $colors ) > 127.5 ? 'var(--dark)' : 'var(--light)';
+		// Dark text when it contrasts more than light with every color given (the gradient: both ends).
+		$on = function ( string ...$colors ) use ( $luminance ): string {
+			$l = array_map( $luminance, $colors );
+			return min( array_map( fn( $x ) => ( $x + .05 ) / .05, $l ) ) >= min( array_map( fn( $x ) => 1.05 / ( $x + .05 ), $l ) ) ? 'var(--dark)' : 'var(--light)';
+		};
 		$vars = array(
 			'--primary'           => $palette['primary'],
 			'--primary-lighter'   => $palette['primary'],
@@ -105,6 +115,12 @@ function marccent_blocks_theme_vars(): array {
 			'--secondary-text'    => $on( $palette['secondary'] ),
 			'--gradient-text'     => $on( $palette['primary'], $palette['secondary'] ),
 		);
+		// Text on the shades' fills (the colors themselves while SHADES is off).
+		foreach ( array( 'primary', 'secondary' ) as $name ) {
+			foreach ( array( 'lighter', 'darker' ) as $side ) {
+				$vars[ "--$name-$side-text" ] = $vars[ "--$name-text" ];
+			}
+		}
 	}
 	foreach ( array( 'dark', 'light' ) as $mode ) {
 		if ( ! empty( $t[ $mode ] ) ) {

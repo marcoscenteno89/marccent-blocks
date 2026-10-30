@@ -19,7 +19,7 @@ says which.
 
 ## Build
 
-The theme is a release, pinned in `package.json` (`github:marcoscenteno89/marccent-theme#v1.0.0-rc.1`); to move to a new
+The theme is a release, pinned in `package.json` (`github:marcoscenteno89/marccent-theme#v1.0.0-rc.2`); to move to a new
 one, change the tag and rebuild.
 
 ```sh
