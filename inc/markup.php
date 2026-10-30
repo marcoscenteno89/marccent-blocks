@@ -32,6 +32,15 @@ function marccent_blocks_icon( string $icon, string $class = '', string $family 
 	return sprintf( '<i data-component="icon" class="%s" aria-hidden="true"></i>', esc_attr( marccent_blocks_cx( $classes, $class ) ) );
 }
 
+/*
+ * A link's URL, escaped: empty for a scheme that isn't allowed (javascript:…). A link that is only a {{ token }}
+ * ({{ link }}, as the editor saves it, %7B%7B link %7D%7D, too) is kept as it is: Marccent Content fills it as the
+ * block renders, through esc_url_raw, and esc_url here would mangle it into http://….
+ */
+function marccent_blocks_href( string $href ): string {
+	return preg_match( '/^\s*(\{\{[^{}]*\}\}|%7B%7B.*?%7D%7D)\s*$/i', $href ) ? esc_attr( trim( $href ) ) : esc_url( $href );
+}
+
 /**
  * Button: a link (or a <button> without an href) with an icon and its label, which is also its accessible name, since
  * it hides when the button is narrow; without an icon a text link.
@@ -44,7 +53,7 @@ function marccent_blocks_button( array $b, ?callable $attributes = null ): strin
 	$attributes ??= 'marccent_blocks_attributes';
 	// The label may come from a RichText (HTML): its plain text.
 	$label = trim( html_entity_decode( wp_strip_all_tags( (string) ( $b['label'] ?? '' ) ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
-	$href  = esc_url( (string) ( $b['href'] ?? '' ) ); // empty for a scheme that isn't allowed (javascript:…)
+	$href  = marccent_blocks_href( (string) ( $b['href'] ?? '' ) );
 	$tag   = $href ? 'a' : 'button';
 	$attrs = array_merge(
 		$href ? array( 'href' => $href ) : array( 'type' => 'button' ),

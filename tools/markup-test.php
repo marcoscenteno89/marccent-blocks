@@ -79,9 +79,17 @@ function parse_html( string $html ) {
 	return tree( $doc->getElementsByTagName( 'body' )->item( 0 ) );
 }
 
+// A link that is only a {{ token }} stays one, for Marccent Content to fill; anything else is escaped as a URL.
+foreach ( array( '{{link}}' => '{{link}}', '%7B%7B link %7D%7D' => '%7B%7B link %7D%7D', 'javascript:{{link}}' => '', '{{a}}{{b}}x' => '' ) as $in => $want ) {
+	$got = marccent_blocks_href( $in );
+	$ok  = $got === $want;
+	$failed = ( $failed ?? 0 ) + ( $ok ? 0 : 1 );
+	printf( "%s href: %s\n", $ok ? 'ok  ' : 'FAIL', $in );
+}
+
 $file      = __DIR__ . '/../node_modules/marccent-theme/markup/reference.json';
 $reference = json_decode( (string) file_get_contents( $file ), true ) ?: exit( "No markup reference at $file: npm install first.\n" );
-$failed    = 0;
+$failed  ??= 0;
 foreach ( $render as $component => $fn ) {
 	foreach ( $reference[ $component ] ?? array() as $case ) {
 		$html = $fn( $case['fields'] );

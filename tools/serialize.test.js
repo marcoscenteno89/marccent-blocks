@@ -7,12 +7,24 @@
  *   MARCCENT_SPEC=/path/spec.js MARCCENT_OUT=/path/out.json npm run serialize
  */
 import fs from 'fs';
-import { createBlock, serialize, parse } from '@wordpress/blocks';
+import { createElement } from '@wordpress/element';
+import { createBlock, serialize, parse, registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks } from '@wordpress/block-editor';
 import { registerCoreBlocks } from '@wordpress/block-library';
 
 registerCoreBlocks();
 const ours = fs.readdirSync( `${ __dirname }/../src/blocks` );
 ours.forEach( ( name ) => require( `../src/blocks/${ name }/index.js` ) );
+
+// Marccent Content's blocks (Loop, Field), when it sits beside this plugin: from their block.json, saved as its
+// editor saves them (their inner blocks; the server renders the rest).
+const content = `${ __dirname }/../../marccent-content/blocks`;
+if ( fs.existsSync( content ) ) {
+	fs.readdirSync( content ).forEach( ( dir ) => {
+		const { name, ...meta } = JSON.parse( fs.readFileSync( `${ content }/${ dir }/block.json`, 'utf8' ) );
+		registerBlockType( name, { ...meta, save: () => createElement( InnerBlocks.Content ) } );
+	} );
+}
 
 const toBlock = ( [ name, attributes = {}, inner = [] ] ) => {
 	const block = createBlock( name, attributes, inner.map( toBlock ) );
