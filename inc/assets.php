@@ -44,8 +44,9 @@ add_filter( 'render_block', function ( $html, $block ) {
 	$page['designs'] += array_fill_keys( $designs[1], true );
 	$page['islands'] += array_fill_keys( $islands[1], true );
 	$page['canvas']   = $page['canvas'] || preg_match( '/\bdata-component="[^"]*\banimation\b/', $html );
-	// Theme markup the engine wires up (tooltips, popovers, dialogs, file drops, code…) needs the runtime too.
-	$page['engine']   = $page['engine'] || preg_match( '/\bdata-component="[^"]*\b(?:tooltip|popover|modal|drawer|file-drop|code|toggle-button|toggle-panel|nav-bar|app-shell|menu)\b|\bdata-opens=|\bclass="[^"]*\bhover-(?:tilt|spotlight|magnet)\b/', $html );
+	// Theme markup the engine wires up (tooltips, popovers, dialogs, file drops, code…) needs the runtime too, and so
+	// does a Form block (its enhancer sends it without leaving the page: runtime/forms.js).
+	$page['engine']   = $page['engine'] || preg_match( '/\bdata-component="[^"]*\b(?:tooltip|popover|modal|drawer|file-drop|code|toggle-button|toggle-panel|nav-bar|app-shell|menu)\b|\bdata-opens=|\bdata-marccent-form=|\bclass="[^"]*\bhover-(?:tilt|spotlight|magnet)\b/', $html );
 	if ( 'marccent/navbar' === $block['blockName'] && ( $block['attrs']['themeButton'] ?? true ) ) {
 		$page['themeButton'] = true;
 	}

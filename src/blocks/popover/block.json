@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/popover",
+	"title": "Popover",
+	"category": "marccent",
+	"icon": "admin-comments",
+	"description": "A button that opens a small panel of blocks beside it: filters, details, a menu.",
+	"keywords": [ "dropdown", "panel", "flyout", "menu" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"trigger": { "type": "string", "default": "Open" },
+		"label": { "type": "string", "default": "" },
+		"side": { "type": "string", "default": "bottom" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

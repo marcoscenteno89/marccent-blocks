@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/accordion",
+	"title": "Accordion",
+	"category": "marccent",
+	"icon": "list-view",
+	"description": "Questions and answers, or any sections, each opened by its header (the browser’s <details>): one open at a time, or several.",
+	"keywords": [ "faq", "questions", "collapse", "details", "toggle" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"open": { "type": "number", "default": 0 },
+		"multiple": { "type": "boolean", "default": false }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"allowedBlocks": [ "marccent/accordion-item" ]
+}

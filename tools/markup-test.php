@@ -42,6 +42,16 @@ $render = array(
 	'grid'    => fn( $f ) => marccent_blocks_grid( $f, $f['content'], with_classes( $f['classes'] ) ),
 	'card'    => fn( $f ) => marccent_blocks_card( $f, $f['content'], with_classes( $f['classes'] ) ),
 	'nav'     => fn( $f ) => marccent_blocks_navbar( $f['brand'], $f['items'] ),
+	// The interactive components: ids as the reference writes them (id-1); a block makes its own.
+	'accordion' => fn( $f ) => marccent_blocks_accordion( implode( '', array_map(
+		fn( $item, $i ) => marccent_blocks_accordion_item( htmlspecialchars( $item['header'] ), $item['content'], $f['multiple'] ? null : 'id-1', $i === $f['open'] ),
+		$f['items'], array_keys( $f['items'] )
+	) ) ),
+	'alert'     => fn( $f ) => marccent_blocks_alert( $f['tone'], $f['content'] ),
+	'modal'     => fn( $f ) => marccent_blocks_modal( array( 'titleId' => 'id-1', 'title' => htmlspecialchars( $f['title'] ), 'variant' => $f['variant'] ), $f['content'] ),
+	'drawer'    => fn( $f ) => marccent_blocks_drawer( array( 'titleId' => 'id-1', 'title' => htmlspecialchars( $f['title'] ), 'side' => $f['side'] ), $f['content'] ),
+	'tooltip'   => fn( $f ) => marccent_blocks_tooltip( array( 'id' => 'id-1' ) + $f ),
+	'popover'   => fn( $f ) => marccent_blocks_popover( array( 'id' => 'id-1' ) + $f, $f['content'] ),
 );
 
 // An element as a comparable tree: its name, attributes sorted (classes too), and its children; blank text dropped.

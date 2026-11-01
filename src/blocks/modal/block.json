@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/modal",
+	"title": "Modal",
+	"category": "marccent",
+	"icon": "external",
+	"description": "A button that opens a dialog over the page: its title, its blocks and a Close button. The default look or a ticket.",
+	"keywords": [ "dialog", "popup", "lightbox", "overlay" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"title": { "type": "string", "default": "Title" },
+		"variant": { "type": "string", "default": "" },
+		"buttonLabel": { "type": "string", "default": "Open" },
+		"buttonIcon": { "type": "string", "default": "arrow-up-right-from-square" },
+		"buttonColor": { "type": "string", "default": "primary" },
+		"dialogId": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

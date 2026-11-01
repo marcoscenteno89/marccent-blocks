@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/parallax",
+	"title": "Parallax",
+	"category": "marccent",
+	"icon": "move",
+	"description": "Its blocks lag the scroll a little, for depth.",
+	"keywords": [ "parallax", "scroll", "depth", "motion" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"speed": { "type": "number", "default": 0.2 }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

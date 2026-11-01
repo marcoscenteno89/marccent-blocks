@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/drawer",
+	"title": "Drawer",
+	"category": "marccent",
+	"icon": "align-pull-right",
+	"description": "A button that slides a panel in from the side of the page: its title and its blocks.",
+	"keywords": [ "sidebar", "panel", "offcanvas", "slide" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"title": { "type": "string", "default": "Title" },
+		"side": { "type": "string", "default": "end" },
+		"buttonLabel": { "type": "string", "default": "Open" },
+		"buttonIcon": { "type": "string", "default": "bars" },
+		"buttonColor": { "type": "string", "default": "primary" },
+		"dialogId": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

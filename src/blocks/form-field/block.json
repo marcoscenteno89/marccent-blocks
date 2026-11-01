@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/form-field",
+	"title": "Form field",
+	"category": "marccent",
+	"icon": "edit",
+	"description": "One field of a form: text, email, phone, a choice from a list, a checkbox…, beside its label.",
+	"keywords": [ "input", "field", "text", "email", "select" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"name": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"type": { "type": "string", "default": "text" },
+		"required": { "type": "boolean", "default": false },
+		"options": { "type": "string", "default": "" },
+		"placeholder": { "type": "string", "default": "" },
+		"help": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/form" ]
+}

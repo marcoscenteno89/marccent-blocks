@@ -19,12 +19,19 @@ require __DIR__ . '/inc/theme.php';  // the site's starting theme, painted on <h
 require __DIR__ . '/inc/assets.php'; // the styles and scripts, only what each page uses
 require __DIR__ . '/inc/menu.php';   // menus in the shape the theme's components take
 require __DIR__ . '/inc/markup.php'; // the theme's markup, written by the server (the blocks' render.php)
+require __DIR__ . '/inc/islands.php'; // blocks the theme's React components draw: data-island, props, a stand-in
+require __DIR__ . '/inc/forms.php';   // the Form block's server side: checks, entries (Forms → Entries), email, Turnstile
+if ( is_admin() ) {
+	require __DIR__ . '/inc/forms-admin.php'; // the entries' screens and Settings → Marccent forms
+}
 require __DIR__ . '/inc/export.php'; // every Marccent plugin's settings as one JSON file (Tools → Marccent export, wp marccent)
 
 // Blocks: every block.json the build wrote (src/blocks/* → build/blocks/*).
 add_action( 'init', function () {
 	foreach ( glob( MARCCENT_BLOCKS_DIR . '/build/blocks/*/block.json' ) as $file ) {
-		register_block_type( dirname( $file ) );
+		// The blocks with blocks inside render them themselves (marccent_blocks_inner, inc/markup.php): without
+		// skip_inner_blocks WordPress renders them first too, unused, and each one nested in another doubles that.
+		register_block_type( dirname( $file ), array( 'skip_inner_blocks' => true ) );
 	}
 	register_nav_menus( array( 'primary' => __( 'Primary', 'marccent-blocks' ) ) );
 } );

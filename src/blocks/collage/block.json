@@ -1,0 +1,43 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/collage",
+	"title": "Collage",
+	"category": "marccent",
+	"icon": "layout",
+	"description": "Tiles of image cards of different sizes, shapes and borders on one dense grid: photos or live canvas animations.",
+	"keywords": [ "gallery", "mosaic", "grid", "photos", "bento" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"tiles": {
+			"type": "array",
+			"default": [
+				{
+					"canvas": "blob",
+					"size": "feature",
+					"title": "Blob"
+				},
+				{
+					"canvas": "wave",
+					"size": "landscape",
+					"title": "Wave"
+				},
+				{
+					"canvas": "snow",
+					"size": "square",
+					"title": "Snow"
+				},
+				{
+					"canvas": "network-loop",
+					"size": "square",
+					"title": "Network"
+				}
+			]
+		},
+		"cols": { "type": "number", "default": 6 },
+		"row": { "type": "string", "default": "11rem" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/theme-editor",
+	"title": "Theme editor",
+	"category": "marccent",
+	"icon": "art",
+	"description": "The theme’s full editor: the palette, mode, design style, hover effect and more, for visitors to make the site theirs.",
+	"keywords": [ "theme", "palette", "design", "customizer", "settings" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

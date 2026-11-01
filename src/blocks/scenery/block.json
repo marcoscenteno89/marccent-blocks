@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/scenery",
+	"title": "Scenery",
+	"category": "marccent",
+	"icon": "palmtree",
+	"description": "A landscape of silhouette layers stacked back to front, each drifting with the scroll by its depth; its blocks sit on top, centered.",
+	"keywords": [ "landscape", "hero", "parallax", "mountains", "background" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"layers": { "type": "string", "default": "stars, moon, ranges, mountains, forest, meadow" },
+		"height": { "type": "string", "default": "22rem" },
+		"parallax": { "type": "boolean", "default": true },
+		"min": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

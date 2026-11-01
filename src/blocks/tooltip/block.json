@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/tooltip",
+	"title": "Tooltip",
+	"category": "marccent",
+	"icon": "format-chat",
+	"description": "A word or phrase that shows a hint beside it on hover or focus.",
+	"keywords": [ "hint", "help", "title", "info" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"trigger": { "type": "string", "default": "Hover me" },
+		"content": { "type": "string", "default": "A short hint." },
+		"side": { "type": "string", "default": "top" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

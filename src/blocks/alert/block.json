@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/alert",
+	"title": "Alert",
+	"category": "marccent",
+	"icon": "warning",
+	"description": "A message in the page in a tone’s color: saved, a heads-up, an error.",
+	"keywords": [ "notice", "message", "callout", "warning" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"tone": { "type": "string", "default": "primary" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

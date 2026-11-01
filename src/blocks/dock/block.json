@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/dock",
+	"title": "Dock",
+	"category": "marccent",
+	"icon": "ellipsis",
+	"description": "A row of round icon buttons that swell as the pointer passes (macOS style), each named in a tooltip.",
+	"keywords": [ "icons", "toolbar", "links", "social", "macos" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"icon": "house",
+					"label": "Home",
+					"href": "/"
+				},
+				{
+					"icon": "envelope",
+					"label": "Contact",
+					"href": "/contact/"
+				},
+				{
+					"icon": "fa-brands fa-github",
+					"label": "GitHub",
+					"href": "https://github.com",
+					"external": true
+				}
+			]
+		},
+		"label": { "type": "string", "default": "Dock" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

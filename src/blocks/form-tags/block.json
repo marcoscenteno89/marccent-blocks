@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/form-tags",
+	"title": "Form tags",
+	"category": "marccent",
+	"icon": "tag",
+	"description": "A field that turns what’s typed into tags (keywords, skills, emails): the theme’s TagInput.",
+	"keywords": [ "tags", "keywords", "chips", "multiple" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"name": { "type": "string", "default": "tags" },
+		"label": { "type": "string", "default": "Add a tag" },
+		"suggestions": { "type": "string", "default": "" },
+		"max": { "type": "number", "default": 0 }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/form" ]
+}

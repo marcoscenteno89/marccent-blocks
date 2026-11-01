@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/mini-theme-editor",
+	"title": "Mini theme editor",
+	"category": "marccent",
+	"icon": "admin-customizer",
+	"description": "The theme’s row of controls (light / dark, glass, the palette, the design style, reset) so visitors pick how the site looks, anywhere on a page.",
+	"keywords": [ "theme", "palette", "dark mode", "switcher", "customizer" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"align": { "type": "string", "default": "start" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

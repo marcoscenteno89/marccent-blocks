@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/radial-menu",
+	"title": "Radial menu",
+	"category": "marccent",
+	"icon": "marker",
+	"description": "One round button that opens a ring of items around itself (a speed dial).",
+	"keywords": [ "speed dial", "fab", "menu", "circle" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"icon": "phone",
+					"label": "Call",
+					"href": "tel:+12085550100"
+				},
+				{
+					"icon": "envelope",
+					"label": "Email",
+					"href": "mailto:hello@example.com"
+				},
+				{
+					"icon": "location-dot",
+					"label": "Directions",
+					"href": "#"
+				}
+			]
+		},
+		"radius": { "type": "string", "default": "5rem" },
+		"label": { "type": "string", "default": "Quick menu" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

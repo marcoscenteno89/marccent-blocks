@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/countdown",
+	"title": "Countdown",
+	"category": "marccent",
+	"icon": "clock",
+	"description": "A gooey digit counting down to zero, once it comes into view.",
+	"keywords": [ "countdown", "timer", "digit", "goo" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"from": { "type": "number", "default": 5 }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

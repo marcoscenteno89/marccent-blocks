@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/compare",
+	"title": "Compare",
+	"category": "marccent",
+	"icon": "image-flip-horizontal",
+	"description": "Two pictures of the same thing, one over the other, split by a handle you drag: before and after.",
+	"keywords": [ "before", "after", "slider", "difference", "image" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"before": { "type": "string", "default": "" },
+		"after": { "type": "string", "default": "" },
+		"beforeLabel": { "type": "string", "default": "Before" },
+		"afterLabel": { "type": "string", "default": "After" },
+		"start": { "type": "number", "default": 50 },
+		"label": { "type": "string", "default": "Before and after" },
+		"ratio": { "type": "string", "default": "16 / 9" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

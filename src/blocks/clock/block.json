@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/clock",
+	"title": "Clock",
+	"category": "marccent",
+	"icon": "clock",
+	"description": "The time, live, in a format you choose.",
+	"keywords": [ "time", "clock", "live", "date" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"format": { "type": "string", "default": "h:mm:ss A" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
