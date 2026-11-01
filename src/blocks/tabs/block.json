@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/tabs",
+	"title": "Tabs",
+	"category": "marccent",
+	"icon": "index-card",
+	"description": "Tabs over a panel, a gradient bar sliding under the picked one; each tab’s blocks show when it’s picked. Arrow keys move between them.",
+	"keywords": [ "tab", "panels", "switch", "sections" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"allowedBlocks": [ "marccent/tab" ]
+}

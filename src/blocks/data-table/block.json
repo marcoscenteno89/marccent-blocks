@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/data-table",
+	"title": "Data table",
+	"category": "marccent",
+	"icon": "editor-table",
+	"description": "A table you can search, sort by any column and page through, from rows typed as CSV (the first line: the headers).",
+	"keywords": [ "table", "csv", "data", "sort", "search", "spreadsheet" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"csv": { "type": "string", "default": "Name,City,Work orders\nTeton Ridge Builders,Idaho Falls,4\nSnake River Family Clinic,Pocatello,2\nWasatch Grill,Ogden,1" },
+		"label": { "type": "string", "default": "Accounts" },
+		"pageSize": { "type": "number", "default": 10 },
+		"search": { "type": "boolean", "default": true }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

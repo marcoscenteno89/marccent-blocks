@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/code",
+	"title": "Code",
+	"category": "marccent",
+	"icon": "editor-code",
+	"description": "A read-only code block, highlighted in the theme’s colors, with a copy button.",
+	"keywords": [ "code", "snippet", "syntax", "pre", "highlight" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"code": {
+			"type": "string",
+			"default": "const hello = ( name ) => `Hello, ${ name }!`;"
+		},
+		"lang": { "type": "string", "default": "js" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

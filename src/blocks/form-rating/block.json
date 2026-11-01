@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/form-rating",
+	"title": "Form rating",
+	"category": "marccent",
+	"icon": "star-filled",
+	"description": "Stars to pick a score in a form (radio buttons: works without JavaScript).",
+	"keywords": [ "rating", "stars", "score", "review" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"name": { "type": "string", "default": "rating" },
+		"label": { "type": "string", "default": "Rating" },
+		"max": { "type": "number", "default": 5 },
+		"icon": { "type": "string", "default": "star" },
+		"required": { "type": "boolean", "default": false }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/form" ]
+}

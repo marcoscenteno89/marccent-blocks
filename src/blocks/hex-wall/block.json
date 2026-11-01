@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/hex-wall",
+	"title": "Hex wall",
+	"category": "marccent",
+	"icon": "groups",
+	"description": "A honeycomb of hexagons, each with an icon or initials that turns over to a name and a role: a team, skills.",
+	"keywords": [ "team", "people", "honeycomb", "hexagon", "skills" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"people": {
+			"type": "array",
+			"default": [
+				{
+					"name": "Ava Hansen",
+					"role": "Owner",
+					"initials": "AH"
+				},
+				{
+					"name": "Liam Parker",
+					"role": "Operations",
+					"icon": "gear"
+				},
+				{
+					"name": "Mia Nielsen",
+					"role": "Projects",
+					"icon": "helmet-safety"
+				}
+			]
+		},
+		"perRow": { "type": "number", "default": 4 }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

@@ -23,15 +23,18 @@ import { Goo } from 'marccent-theme/components/ui/goo';
 import { PauseOffscreen } from 'marccent-theme/components/pause-offscreen';
 import { enhance } from 'marccent-theme/core/enhance';
 import 'marccent-theme/core/components';
+import { enhanceForms } from './forms';
 
 const named = ( load, name ) => lazy( () => load().then( ( m ) => ( { default: m[ name ] } ) ) );
 const CanvasScanner = named( () => import( /* webpackChunkName: "canvas-scanner" */ 'marccent-theme/components/visuals/canvas-scanner' ), 'CanvasScanner' );
 const Toast = named( () => import( /* webpackChunkName: "toast" */ 'marccent-theme/components/ui/toast' ), 'Toast' );
 
-const ISLANDS = {
-	navbar: lazy( () => import( /* webpackChunkName: "island-navbar" */ './islands/navbar' ) ),
-	carousel: lazy( () => import( /* webpackChunkName: "island-carousel" */ './islands/carousel' ) ),
-};
+// Every file in ./islands is an island by its name (islands/timeline.js: data-island="timeline"), each its own chunk.
+const ISLAND_FILES = require.context( './islands', false, /^\.\/[a-z0-9-]+\.js$/, 'lazy' );
+const ISLANDS = Object.fromEntries( ISLAND_FILES.keys().map( ( file ) => [
+	file.slice( 2, -3 ),
+	lazy( () => ISLAND_FILES( file ) ),
+] ) );
 
 /*
  * Props come from the page's markup, and anyone who can edit a post can write a data-island element by hand, so every
@@ -96,6 +99,7 @@ const start = () => {
 	const canvases = !! document.querySelector( '[data-component~="animation"]' );
 	const goo = themeButton || !! document.querySelector( '.hover-goo, [data-hover="goo"]' );
 	enhance();
+	enhanceForms();
 	const host = document.createElement( 'div' );
 	host.id = 'marccent-runtime';
 	document.body.append( host );

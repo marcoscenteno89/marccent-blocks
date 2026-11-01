@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/stat-card",
+	"title": "Stat card",
+	"category": "marccent",
+	"icon": "chart-pie",
+	"description": "A number that matters, with an icon in a ring (a progress ring when it has a fill), a label and a line of text; its blocks are buttons at the bottom.",
+	"keywords": [ "stat", "number", "kpi", "metric", "counter" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"icon": { "type": "string", "default": "users" },
+		"value": { "type": "string", "default": "1,200" },
+		"label": { "type": "string", "default": "Customers" },
+		"text": { "type": "string", "default": "" },
+		"accent": { "type": "boolean", "default": true },
+		"fill": {
+			"type": "number"
+		}
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

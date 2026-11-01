@@ -35,10 +35,14 @@ function marccent_blocks_icon( string $icon, string $class = '', string $family 
 /*
  * A link's URL, escaped: empty for a scheme that isn't allowed (javascript:…). A link that is only a {{ token }}
  * ({{ link }}, as the editor saves it, %7B%7B link %7D%7D, too) is kept as it is: Marccent Content fills it as the
- * block renders, through esc_url_raw, and esc_url here would mangle it into http://….
+ * block renders, through esc_url_raw, and esc_url here would mangle it into http://…. Tokens inside a URL
+ * (https://maps…?q={{ lat }},{{ lng }}) are URL-encoded first, as the editor saves them, so esc_url keeps them.
  */
 function marccent_blocks_href( string $href ): string {
-	return preg_match( '/^\s*(\{\{[^{}]*\}\}|%7B%7B.*?%7D%7D)\s*$/i', $href ) ? esc_attr( trim( $href ) ) : esc_url( $href );
+	if ( preg_match( '/^\s*(\{\{[^{}]*\}\}|%7B%7B.*?%7D%7D)\s*$/i', $href ) ) {
+		return esc_attr( trim( $href ) );
+	}
+	return esc_url( preg_replace_callback( '/\{\{([^{}]*)\}\}/', fn( $m ) => '%7B%7B' . rawurlencode( trim( $m[1] ) ) . '%7D%7D', $href ) );
 }
 
 /**
@@ -52,7 +56,7 @@ function marccent_blocks_href( string $href ): string {
 function marccent_blocks_button( array $b, ?callable $attributes = null ): string {
 	$attributes ??= 'marccent_blocks_attributes';
 	// The label may come from a RichText (HTML): its plain text.
-	$label = trim( html_entity_decode( wp_strip_all_tags( (string) ( $b['label'] ?? '' ) ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+	$label = marccent_blocks_text( (string) ( $b['label'] ?? '' ) );
 	$href  = marccent_blocks_href( (string) ( $b['href'] ?? '' ) );
 	$tag   = $href ? 'a' : 'button';
 	$attrs = array_merge(
@@ -207,4 +211,115 @@ function marccent_blocks_navbar( array $brand, array $items, string $end = '', s
 		. '<button type="button" data-component="toggle-button" data-icon="bars-staggered" data-active-icon="xmark" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">' . marccent_blocks_icon( 'bars-staggered', 'btn-icon' ) . '</button>'
 		. sprintf( '<div id="site-nav" class="nav-collapse"><nav data-component="menu" class="menu grid gap-0 auto-cols divide" style="--cols: %d" aria-label="Main">%s</nav>%s</div>', count( $items ), marccent_blocks_menu_items( $items ), $end )
 		. $last . '</div></header>';
+}
+
+/*
+ * The theme's interactive components (marccent-theme components/ui: accordion.js, alert.js, modal.js, popover.js), as
+ * its markup reference has them; the plain-JS engine (core/components.js) wires them up on the page: a dialog opens
+ * from anything with data-opens="<its id>", a popover from its popovertarget button, a tooltip from its trigger.
+ * Text the editor stores as rich text (a header, a title, a trigger's label) is shown as plain text.
+ */
+function marccent_blocks_text( string $html ): string {
+	return trim( html_entity_decode( wp_strip_all_tags( $html ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+}
+
+// An icon button's ✕ that closes its dialog ([data-close]).
+function marccent_blocks_close_button( bool $labelled = false, string $classes = '' ): string {
+	$label = $labelled ? 'Close' : '';
+	return marccent_blocks_button( array( 'label' => $label, 'icon' => 'xmark', 'classes' => $classes ), fn( $attrs ) => marccent_blocks_attributes( $attrs + array( 'aria-label' => 'Close', 'data-close' => 'true' ) ) );
+}
+
+// Accordion: its items, already rendered (marccent_blocks_accordion_item).
+function marccent_blocks_accordion( string $items, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	return sprintf( '<div %s>%s</div>', $attributes( array( 'data-component' => 'accordion', 'class' => 'accordion grid cols-1 gap-0 divide border round' ) ), $items );
+}
+
+// An accordion's item: a <details> its header opens. Items that share a name open one at a time (none: several).
+function marccent_blocks_accordion_item( string $header, string $content, ?string $name, bool $open, string $class = '' ): string {
+	return sprintf(
+		'<details %s><summary class="header pad-sm">%s</summary><div class="%s">%s</div></details>',
+		marccent_blocks_attributes( array( 'data-component' => 'accordion-item', 'name' => $name, 'open' => $open ? '' : null ) ),
+		esc_html( marccent_blocks_text( $header ) ),
+		esc_attr( marccent_blocks_cx( 'pad-sm', $class ) ),
+		$content
+	);
+}
+
+// Alert: a message in a tone's fill (none when the classes already give one); danger interrupts (role alert).
+function marccent_blocks_alert( string $tone, string $content, ?callable $attributes = null, string $classes = '' ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$tone        = $tone ?: 'primary';
+	$fill        = preg_match( '/\bbg-/', $classes ) ? '' : "bg-$tone";
+	return sprintf( '<div %s>%s</div>', $attributes( array( 'data-component' => 'alert', 'role' => 'danger' === $tone ? 'alert' : 'status', 'class' => marccent_blocks_cx( 'pad border round', $fill ) ) ), $content );
+}
+
+// Modal: a <dialog> with its title, content and a Close button; the default look or the ticket one. Its id (which
+// data-opens names; the theme's React Modal opens from state and has none) and its title's id (titleId, else
+// "<id>-title").
+function marccent_blocks_modal( array $m, string $content, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$id          = $m['id'] ?? null;
+	$title_id    = (string) ( $m['titleId'] ?? "$id-title" );
+	$title       = esc_html( marccent_blocks_text( (string) ( $m['title'] ?? '' ) ) );
+	$ticket      = 'ticket' === ( $m['variant'] ?? '' );
+	$panel       = $ticket
+		? sprintf(
+			'<div data-component="modal-panel" class="grid cols-1 gap-0"><div class="header pad bg-gradient text-center"><h2 id="%1$s" class="h4">%2$s</h2></div><div class="modal-neck bg-gradient"></div><div class="modal-flare bg"></div><div class="bg pad-x grid cols-1">%3$s</div><div class="bg pad grid auto-cols cols-center gap-sm">%4$s</div></div>',
+			esc_attr( $title_id ), $title, $content, marccent_blocks_close_button( true, 'gradient' )
+		)
+		: sprintf(
+			'<div data-component="modal-panel" class="grid cols-1 gap-0 divide"><div class="header pad"><h2 id="%1$s" class="h5">%2$s</h2>%3$s</div><div class="pad grid cols-1">%4$s</div><div class="grid auto-cols items-center gap-sm pad" style="justify-content:end">%5$s</div></div>',
+			esc_attr( $title_id ), $title, marccent_blocks_close_button(), $content, marccent_blocks_close_button( true )
+		);
+	return sprintf( '<dialog %s>%s</dialog>', $attributes( array( 'id' => $id, 'data-component' => 'modal', 'class' => marccent_blocks_cx( 'modal', $ticket ? 'ticket' : '' ), 'aria-labelledby' => $title_id ) ), $panel );
+}
+
+// Drawer: a <dialog> that slides in from the start or the end, its title and ✕ on top and its content scrolling.
+function marccent_blocks_drawer( array $d, string $content, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$id          = $d['id'] ?? null;
+	$title_id    = (string) ( $d['titleId'] ?? "$id-title" );
+	return sprintf(
+		'<dialog %s><div class="grid cols-1 gap-0 divide h-100" style="grid-template-rows:auto minmax(0, 1fr);grid-auto-rows:auto"><div class="header pad"><h2 id="%s" class="h5">%s</h2>%s</div><div class="pad grid cols-1 content-start overflow-auto">%s</div></div></dialog>',
+		$attributes( array( 'id' => $id, 'data-component' => 'drawer', 'data-side' => 'start' === ( $d['side'] ?? '' ) ? 'start' : 'end', 'class' => 'modal drawer', 'aria-labelledby' => $title_id ) ),
+		esc_attr( $title_id ),
+		esc_html( marccent_blocks_text( (string) ( $d['title'] ?? '' ) ) ),
+		marccent_blocks_close_button(),
+		$content
+	);
+}
+
+// The button that opens a dialog: the theme's Button with data-opens naming it.
+function marccent_blocks_opener( array $b, string $dialog ): string {
+	return marccent_blocks_button( $b, fn( $attrs ) => marccent_blocks_attributes( $attrs + array( 'data-opens' => $dialog, 'aria-haspopup' => 'dialog' ) ) );
+}
+
+// Tooltip: a hint beside its trigger (a text link) on hover or focus.
+function marccent_blocks_tooltip( array $t ): string {
+	$id = (string) $t['id'];
+	return sprintf(
+		'<button type="button" class="btn-link" id="%1$s-anchor" aria-describedby="%1$s">%2$s</button><div id="%1$s" role="tooltip" popover="manual" data-component="tooltip" data-placement="%3$s" class="float tooltip">%4$s</div>',
+		esc_attr( $id ),
+		esc_html( marccent_blocks_text( (string) ( $t['trigger'] ?? '' ) ) ),
+		esc_attr( marccent_blocks_side( $t['side'] ?? 'top' ) ),
+		esc_html( marccent_blocks_text( (string) ( $t['content'] ?? '' ) ) )
+	);
+}
+
+// Popover: a panel its button opens and closes (the browser's popover), beside it.
+function marccent_blocks_popover( array $p, string $content ): string {
+	$id = (string) $p['id'];
+	return sprintf(
+		'<button type="button" class="btn" id="%1$s-anchor" popovertarget="%1$s">%2$s</button><div id="%1$s" popover="auto" role="group" aria-label="%3$s" data-component="popover" data-placement="%4$s" class="float popover bg border round shadow pad-sm">%5$s</div>',
+		esc_attr( $id ),
+		esc_html( marccent_blocks_text( (string) ( $p['trigger'] ?? '' ) ) ),
+		esc_attr( marccent_blocks_text( (string) ( $p['label'] ?? '' ) ?: (string) ( $p['trigger'] ?? '' ) ) ),
+		esc_attr( marccent_blocks_side( $p['side'] ?? 'bottom' ) ),
+		$content
+	);
+}
+
+function marccent_blocks_side( string $side ): string {
+	return in_array( $side, array( 'top', 'bottom', 'start', 'end' ), true ) ? $side : 'top';
 }

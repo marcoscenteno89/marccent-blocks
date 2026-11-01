@@ -10,11 +10,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /*
- * The site's starting theme (palettes, mode, design style…), over the package's lib/theme.defaults.json. Saved as
- * JSON in the marccent_defaults option, e.g.
- *   {"palette":"brand","isDark":false,"design":"professional","palettes":[{"id":"brand","primary":"#046bd2","secondary":"#1e293b"}]}
- */
-/*
  * The marccent-theme release this build was made from (package.json pins it: github:…#v<version>), so the theme,
  * Local and Content can check the one copy every Marccent plugin shares.
  */
@@ -24,8 +19,38 @@ function marccent_blocks_theme_version(): string {
 	return $version;
 }
 
+/*
+ * One of our options, kept among those WordPress loads with every request (autoload). One that's missing, or saved
+ * without autoload, costs a database query on every page that reads it (WordPress remembers a missing option only for
+ * the request), so the first read adds it with $default or switches it to autoload.
+ */
+function marccent_blocks_option( string $name, $default ) {
+	global $wpdb;
+	if ( wp_installing() || array_key_exists( $name, wp_load_alloptions() ) ) {
+		return get_option( $name, $default );
+	}
+	$value = get_option( $name, null );
+	if ( null !== $value ) {
+		wp_set_option_autoload( $name, true );
+		return $value;
+	}
+	// INSERT IGNORE, not add_option: add_option overwrites a row that's there, and a read that failed (the database
+	// timing out) looks the same as a missing option here.
+	$wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO $wpdb->options (option_name, option_value, autoload) VALUES (%s, %s, 'on')", $name, maybe_serialize( $default ) ) );
+	if ( wp_using_ext_object_cache() ) {
+		wp_cache_delete( 'alloptions', 'options' );
+		wp_cache_delete( 'notoptions', 'options' );
+	}
+	return $default;
+}
+
+/*
+ * The site's starting theme (palettes, mode, design style…), over the package's lib/theme.defaults.json. Saved as
+ * JSON in the marccent_defaults option, e.g.
+ *   {"palette":"brand","isDark":false,"design":"professional","palettes":[{"id":"brand","primary":"#046bd2","secondary":"#1e293b"}]}
+ */
 function marccent_blocks_defaults(): array {
-	$defaults = json_decode( (string) get_option( 'marccent_defaults', '{}' ), true );
+	$defaults = json_decode( (string) marccent_blocks_option( 'marccent_defaults', '{}' ), true );
 	return is_array( $defaults ) ? $defaults : array();
 }
 

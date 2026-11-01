@@ -1,0 +1,34 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/step-bar",
+	"title": "Step bar",
+	"category": "marccent",
+	"icon": "arrow-right-alt",
+	"description": "Steps as chevrons chained into one bar: done ones filled, the current one in the gradient. A process, an order’s progress.",
+	"keywords": [ "steps", "progress", "process", "wizard", "breadcrumb" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"steps": {
+			"type": "array",
+			"default": [
+				{
+					"label": "Order"
+				},
+				{
+					"label": "Pay"
+				},
+				{
+					"label": "Ship"
+				},
+				{
+					"label": "Done"
+				}
+			]
+		},
+		"start": { "type": "number", "default": 1 }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

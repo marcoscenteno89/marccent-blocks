@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/form",
+	"title": "Form",
+	"category": "marccent",
+	"icon": "feedback",
+	"description": "A form visitors send: its fields (and any blocks between them), checked on the server, kept under Forms → Entries and emailed.",
+	"keywords": [ "contact", "form", "enquiry", "quote", "signup" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"formId": { "type": "string", "default": "" },
+		"submitLabel": { "type": "string", "default": "Send" },
+		"submitIcon": { "type": "string", "default": "paper-plane" },
+		"successMessage": { "type": "string", "default": "Thanks! We got it and will be in touch." },
+		"emailTo": { "type": "string", "default": "" },
+		"emailSubject": { "type": "string", "default": "" },
+		"layout": { "type": "string", "default": "grid gap-sm pairs" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

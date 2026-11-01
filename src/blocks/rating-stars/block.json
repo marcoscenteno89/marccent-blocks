@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/rating-stars",
+	"title": "Stars",
+	"category": "marccent",
+	"icon": "star-filled",
+	"description": "A score to read, not pick: icons filled to a value (3.5 fills three and a half).",
+	"keywords": [ "rating", "stars", "score", "review" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"value": { "type": "number", "default": 4.5 },
+		"max": { "type": "number", "default": 5 },
+		"icon": { "type": "string", "default": "star" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

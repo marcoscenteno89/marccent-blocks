@@ -39,3 +39,7 @@ To work on the theme and the plugin together, install your checkout over the rel
 and put the tag back before committing.
 
 The site's starting theme is the `marccent_defaults` option (JSON), e.g. `{"palette":"brand","isDark":false,"design":"swiss","palettes":[{"id":"brand","primary":"#046bd2","secondary":"#1e293b"}]}`.
+
+## Export and import
+
+**Tools → Marccent export** downloads everything the Marccent plugins and theme keep in the database as one JSON file (the starting theme, the business details, tracking codes, field groups and post types, site content, the header and footer), and imports such a file, part by part. The same from WP-CLI: `wp marccent export [--parts=theme,business] [--file=site.json]` and `wp marccent import site.json [--parts=…]`. A plugin adds its parts with the `marccent_export_parts` filter (`inc/export.php`). Page content, posts and media are WordPress's own export (Tools → Export).

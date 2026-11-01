@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/tab",
+	"title": "Tab",
+	"category": "marccent",
+	"icon": "table-row-before",
+	"description": "One tab of a Tabs block: its label (and icon) and the blocks it shows.",
+	"keywords": [ "tab", "panel" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"label": { "type": "string", "default": "Tab" },
+		"icon": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"parent": [ "marccent/tabs" ]
+}

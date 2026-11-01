@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/timeline",
+	"title": "Timeline",
+	"category": "marccent",
+	"icon": "backup",
+	"description": "Events down a gradient line, each marked by a hexagon with its icon and told in a card: a history, a process, milestones.",
+	"keywords": [ "history", "milestones", "process", "steps", "events" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"events": { "type": "array", "default": [ { "date": "2024", "title": "Founded", "text": "Where it started.", "icon": "flag" }, { "date": "2026", "title": "Today", "icon": "star" } ] }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
