@@ -19,6 +19,7 @@ require __DIR__ . '/inc/theme.php';  // the site's starting theme, painted on <h
 require __DIR__ . '/inc/assets.php'; // the styles and scripts, only what each page uses
 require __DIR__ . '/inc/menu.php';   // menus in the shape the theme's components take
 require __DIR__ . '/inc/markup.php'; // the theme's markup, written by the server (the blocks' render.php)
+require __DIR__ . '/inc/export.php'; // every Marccent plugin's settings as one JSON file (Tools → Marccent export, wp marccent)
 
 // Blocks: every block.json the build wrote (src/blocks/* → build/blocks/*).
 add_action( 'init', function () {
