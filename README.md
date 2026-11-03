@@ -40,6 +40,26 @@ and put the tag back before committing.
 
 The site's starting theme is the `marccent_defaults` option (JSON), e.g. `{"palette":"brand","isDark":false,"design":"swiss","palettes":[{"id":"brand","primary":"#046bd2","secondary":"#1e293b"}]}`.
 
+## Visibility and copying a block's style
+
+Every block has a Visibility panel: who sees it (logged in or out), from and until when (a sale, a holiday notice), and
+the screen sizes it's hidden on (phones, tablets, computers). Who and when are decided by the server, so on a cached
+site use them only on pages the cache skips. A Marccent block's ⋮ menu has Copy style and Paste style: its settings
+without its words, links or pictures, onto other blocks of its kind.
+
+## Forms
+
+The Form block keeps entries (Forms → Entries, Download CSV, filtered by form) and emails them; a webhook posts each
+one as JSON (Zapier, Make, a CRM). Its fields: text, email, phone, URL, number, date, several lines, a choice, a
+checkbox, a rating, tags, and a file upload (images, PDFs, office documents, 5 MB; checked by content, kept at an
+address no one can guess). A field can show only when another has a value (`service=Patios`), and a "Next step"
+field splits a form into steps, each checked before the next.
+
 ## Export and import
 
 **Tools → Marccent export** downloads everything the Marccent plugins and theme keep in the database as one JSON file (the starting theme, the business details, tracking codes, field groups and post types, site content, the header and footer), and imports such a file, part by part. The same from WP-CLI: `wp marccent export [--parts=theme,business] [--file=site.json]` and `wp marccent import site.json [--parts=…]`. A plugin adds its parts with the `marccent_export_parts` filter (`inc/export.php`). Page content, posts and media are WordPress's own export (Tools → Export).
+
+**JSON sync**, as ACF's local JSON: turned on (Tools → Marccent export), every save writes each part to its own file
+(`uploads/marccent-json/<part>.json`, or the folder in the `MARCCENT_JSON_DIR` constant: put it in the site's
+repository), so the settings have a history in git. A file changed outside the site (a pull) shows as "sync
+available", a click from imported; a save never overwrites it first.

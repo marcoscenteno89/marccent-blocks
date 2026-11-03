@@ -25,7 +25,8 @@ add_action( 'manage_marccent_entry_posts_custom_column', function ( $column, $id
 			break;
 		case 'source':
 			$post = (int) get_post_meta( $id, '_marccent_post', true );
-			printf( '<code>%s</code><br><a href="%s">%s</a>', esc_html( (string) get_post_meta( $id, '_marccent_form', true ) ), esc_url( (string) get_permalink( $post ) ), esc_html( get_the_title( $post ) ) );
+			$form = (string) get_post_meta( $id, '_marccent_form', true );
+			printf( '<a href="%s"><code>%s</code></a><br><a href="%s">%s</a>', esc_url( add_query_arg( 'marccent_form', $form ) ), esc_html( $form ), esc_url( (string) get_permalink( $post ) ), esc_html( get_the_title( $post ) ) );
 			break;
 		case 'verified':
 			echo get_post_meta( $id, '_marccent_verified', true ) ? esc_html__( 'Turnstile', 'marccent-blocks' ) : '<span style="color:#b32d2e">' . esc_html__( 'Not checked', 'marccent-blocks' ) . '</span>';
@@ -37,6 +38,53 @@ add_action( 'manage_marccent_entry_posts_custom_column', function ( $column, $id
 	}
 }, 10, 2 );
 
+// Download as CSV: above the list, the entries shown (one form's when the list is filtered by it), a column per field.
+add_filter( 'views_edit-marccent_entry', function ( $views ) {
+	$form = sanitize_key( $_GET['marccent_form'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification -- a link only
+	$views['marccent_csv'] = sprintf( '<a href="%s" class="button button-small" style="margin-left:8px">%s</a>', esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'marccent_entries_csv', 'form' => $form ), admin_url( 'admin-post.php' ) ), 'marccent_entries_csv' ) ), esc_html__( 'Download CSV', 'marccent-blocks' ) );
+	return $views;
+} );
+
+// The list filtered by one form: ?marccent_form=<formId>, the Form column's id linking to it.
+add_action( 'pre_get_posts', function ( WP_Query $q ) {
+	if ( is_admin() && $q->is_main_query() && 'marccent_entry' === $q->get( 'post_type' ) && ! empty( $_GET['marccent_form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- a filter
+		$q->set( 'meta_query', array( array( 'key' => '_marccent_form', 'value' => sanitize_key( $_GET['marccent_form'] ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	}
+} );
+
+add_action( 'admin_post_marccent_entries_csv', function () {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Not allowed.', 'marccent-blocks' ) );
+	}
+	check_admin_referer( 'marccent_entries_csv' );
+	$form    = sanitize_key( $_GET['form'] ?? '' );
+	$entries = get_posts( array( 'post_type' => 'marccent_entry', 'post_status' => 'any', 'numberposts' => -1, 'orderby' => 'date', 'order' => 'DESC', 'meta_query' => $form ? array( array( 'key' => '_marccent_form', 'value' => $form ) ) : array() ) );
+	$columns = array();
+	foreach ( $entries as $e ) {
+		foreach ( (array) get_post_meta( $e->ID, '_marccent_fields', true ) as $name => $f ) {
+			$columns[ $name ] = $columns[ $name ] ?? (string) ( $f['label'] ?? $name );
+		}
+	}
+	// A value a spreadsheet would run as a formula (=, +, -, @) starts with a quote instead.
+	$cell = fn( $v ) => preg_match( '/^[=+\-@\t\r]/', (string) $v ) ? "'" . $v : (string) $v;
+	nocache_headers();
+	header( 'Content-Type: text/csv; charset=utf-8' );
+	header( 'Content-Disposition: attachment; filename="entries-' . ( $form ?: 'all' ) . '-' . gmdate( 'Y-m-d' ) . '.csv"' );
+	$out = fopen( 'php://output', 'w' );
+	fwrite( $out, "\xEF\xBB\xBF" ); // UTF-8, as Excel reads it
+	fputcsv( $out, array_merge( array( __( 'Date', 'marccent-blocks' ), __( 'Form', 'marccent-blocks' ), __( 'Page', 'marccent-blocks' ) ), array_values( $columns ) ) );
+	foreach ( $entries as $e ) {
+		$fields = (array) get_post_meta( $e->ID, '_marccent_fields', true );
+		$row    = array( get_date_from_gmt( $e->post_date_gmt, 'Y-m-d H:i' ), (string) get_post_meta( $e->ID, '_marccent_form', true ), get_the_title( (int) get_post_meta( $e->ID, '_marccent_post', true ) ) );
+		foreach ( array_keys( $columns ) as $name ) {
+			$row[] = $cell( $fields[ $name ]['value'] ?? '' );
+		}
+		fputcsv( $out, $row );
+	}
+	fclose( $out );
+	exit;
+} );
+
 // One entry: its fields, read only (no editor, no Publish box: an entry is what was sent).
 add_action( 'add_meta_boxes_marccent_entry', function ( WP_Post $entry ) {
 	remove_meta_box( 'submitdiv', 'marccent_entry', 'side' );
@@ -44,7 +92,10 @@ add_action( 'add_meta_boxes_marccent_entry', function ( WP_Post $entry ) {
 	add_meta_box( 'marccent-entry', __( 'What was sent', 'marccent-blocks' ), function ( WP_Post $entry ) {
 		echo '<table class="widefat striped"><tbody>';
 		foreach ( (array) get_post_meta( $entry->ID, '_marccent_fields', true ) as $name => $f ) {
-			printf( '<tr><th scope="row" style="width:12rem">%s <code>%s</code></th><td>%s</td></tr>', esc_html( (string) ( $f['label'] ?? '' ) ), esc_html( (string) $name ), nl2br( esc_html( (string) ( $f['value'] ?? '' ) ) ) );
+			$value = (string) ( $f['value'] ?? '' );
+			// An upload's address: a link to it.
+			$shown = str_contains( $value, '/marccent-forms/' ) && wp_http_validate_url( $value ) ? sprintf( '<a href="%s" target="_blank" rel="noopener">%s</a>', esc_url( $value ), esc_html( wp_basename( $value ) ) ) : nl2br( esc_html( $value ) );
+			printf( '<tr><th scope="row" style="width:12rem">%s <code>%s</code></th><td>%s</td></tr>', esc_html( (string) ( $f['label'] ?? '' ) ), esc_html( (string) $name ), $shown ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above
 		}
 		echo '</tbody></table>';
 		$post = (int) get_post_meta( $entry->ID, '_marccent_post', true );

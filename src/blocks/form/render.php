@@ -59,6 +59,7 @@ printf(
 		'data-marccent-form' => $form_id,
 		'class'              => in_array( $a['layout'], array( 'grid gap-sm pairs', 'grid cols-1 gap-sm' ), true ) ? $a['layout'] : 'grid gap-sm pairs',
 		'method'             => 'post',
+		'enctype'            => 'multipart/form-data', // a file field's upload, without JavaScript too
 		'action'             => admin_url( 'admin-post.php' ),
 		'data-rest'          => rest_url( 'marccent-blocks/v1/forms/submit' ),
 		'data-rest-nonce'    => wp_create_nonce( 'wp_rest' ),

@@ -47,6 +47,9 @@ const Edit = ( { attributes: a, setAttributes: set, clientId } ) => {
 					<TextControl label="Send entries to" type="email" help="Empty: the site’s admin email. Every entry is also kept under Forms → Entries." value={ a.emailTo } onChange={ ( emailTo ) => set( { emailTo } ) } />
 					<TextControl label="Subject" help="Empty: “New submission: <the page’s title>”." value={ a.emailSubject } onChange={ ( emailSubject ) => set( { emailSubject } ) } />
 				</PanelBody>
+				<PanelBody title="Send on" initialOpen={ !! a.webhook }>
+					<TextControl label="Webhook" type="url" help="An address each entry is posted to as JSON: Zapier, Make, a CRM. Empty: none." value={ a.webhook } onChange={ ( webhook ) => set( { webhook } ) } />
+				</PanelBody>
 			</InspectorControls>
 			<div { ...props }>
 				{ props.children }

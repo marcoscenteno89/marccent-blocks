@@ -5,20 +5,59 @@
 	"title": "Form field",
 	"category": "marccent",
 	"icon": "edit",
-	"description": "One field of a form: text, email, phone, a choice from a list, a checkbox…, beside its label.",
-	"keywords": [ "input", "field", "text", "email", "select" ],
+	"description": "One field of a form: text, email, phone, a choice from a list, a checkbox, a file…, beside its label; or where the form's next step starts.",
+	"keywords": [
+		"input",
+		"field",
+		"text",
+		"email",
+		"select"
+	],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"name": { "type": "string", "default": "" },
-		"label": { "type": "string", "default": "" },
-		"type": { "type": "string", "default": "text" },
-		"required": { "type": "boolean", "default": false },
-		"options": { "type": "string", "default": "" },
-		"placeholder": { "type": "string", "default": "" },
-		"help": { "type": "string", "default": "" }
+		"name": {
+			"type": "string",
+			"default": ""
+		},
+		"label": {
+			"type": "string",
+			"default": ""
+		},
+		"type": {
+			"type": "string",
+			"default": "text"
+		},
+		"required": {
+			"type": "boolean",
+			"default": false
+		},
+		"options": {
+			"type": "string",
+			"default": ""
+		},
+		"placeholder": {
+			"type": "string",
+			"default": ""
+		},
+		"help": {
+			"type": "string",
+			"default": ""
+		},
+		"showIf": {
+			"type": "string",
+			"default": ""
+		},
+		"accept": {
+			"type": "string",
+			"default": ""
+		}
 	},
-	"supports": { "html": false },
+	"supports": {
+		"html": false
+	},
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
-	"ancestor": [ "marccent/form" ]
+	"ancestor": [
+		"marccent/form"
+	]
 }

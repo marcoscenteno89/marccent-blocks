@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Marccent Blocks
  * Description: The Marccent theme (marccent-theme) in WordPress: its styles, its live theme engine (palettes, light / dark, design styles) and its components as blocks.
- * Version: 0.4.4
+ * Version: 0.5.0
  * Requires at least: 6.6
  * Requires PHP: 8.0
  * Author: Marcos Centeno
@@ -25,6 +25,7 @@ if ( is_admin() ) {
 	require __DIR__ . '/inc/forms-admin.php'; // the entries' screens and Settings → Marccent forms
 }
 require __DIR__ . '/inc/export.php'; // every Marccent plugin's settings as one JSON file (Tools → Marccent export, wp marccent)
+require __DIR__ . '/inc/visibility.php'; // any block shown to whom, when and on which screens; copying a block's style
 
 // Blocks: every block.json the build wrote (src/blocks/* → build/blocks/*).
 add_action( 'init', function () {

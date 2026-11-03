@@ -66,6 +66,86 @@ function marccent_import( array $file, ?array $only = null ): array {
 	return $done;
 }
 
+/*
+ * JSON sync, as ACF's local JSON: with a sync folder, every save writes each part to its own file there
+ * (<part>.json), so the settings have a history in git without anyone exporting; the database stays the source of
+ * truth. A file that changed outside the site (a git pull, another developer's commit) shows as "sync available" under
+ * Tools → Marccent export, a click from imported.
+ *
+ * The folder: the MARCCENT_JSON_DIR constant (wp-config.php: a folder the site's repository keeps), else
+ * uploads/marccent-json once it's turned on (Tools → Marccent export). The marccent_json_dir filter has the last word.
+ */
+
+function marccent_json_dir(): string {
+	$dir = defined( 'MARCCENT_JSON_DIR' ) ? (string) MARCCENT_JSON_DIR : wp_upload_dir( null, false )['basedir'] . '/marccent-json';
+	return untrailingslashit( (string) apply_filters( 'marccent_json_dir', $dir ) );
+}
+
+function marccent_json_on(): bool {
+	return is_dir( marccent_json_dir() ) && wp_is_writable( marccent_json_dir() );
+}
+
+// A part's data as its file holds it: pretty, with a newline, so diffs read well.
+function marccent_json_encode( $data ): string {
+	return wp_json_encode( $data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "\n";
+}
+
+/**
+ * Each part's state: 'same' (the file is the database's), 'file' (the file changed since the site last wrote it: sync
+ * available), 'site' (the database changed: the next write saves it), or 'none' (no file yet).
+ */
+function marccent_json_status(): array {
+	$dir     = marccent_json_dir();
+	$written = (array) get_option( 'marccent_json_written', array() );
+	$out     = array();
+	foreach ( marccent_export_parts() as $key => $part ) {
+		$path = "$dir/$key.json";
+		$db   = md5( marccent_json_encode( call_user_func( $part['export'] ) ) );
+		$file = is_readable( $path ) ? md5( (string) file_get_contents( $path ) ) : '';
+		$out[ $key ] = '' === $file ? 'none' : ( $file === $db ? 'same' : ( ( $written[ $key ] ?? '' ) !== $file ? 'file' : 'site' ) );
+	}
+	return $out;
+}
+
+// Writes the parts whose database value differs from their file, except a file changed outside the site (that one
+// waits to be synced, so a save never overwrites a pull).
+function marccent_json_write(): void {
+	if ( ! marccent_json_on() ) {
+		return;
+	}
+	$dir     = marccent_json_dir();
+	$written = (array) get_option( 'marccent_json_written', array() );
+	$status  = marccent_json_status();
+	foreach ( marccent_export_parts() as $key => $part ) {
+		if ( 'same' === $status[ $key ] || 'file' === $status[ $key ] ) {
+			continue;
+		}
+		$json = marccent_json_encode( call_user_func( $part['export'] ) );
+		if ( false !== file_put_contents( "$dir/$key.json", $json ) ) {
+			$written[ $key ] = md5( $json );
+		}
+	}
+	update_option( 'marccent_json_written', $written, false );
+}
+
+// A request that changed settings or the theme's parts writes the files once, at its end.
+$GLOBALS['marccent_json_dirty'] = false;
+foreach ( array( 'added_option', 'updated_option', 'deleted_option' ) as $marccent_hook ) {
+	add_action( $marccent_hook, function ( $option ) {
+		if ( ! in_array( $option, array( 'marccent_json_written', 'cron', '_transient_doing_cron' ), true ) && ! str_starts_with( $option, '_transient' ) && ! str_starts_with( $option, '_site_transient' ) ) {
+			$GLOBALS['marccent_json_dirty'] = true;
+		}
+	} );
+}
+add_action( 'save_post_wp_template_part', function () {
+	$GLOBALS['marccent_json_dirty'] = true;
+} );
+add_action( 'shutdown', function () {
+	if ( $GLOBALS['marccent_json_dirty'] && ( is_admin() || wp_is_serving_rest_request() || ( defined( 'WP_CLI' ) && WP_CLI ) ) && marccent_json_on() ) {
+		marccent_json_write();
+	}
+} );
+
 /* Tools → Marccent export */
 
 add_action( 'admin_menu', function () {
@@ -83,6 +163,42 @@ add_action( 'admin_post_marccent_export', function () {
 	header( 'Content-Type: application/json; charset=utf-8' );
 	header( 'Content-Disposition: attachment; filename="' . $name . '"' );
 	echo wp_json_encode( marccent_export( $only ), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+	exit;
+} );
+
+// JSON sync: turn it on (the uploads folder, closed to visitors), or import the files that changed.
+add_action( 'admin_post_marccent_json', function () {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Not allowed.', 'marccent-blocks' ) );
+	}
+	check_admin_referer( 'marccent_json' );
+	$dir = marccent_json_dir();
+	if ( isset( $_POST['enable'] ) && ! is_dir( $dir ) && wp_mkdir_p( $dir ) ) {
+		file_put_contents( "$dir/.htaccess", "Require all denied\n" );
+		file_put_contents( "$dir/index.php", "<?php // Silence.\n" );
+	}
+	$done = array();
+	foreach ( array_map( 'sanitize_key', (array) ( $_POST['sync'] ?? array() ) ) as $key ) {
+		$data = json_decode( (string) @file_get_contents( "$dir/$key.json" ), true ); // phpcs:ignore WordPress.PHP.NoSilencedErrors -- a missing file is reported below
+		$done += is_array( $data )
+			? marccent_import( array( 'marccent' => 1, 'parts' => array( $key => $data ) ), array( $key ) )
+			: array( $key => new WP_Error( 'marccent_json', __( 'Its file isn’t valid JSON.', 'marccent-blocks' ) ) );
+	}
+	if ( $done ) {
+		set_transient( 'marccent_import_' . get_current_user_id(), array_map( fn( $r ) => is_wp_error( $r ) ? $r->get_error_message() : true, $done ), 300 );
+	}
+	marccent_json_write(); // the parts on no file yet, and those just imported, written as the site has them now
+	if ( $done ) {
+		$written = (array) get_option( 'marccent_json_written', array() );
+		foreach ( array_keys( array_filter( $done, fn( $r ) => true === $r ) ) as $key ) { // a failed one keeps waiting
+			if ( is_readable( "$dir/$key.json" ) ) {
+				$written[ $key ] = md5( (string) file_get_contents( "$dir/$key.json" ) ); // in sync now
+			}
+		}
+		update_option( 'marccent_json_written', $written, false );
+		marccent_json_write(); // a file the import changed (sanitized) is rewritten as the site keeps it
+	}
+	wp_safe_redirect( add_query_arg( $done ? 'imported' : 'json', 1, admin_url( 'tools.php?page=marccent-export' ) ) );
 	exit;
 } );
 
@@ -133,6 +249,8 @@ function marccent_export_page(): void {
 	submit_button( __( 'Download JSON', 'marccent-blocks' ), 'primary', 'submit', false );
 	echo '</form>';
 
+	marccent_json_section( $parts );
+
 	echo '<h2 style="margin-top:2rem">' . esc_html__( 'Import', 'marccent-blocks' ) . '</h2><form method="post" enctype="multipart/form-data" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 	echo '<input type="hidden" name="action" value="marccent_import">';
 	wp_nonce_field( 'marccent_import' );
@@ -141,6 +259,45 @@ function marccent_export_page(): void {
 	$checks();
 	submit_button( __( 'Import', 'marccent-blocks' ), 'secondary', 'submit', false );
 	echo '</form></div>';
+}
+
+function marccent_json_section( array $parts ): void {
+	$dir = marccent_json_dir();
+	echo '<h2 style="margin-top:2rem">' . esc_html__( 'JSON sync', 'marccent-blocks' ) . '</h2>';
+	printf( '<form method="post" action="%s"><input type="hidden" name="action" value="marccent_json">', esc_url( admin_url( 'admin-post.php' ) ) );
+	wp_nonce_field( 'marccent_json' );
+	if ( ! marccent_json_on() ) {
+		echo '<p>' . esc_html__( 'Off. With it on, every save writes each part to its own JSON file in a folder, so the settings have a history in git; a file changed there (a git pull) shows here, ready to import.', 'marccent-blocks' ) . '</p>';
+		/* translators: %s: a folder */
+		echo '<p class="description">' . sprintf( esc_html__( 'The folder: %s, or the MARCCENT_JSON_DIR constant in wp-config.php (a folder the site’s repository keeps).', 'marccent-blocks' ), '<code>' . esc_html( $dir ) . '</code>' ) . '</p>';
+		if ( ! defined( 'MARCCENT_JSON_DIR' ) ) {
+			submit_button( __( 'Turn on JSON sync', 'marccent-blocks' ), 'secondary', 'enable', false );
+		}
+		echo '</form>';
+		return;
+	}
+	$labels = array(
+		'same' => __( 'In sync', 'marccent-blocks' ),
+		'file' => __( 'Sync available: the file changed', 'marccent-blocks' ),
+		'site' => __( 'Changed here; written on the next save', 'marccent-blocks' ),
+		'none' => __( 'No file yet', 'marccent-blocks' ),
+	);
+	/* translators: %s: a folder */
+	echo '<p>' . sprintf( esc_html__( 'On: each part is written to %s on every save.', 'marccent-blocks' ), '<code>' . esc_html( $dir ) . '/&lt;part&gt;.json</code>' ) . '</p>';
+	echo '<table class="widefat striped" style="max-width:48rem"><tbody>';
+	$any = false;
+	foreach ( marccent_json_status() as $key => $state ) {
+		$any = $any || 'file' === $state;
+		printf(
+			'<tr><td>%s</td><td><code>%s.json</code></td><td>%s</td></tr>',
+			'file' === $state ? sprintf( '<label><input type="checkbox" name="sync[]" value="%s" checked> %s</label>', esc_attr( $key ), esc_html( $parts[ $key ]['label'] ?? $key ) ) : esc_html( $parts[ $key ]['label'] ?? $key ),
+			esc_html( $key ),
+			'file' === $state ? '<strong>' . esc_html( $labels[ $state ] ) . '</strong>' : esc_html( $labels[ $state ] )
+		);
+	}
+	echo '</tbody></table><p>';
+	submit_button( $any ? __( 'Import the ticked files', 'marccent-blocks' ) : __( 'Write the files now', 'marccent-blocks' ), $any ? 'primary' : 'secondary', 'submit', false );
+	echo '</p></form>';
 }
 
 /* WP-CLI */

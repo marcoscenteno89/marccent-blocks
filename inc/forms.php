@@ -12,6 +12,13 @@
  * with a flag, errors kept a few minutes under a random token), and the REST route the runtime's enhancer uses
  * (src/runtime/forms.js: JSON back, errors shown beside their fields).
  *
+ * A field can show only when another has a value (its showIf: "service=Patios,Driveways", "contact!=Phone", "phone"
+ * for filled in); hidden, it isn't required and isn't kept. A "step" field splits the form into steps (the runtime shows
+ * one at a time; without JavaScript it's one long form). A file field takes an upload (images, PDFs, office documents,
+ * 5 MB by default: the marccent_forms_max_upload filter), kept under uploads/marccent-forms/ at an address no one can
+ * guess, and linked from the entry and the email. A form with a webhook posts each entry there as JSON (Zapier, Make,
+ * a CRM).
+ *
  * The nonce is printed in the page: a page cache keeps it longer than a nonce lives (a day at most), so a cached page's
  * form fails as expired. Cache pages with forms for less than 12 hours, or not at all.
  */
@@ -48,7 +55,7 @@ function marccent_forms_fields( array $blocks, array $fields = array() ): array 
 		if ( in_array( $block['blockName'], MARCCENT_FORM_FIELDS, true ) ) {
 			$a    = marccent_forms_attrs( $block );
 			$name = sanitize_key( (string) ( $a['name'] ?? '' ) );
-			if ( '' !== $name && ! isset( $fields[ $name ] ) && count( $fields ) < 50 ) {
+			if ( '' !== $name && ! isset( $fields[ $name ] ) && count( $fields ) < 50 && 'step' !== ( $a['type'] ?? '' ) ) {
 				$kind            = substr( $block['blockName'], strlen( 'marccent/form-' ) );
 				$fields[ $name ] = array(
 					'kind'     => $kind,
@@ -57,6 +64,7 @@ function marccent_forms_fields( array $blocks, array $fields = array() ): array 
 					'required' => ! empty( $a['required'] ),
 					'options'  => 'select' === ( $a['type'] ?? '' ) ? marccent_forms_options( (string) $a['options'] ) : array(),
 					'max'      => max( 0, (int) ( $a['max'] ?? 0 ) ),
+					'show_if'  => trim( (string) ( $a['showIf'] ?? '' ) ),
 				);
 			}
 		}
@@ -88,10 +96,22 @@ function marccent_forms_definition( int $post_id, string $form_id ): ?array {
  * The defined fields' values from the request, each checked for its type and capped in length; unknown names are
  * never read. Returns [ values: name => clean value, errors: name => message ].
  */
-function marccent_forms_validate( array $fields, array $input ): array {
+function marccent_forms_validate( array $fields, array $input, array $files = array() ): array {
 	$values = array();
 	$errors = array();
 	foreach ( $fields as $name => $f ) {
+		if ( ! marccent_forms_shown( $f['show_if'] ?? '', $input ) ) {
+			$values[ $name ] = ''; // hidden: not asked, so not required and not kept
+			continue;
+		}
+		if ( 'file' === $f['type'] ) {
+			[ $value, $error ] = marccent_forms_check_file( $files[ $name ] ?? null, $f );
+			if ( $error ) {
+				$errors[ $name ] = $error;
+			}
+			$values[ $name ] = $value;
+			continue;
+		}
 		$raw = $input[ $name ] ?? '';
 		if ( ! is_scalar( $raw ) ) {
 			$errors[ $name ] = __( 'That isn’t a valid value.', 'marccent-blocks' );
@@ -169,6 +189,74 @@ function marccent_forms_validate( array $fields, array $input ): array {
 	return array( $values, $errors );
 }
 
+// Whether a field with a showIf is shown, given what was sent: "name=a,b" (one of), "name!=a", "name" (filled in).
+function marccent_forms_shown( string $if, array $input ): bool {
+	if ( '' === $if || ! preg_match( '/^([a-z0-9_\-]+)\s*(?:(!=|=)\s*(.*))?$/i', $if, $m ) ) {
+		return true;
+	}
+	$have = trim( (string) ( is_scalar( $input[ sanitize_key( $m[1] ) ] ?? '' ) ? $input[ sanitize_key( $m[1] ) ] ?? '' : '' ) );
+	if ( empty( $m[2] ) ) {
+		return '' !== $have;
+	}
+	$in = in_array( $have, array_map( 'trim', explode( ',', $m[3] ) ), true );
+	return '=' === $m[2] ? $in : ! $in;
+}
+
+// The kinds of file a form takes: images, PDFs and office documents.
+function marccent_forms_mimes(): array {
+	return (array) apply_filters( 'marccent_forms_mimes', array(
+		'jpg|jpeg|jpe' => 'image/jpeg',
+		'png'          => 'image/png',
+		'gif'          => 'image/gif',
+		'webp'         => 'image/webp',
+		'heic'         => 'image/heic',
+		'pdf'          => 'application/pdf',
+		'doc'          => 'application/msword',
+		'docx'         => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'xls'          => 'application/vnd.ms-excel',
+		'xlsx'         => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'txt'          => 'text/plain',
+		'csv'          => 'text/csv',
+	) );
+}
+
+// An upload, checked (size, kind) but not kept yet: [ the file to keep, or '' when there's none, error message ].
+function marccent_forms_check_file( $file, array $f ): array {
+	if ( ! is_array( $file ) || UPLOAD_ERR_NO_FILE === (int) ( $file['error'] ?? UPLOAD_ERR_NO_FILE ) ) {
+		return array( '', $f['required'] ? __( 'Choose a file.', 'marccent-blocks' ) : '' );
+	}
+	$max = (int) apply_filters( 'marccent_forms_max_upload', 5 * MB_IN_BYTES );
+	if ( UPLOAD_ERR_OK !== (int) $file['error'] || ! is_uploaded_file( (string) $file['tmp_name'] ) ) {
+		return array( '', in_array( (int) $file['error'], array( UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE ), true ) ? sprintf( /* translators: %s: a size, 5 MB */ __( 'Keep it under %s.', 'marccent-blocks' ), size_format( $max ) ) : __( 'The file didn’t arrive. Try again.', 'marccent-blocks' ) );
+	}
+	if ( (int) $file['size'] > $max ) {
+		/* translators: %s: a size, 5 MB */
+		return array( '', sprintf( __( 'Keep it under %s.', 'marccent-blocks' ), size_format( $max ) ) );
+	}
+	$type = wp_check_filetype_and_ext( (string) $file['tmp_name'], (string) $file['name'], marccent_forms_mimes() );
+	if ( ! $type['ext'] || ! $type['type'] ) {
+		return array( '', __( 'That kind of file isn’t accepted: send an image, a PDF or an office document.', 'marccent-blocks' ) );
+	}
+	return array( array( 'upload' => $file ), '' );
+}
+
+// Keeps a checked upload under uploads/marccent-forms/<random>/ and returns its address ('' if it couldn't).
+function marccent_forms_store_file( array $file ): string {
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	$dir = 'marccent-forms/' . wp_generate_password( 24, false );
+	$to  = function ( $d ) use ( $dir ) {
+		return array_merge( $d, array( 'subdir' => "/$dir", 'path' => $d['basedir'] . "/$dir", 'url' => $d['baseurl'] . "/$dir" ) );
+	};
+	add_filter( 'upload_dir', $to );
+	$done = wp_handle_upload( $file, array( 'test_form' => false, 'mimes' => marccent_forms_mimes() ) );
+	remove_filter( 'upload_dir', $to );
+	if ( ! empty( $done['file'] ) ) {
+		// No listing of the folder: only who has the address finds the file.
+		@file_put_contents( dirname( $done['file'] ) . '/index.html', '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+	}
+	return (string) ( $done['url'] ?? '' );
+}
+
 // The visitor's address, as the server got it (not X-Forwarded-For, which anyone can write). Behind a proxy, the host
 // should set REMOTE_ADDR to the visitor's, or every visitor shares one rate limit.
 function marccent_forms_ip(): string {
@@ -221,7 +309,7 @@ function marccent_forms_turnstile_ok( string $token ): bool {
  * Checks a submission and keeps it: [ ok, status (HTTP), message, errors: name => message, form, post ].
  * $input is the request's fields, unslashed.
  */
-function marccent_forms_submit( array $input ): array {
+function marccent_forms_submit( array $input, array $files = array() ): array {
 	$fail    = fn( int $status, string $message, array $errors = array() ) => array( 'ok' => false, 'status' => $status, 'message' => $message, 'errors' => $errors );
 	$form_id = sanitize_key( (string) ( $input['marccent_form'] ?? '' ) );
 	$post_id = absint( $input['marccent_post'] ?? 0 );
@@ -241,14 +329,21 @@ function marccent_forms_submit( array $input ): array {
 	if ( $verified && ! marccent_forms_turnstile_ok( (string) ( $input['cf-turnstile-response'] ?? '' ) ) ) {
 		return $fail( 403, __( 'We couldn’t check that you’re not a robot. Try again.', 'marccent-blocks' ) );
 	}
-	[ $values, $errors ] = marccent_forms_validate( $form['fields'], $input );
+	[ $values, $errors ] = marccent_forms_validate( $form['fields'], $input, $files );
 	if ( $errors ) {
-		return $fail( 400, __( 'Some fields need another look.', 'marccent-blocks' ), $errors ) + array( 'values' => $values );
+		return $fail( 400, __( 'Some fields need another look.', 'marccent-blocks' ), $errors ) + array( 'values' => array_filter( $values, 'is_string' ) );
+	}
+	// Everything checked: the uploads kept, each value its address.
+	foreach ( $values as $name => $value ) {
+		if ( is_array( $value ) && isset( $value['upload'] ) ) {
+			$values[ $name ] = marccent_forms_store_file( $value['upload'] );
+		}
 	}
 
-	// Kept first, then emailed: a failed email loses nothing.
+	// Kept first, then emailed and sent on: a failed email loses nothing.
 	$entry = marccent_forms_save( $form, $values, $verified );
 	marccent_forms_mail( $form, $values, $entry );
+	marccent_forms_webhook( $form, $values, $entry );
 
 	$message = marccent_blocks_text( (string) $form['attrs']['successMessage'] ) ?: __( 'Thanks! We got it.', 'marccent-blocks' );
 	return array( 'ok' => true, 'status' => 200, 'message' => $message, 'errors' => array() );
@@ -308,12 +403,38 @@ function marccent_forms_mail( array $form, array $values, int $entry ): void {
 	}
 }
 
+// The form's webhook, if it has one: the entry as JSON, sent without waiting for an answer.
+function marccent_forms_webhook( array $form, array $values, int $entry ): void {
+	$url = (string) ( $form['attrs']['webhook'] ?? '' );
+	if ( '' === $url || ! wp_http_validate_url( $url ) ) {
+		return;
+	}
+	$fields = array();
+	foreach ( $form['fields'] as $name => $f ) {
+		$fields[ $name ] = (string) ( $values[ $name ] ?? '' );
+	}
+	wp_safe_remote_post( $url, array(
+		'blocking' => false,
+		'timeout'  => 5,
+		'headers'  => array( 'Content-Type' => 'application/json' ),
+		'body'     => wp_json_encode( array(
+			'form'      => $form['attrs']['formId'],
+			'page'      => get_permalink( $form['post'] ),
+			'title'     => get_the_title( $form['post'] ),
+			'entry'     => $entry,
+			'submitted' => gmdate( 'c' ),
+			'fields'    => $fields,
+			'labels'    => array_map( fn( $f ) => $f['label'], $form['fields'] ),
+		) ),
+	) );
+}
+
 /* The two ways in */
 
 // Without JavaScript: back to the page, a flag for this form, errors (and what was typed) kept 5 minutes.
 function marccent_forms_post(): void {
 	$input  = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification -- marccent_forms_submit checks it
-	$result = marccent_forms_submit( $input );
+	$result = marccent_forms_submit( $input, $_FILES ); // phpcs:ignore WordPress.Security.NonceVerification -- checked there
 	$post   = absint( $input['marccent_post'] ?? 0 );
 	$form   = sanitize_key( (string) ( $input['marccent_form'] ?? '' ) );
 	$page   = $post && 'publish' === get_post_status( $post ) ? get_permalink( $post ) : home_url( '/' );
@@ -336,7 +457,7 @@ add_action( 'rest_api_init', function () {
 		'methods'             => 'POST',
 		'permission_callback' => '__return_true',
 		'callback'            => function ( WP_REST_Request $request ) {
-			$result = marccent_forms_submit( $request->get_body_params() );
+			$result = marccent_forms_submit( $request->get_body_params(), $request->get_file_params() );
 			return new WP_REST_Response( array( 'ok' => $result['ok'], 'message' => $result['message'], 'errors' => (object) $result['errors'] ), $result['status'] );
 		},
 	) );
@@ -449,13 +570,17 @@ function marccent_forms_row( string $label_html, string $control ): string {
 }
 
 function marccent_forms_field_html( array $a ): string {
+	// A step break: where the next step starts, titled by its label (the runtime shows one step at a time).
+	if ( 'step' === $a['type'] ) {
+		return sprintf( '<div class="form-step-break" data-form-step="%s" style="grid-column:1/-1"></div>', esc_attr( marccent_blocks_text( (string) $a['label'] ) ) );
+	}
 	[ 'name' => $name, 'id' => $id, 'label' => $label, 'error' => $error, 'value' => $value ] = marccent_forms_field_base( $a );
 	if ( '' === $name ) {
 		return '';
 	}
 	$value                 = (string) $value;
 	[ $described, $notes ] = marccent_forms_notes( $id, marccent_blocks_text( (string) $a['help'] ), $error );
-	$type                  = in_array( $a['type'], array( 'text', 'email', 'tel', 'url', 'number', 'date', 'textarea', 'select', 'checkbox' ), true ) ? $a['type'] : 'text';
+	$type                  = in_array( $a['type'], array( 'text', 'email', 'tel', 'url', 'number', 'date', 'textarea', 'select', 'checkbox', 'file' ), true ) ? $a['type'] : 'text';
 	$common                = array(
 		'id'               => $id,
 		'name'             => $name,
@@ -476,6 +601,9 @@ function marccent_forms_field_html( array $a ): string {
 			}
 			$control = sprintf( '<select %s>%s</select>', marccent_blocks_attributes( $common ), $options );
 			break;
+		case 'file':
+			$control = sprintf( '<input %s>', marccent_blocks_attributes( $common + array( 'type' => 'file', 'accept' => (string) ( $a['accept'] ?? '' ) ?: 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv' ) ) );
+			break;
 		case 'checkbox':
 			// The box in the input's place, so the row still reads label | control.
 			$control = sprintf( '<span class="input"><input %s></span>', marccent_blocks_attributes( array( 'type' => 'checkbox', 'value' => '1', 'checked' => '' !== $value ? '' : null ) + array_diff_key( $common, array( 'class' => 1 ) ) ) );
@@ -483,7 +611,10 @@ function marccent_forms_field_html( array $a ): string {
 		default:
 			$control = sprintf( '<input %s>', marccent_blocks_attributes( $common + array( 'type' => $type, 'value' => '' !== $value ? $value : null, 'placeholder' => $placeholder ?: null, 'maxlength' => 'number' === $type || 'date' === $type ? null : 500 ) ) );
 	}
-	return marccent_forms_row( sprintf( '<label class="field-label" for="%s">%s</label>', esc_attr( $id ), esc_html( $label ) ), $control ) . $notes;
+	$row = marccent_forms_row( sprintf( '<label class="field-label" for="%s">%s</label>', esc_attr( $id ), esc_html( $label ) ), $control ) . $notes;
+	$if  = trim( (string) ( $a['showIf'] ?? '' ) );
+	// Shown only when another field has a value: the runtime shows and hides it as the visitor fills the form in.
+	return '' === $if ? $row : sprintf( '<div class="form-if" data-show-if="%s" style="display:contents">%s</div>', esc_attr( $if ), $row );
 }
 
 // Rating: the theme's Rating (radio stars, no JavaScript needed) beside its label.
