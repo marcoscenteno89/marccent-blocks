@@ -129,7 +129,7 @@ function marccent_blocks_section( array $a, string $inner, ?callable $attributes
 	// A least height makes the band a one-cell grid, so its content box can center in it (not .grid: that brings columns).
 	$outer = array(
 		'data-theme' => in_array( $a['mode'] ?? '', array( 'light', 'dark' ), true ) ? $a['mode'] : null,
-		'class'      => marccent_blocks_cx( 'wrap wrap-fluid', $image ? 'stack' : $a['surface'] ?? '' ),
+		'class'      => marccent_blocks_cx( 'wrap wrap-fluid', $image ? 'stack' : $a['surface'] ?? '', marccent_blocks_divider_classes( $a ) ),
 		'style'      => $min ? marccent_blocks_css( array( 'min-height' => $min ) + ( $image ? array() : array( 'display' => 'grid', 'grid-template-columns' => 'minmax(0, 1fr)' ) ) ) : null,
 	);
 	// Over an image: the content on top of the image and shade, centered in the band, in light text.
@@ -143,7 +143,63 @@ function marccent_blocks_section( array $a, string $inner, ?callable $attributes
 		esc_attr( (string) ( $a['imageAlt'] ?? '' ) ),
 		(int) ( $a['shade'] ?? 50 )
 	) : '';
-	return sprintf( '<%1$s %2$s>%3$s<div %4$s>%5$s</div></%1$s>', $tag, $attributes( $outer ), $background, marccent_blocks_attributes( $content ), $inner );
+	$page     = '' === (string) ( $a['surface'] ?? '' );
+	$dividers = marccent_blocks_divider( (array) ( $a['dividerTop'] ?? array() ), 'top', $page ) . marccent_blocks_divider( (array) ( $a['dividerBottom'] ?? array() ), 'bottom', $page );
+	return sprintf( '<%1$s %2$s>%3$s%4$s<div %5$s>%6$s</div></%1$s>', $tag, $attributes( $outer ), $dividers, $background, marccent_blocks_attributes( $content ), $inner );
+}
+
+/*
+ * Section dividers (Divider in marccent-theme's components/widgets/divider.js): a shape on the section's top or bottom
+ * edge, in its color, reaching into the neighbor. The shapes, as their layers' CSS masks, are the package's
+ * markup/dividers.json (copied to build/ by webpack.config.js). A divider is { shape, size, motion, scroll, flip };
+ * a motion or scroll effect the shape doesn't take is left out.
+ */
+function marccent_blocks_dividers(): array {
+	static $shapes;
+	return $shapes ??= json_decode( (string) @file_get_contents( MARCCENT_BLOCKS_DIR . '/build/dividers.json' ), true ) ?: array();
+}
+
+function marccent_blocks_divider_size( array $d ): string {
+	return in_array( $d['size'] ?? '', array( 'sm', 'lg' ), true ) ? $d['size'] : 'md';
+}
+
+// The section's classes for its dividers: it goes over its neighbors, which make room (divider.css).
+function marccent_blocks_divider_classes( array $a ): string {
+	$classes = array();
+	foreach ( array( 'top' => 'dividerTop', 'bottom' => 'dividerBottom' ) as $edge => $key ) {
+		$d = (array) ( $a[ $key ] ?? array() );
+		if ( isset( marccent_blocks_dividers()[ $d['shape'] ?? '' ] ) ) {
+			$classes[] = "has-divider-$edge-" . marccent_blocks_divider_size( $d );
+		}
+	}
+	return implode( ' ', $classes );
+}
+
+function marccent_blocks_divider( array $d, string $edge, bool $page ): string {
+	$def = marccent_blocks_dividers()[ $d['shape'] ?? '' ] ?? null;
+	if ( ! $def ) {
+		return '';
+	}
+	$size   = marccent_blocks_divider_size( $d );
+	$motion = in_array( $d['motion'] ?? '', $def['motions'], true ) ? $d['motion'] : null;
+	$scroll = in_array( $d['scroll'] ?? '', $def['scrolls'], true ) ? $d['scroll'] : null;
+	$layers = '';
+	foreach ( $def['layers'] as $l ) {
+		$layers .= sprintf( '<i %s></i>', marccent_blocks_attributes( array(
+			'style'  => '--mask:' . $l['mask'] . ( $l['opacity'] < 1 ? ';opacity:' . $l['opacity'] : '' ),
+			'data-x' => 'parallax' === $scroll ? $l['x'] : null,
+			'data-y' => 'parallax' === $scroll ? $l['y'] : null,
+		) ) );
+	}
+	return sprintf( '<div %s>%s</div>', marccent_blocks_attributes( array(
+		'aria-hidden'    => 'true',
+		'class'          => marccent_blocks_cx( 'divider', "divider-$edge", 'md' === $size ? '' : "divider-$size", $page ? 'divider-page' : '' ),
+		'data-component' => 'divider',
+		'data-shape'     => $d['shape'],
+		'data-motion'    => $motion,
+		'data-scroll'    => $scroll,
+		'data-flip'      => empty( $d['flip'] ) ? null : '',
+	) ), $layers );
 }
 
 function marccent_blocks_grid( array $a, string $inner, ?callable $attributes = null ): string {

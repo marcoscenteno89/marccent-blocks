@@ -9,6 +9,7 @@
  */
 
 const ABSPATH = __DIR__;
+const MARCCENT_BLOCKS_DIR = __DIR__ . '/..';
 
 function esc_attr( $s ) {
 	return htmlspecialchars( (string) $s, ENT_QUOTES, 'UTF-8', false );

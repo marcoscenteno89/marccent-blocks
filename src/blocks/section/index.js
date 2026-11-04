@@ -7,11 +7,12 @@ import { register } from '../../shared/register';
 import { InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { Button, PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import { SURFACES, WIDTHS, PADS_Y, GAPS, cx } from '../../shared/options';
+import { Divider, dividerClasses, DIVIDERS } from 'marccent-theme/components/widgets/divider';
 import metadata from './block.json';
 import deprecated from './deprecated';
 
 // The band pads the sides (.wrap); the content's .wrap inside it is narrower by that padding (layout.css).
-const outer = ( a ) => cx( 'wrap wrap-fluid', a.imageUrl ? 'stack' : a.surface );
+const outer = ( a ) => cx( 'wrap wrap-fluid', a.imageUrl ? 'stack' : a.surface, dividerClasses( a.dividerTop, a.dividerBottom ) );
 const inner = ( a ) => cx( a.width, a.padY, 'grid cols-1', a.gap, a.center && 'text-center justify-center', a.imageUrl && a.surface );
 // A least height makes the band a one-cell grid, so its content box can center in it (not .grid: that brings columns).
 const outerStyle = ( a ) => ( a.minHeight ? { minHeight: a.minHeight, ...( ! a.imageUrl && { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)' } ) } : undefined );
@@ -27,6 +28,32 @@ const Background = ( { a } ) => a.imageUrl && (
 		<div aria-hidden="true" style={ { background: `rgb(0 0 0 / ${ a.shade }%)` } } />
 	</>
 );
+
+// One edge's divider: the shape, then only what that shape takes.
+const MOTIONS = { roll: 'Roll sideways', tide: 'Tide (layers at three speeds)', swell: 'Swell (roll and bob)', breathe: 'Breathe (rise and settle)' };
+const SCROLLS = { parallax: 'Parallax (layers at different depths)', unfold: 'Unfold (flattens as it rises)', seesaw: 'Seesaw (tips side to side)', rise: 'Rise (swells into a dome)' };
+const none = { label: 'None', value: '' };
+const DividerControls = ( { label, value: d, onChange } ) => {
+	const def = DIVIDERS[ d.shape ];
+	const set = ( v ) => onChange( { ...d, ...v } );
+	return (
+		<>
+			<SelectControl label={ label } value={ d.shape || '' } onChange={ ( shape ) => onChange( shape ? { ...d, shape } : {} ) }
+				options={ [ none, ...Object.entries( DIVIDERS ).map( ( [ value, s ] ) => ( { label: s.title, value } ) ) ] } />
+			{ def && (
+				<>
+					<SelectControl label="Height" value={ d.size || 'md' } onChange={ ( size ) => set( { size } ) }
+						options={ [ { label: 'Small', value: 'sm' }, { label: 'Medium', value: 'md' }, { label: 'Large', value: 'lg' } ] } />
+					{ def.motions.length > 0 && <SelectControl label="Motion" help="Moves by itself; still for visitors who ask for less motion." value={ d.motion || '' }
+						onChange={ ( motion ) => set( { motion } ) } options={ [ none, ...def.motions.map( ( m ) => ( { label: MOTIONS[ m ], value: m } ) ) ] } /> }
+					{ def.scrolls.length > 0 && <SelectControl label="On scroll" value={ d.scroll || '' }
+						onChange={ ( scroll ) => set( { scroll } ) } options={ [ none, ...def.scrolls.map( ( m ) => ( { label: SCROLLS[ m ], value: m } ) ) ] } /> }
+					<ToggleControl label="Mirror left to right" checked={ !! d.flip } onChange={ ( flip ) => set( { flip } ) } />
+				</>
+			) }
+		</>
+	);
+};
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const Tag = a.tagName;
@@ -62,8 +89,15 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 						</>
 					) }
 				</PanelBody>
+				<PanelBody title="Dividers" initialOpen={ false }>
+					<p>A shape on an edge, in this section's color, reaching into the section next to it. Needs a color, not an image.</p>
+					<DividerControls label="Top edge" value={ a.dividerTop || {} } onChange={ ( dividerTop ) => set( { dividerTop } ) } />
+					<DividerControls label="Bottom edge" value={ a.dividerBottom || {} } onChange={ ( dividerBottom ) => set( { dividerBottom } ) } />
+				</PanelBody>
 			</InspectorControls>
 			<Tag { ...blockProps }>
+				{ a.dividerTop?.shape && <Divider { ...a.dividerTop } edge="top" page={ ! a.surface } /> }
+				{ a.dividerBottom?.shape && <Divider { ...a.dividerBottom } edge="bottom" page={ ! a.surface } /> }
 				<Background a={ a } />
 				<div { ...innerProps } />
 			</Tag>

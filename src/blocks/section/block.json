@@ -20,7 +20,9 @@
 		"imageId": { "type": "number" },
 		"imageUrl": { "type": "string" },
 		"imageAlt": { "type": "string", "default": "" },
-		"shade": { "type": "number", "default": 50 }
+		"shade": { "type": "number", "default": 50 },
+		"dividerTop": { "type": "object", "default": {} },
+		"dividerBottom": { "type": "object", "default": {} }
 	},
 	"supports": { "anchor": true, "html": false, "align": false },
 	"editorScript": "file:./index.js",
