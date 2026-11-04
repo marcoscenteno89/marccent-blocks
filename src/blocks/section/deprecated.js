@@ -31,4 +31,7 @@ const save = ( { attributes: a } ) => {
 	);
 };
 
-export default [ { attributes: metadata.attributes, supports: metadata.supports, save } ];
+// Those posts were saved when padY's default was pad-y-lg (before the theme's section rhythm): an unset padY meant it.
+const attributes = { ...metadata.attributes, padY: { ...metadata.attributes.padY, default: 'pad-y-lg' } };
+
+export default [ { attributes, supports: metadata.supports, save } ];

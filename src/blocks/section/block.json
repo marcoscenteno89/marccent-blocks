@@ -11,7 +11,7 @@
 	"attributes": {
 		"tagName": { "type": "string", "default": "section" },
 		"width": { "type": "string", "default": "wrap" },
-		"padY": { "type": "string", "default": "pad-y-lg" },
+		"padY": { "type": "string", "default": "pad-y-section" },
 		"gap": { "type": "string", "default": "" },
 		"surface": { "type": "string", "default": "" },
 		"mode": { "type": "string", "default": "" },

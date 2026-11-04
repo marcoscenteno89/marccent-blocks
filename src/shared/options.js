@@ -51,9 +51,11 @@ export const ANIMATIONS = [ 'blob', 'fire', 'wave', 'network-loop', 'particle-fl
 // Page widths (.wrap sizes in layout.css).
 export const WIDTHS = [ opt( 'Normal', 'wrap' ), opt( 'Narrow', 'wrap wrap-sm' ), opt( 'Wide', 'wrap wrap-lg' ), opt( 'Full', 'wrap wrap-fluid' ) ];
 
-export const PADS_Y = [ opt( 'None', 'pad-y-0' ), opt( 'Small', 'pad-y-sm' ), opt( 'Normal', 'pad-y' ), opt( 'Large', 'pad-y-lg' ) ];
-export const PADS = [ opt( 'None', 'pad-0' ), opt( 'Small', 'pad-sm' ), opt( 'Normal', 'pad' ), opt( 'Large', 'pad-lg' ) ];
-export const GAPS = [ opt( 'None', 'gap-0' ), opt( 'Small', 'gap-sm' ), opt( 'Normal', '' ), opt( 'Large', 'gap-lg' ) ];
+// Section's padding: the section rhythm (fluid, the theme's --section-space) first, then the space scale.
+export const PADS_Y = [ opt( 'Section', 'pad-y-section' ), opt( 'Section, small', 'pad-y-section-sm' ), opt( 'Section, large', 'pad-y-section-lg' ),
+	opt( 'None', 'pad-y-0' ), opt( 'Small', 'pad-y-sm' ), opt( 'Normal', 'pad-y' ), opt( 'Medium', 'pad-y-md' ), opt( 'Large', 'pad-y-lg' ), opt( 'Extra large', 'pad-y-xl' ), opt( 'Double', 'pad-y-2xl' ) ];
+export const PADS = [ opt( 'None', 'pad-0' ), opt( 'Extra small', 'pad-xs' ), opt( 'Small', 'pad-sm' ), opt( 'Normal', 'pad' ), opt( 'Medium', 'pad-md' ), opt( 'Large', 'pad-lg' ), opt( 'Extra large', 'pad-xl' ) ];
+export const GAPS = [ opt( 'None', 'gap-0' ), opt( 'Extra small', 'gap-xs' ), opt( 'Small', 'gap-sm' ), opt( 'Normal', '' ), opt( 'Medium', 'gap-md' ), opt( 'Large', 'gap-lg' ), opt( 'Extra large', 'gap-xl' ) ];
 
 // Grid shapes (layout.css): equal columns, or the uneven layouts that go to one column on narrow screens.
 export const LAYOUTS = [
