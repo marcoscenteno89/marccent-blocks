@@ -264,8 +264,8 @@ function marccent_blocks_navbar( array $brand, array $items, string $end = '', s
 	return '<header data-component="nav-bar" class="nav wrap wrap-fluid pad-y-sm bg border-bottom sticky-top grid cols-1 gap-sm">' . $top
 		. '<div class="wrap pad-0 grid layout-ends items-center gap-sm">'
 		. sprintf( '<a href="%s" class="menu-link grid auto-cols items-center gap-sm" aria-label="%s">%s%s</a>', esc_url( $brand['href'] ), esc_attr( $brand['name'] . ', home' ), $logo, $name )
-		. '<button type="button" data-component="toggle-button" data-icon="bars-staggered" data-active-icon="xmark" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">' . marccent_blocks_icon( 'bars-staggered', 'btn-icon' ) . '</button>'
-		. sprintf( '<div id="site-nav" class="nav-collapse"><nav data-component="menu" class="menu grid gap-0 auto-cols divide" style="--cols: %d" aria-label="Main">%s</nav>%s</div>', count( $items ), marccent_blocks_menu_items( $items ), $end )
+		. '<button type="button" data-component="toggle-button" data-icon="bars" data-active-icon="bars" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">' . marccent_blocks_icon( 'bars', 'btn-icon' ) . '</button>'
+		. sprintf( '<div id="site-nav" class="nav-collapse"><nav data-component="menu" class="menu grid gap-0 auto-cols" style="--cols: %d" aria-label="Main">%s</nav>%s</div>', count( $items ), marccent_blocks_menu_items( $items ), $end )
 		. $last . '</div></header>';
 }
 
