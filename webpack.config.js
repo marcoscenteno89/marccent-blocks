@@ -88,6 +88,9 @@ module.exports = {
 		'designs/all': path.join( PACKAGE, 'styles/designs.css' ),
 		...designs,
 	},
+	// The chunks a script loads later (CodeMirror, an island's component) carry no ?ver= the way WordPress's enqueued
+	// files do, and the server keeps them a year: named by their content, so a new build is a new file.
+	output: { ...defaultConfig.output, chunkFilename: '[id].[contenthash:8].js' },
 	module: { ...defaultConfig.module, rules: defaultConfig.module.rules.map( withPostcss ).map( withTheme ) },
 	resolve: {
 		...defaultConfig.resolve,
