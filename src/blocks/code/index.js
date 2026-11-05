@@ -7,7 +7,7 @@ import metadata from './block.json';
 
 islandBlock( metadata, {
 	fields: [
-		{ key: 'code', label: 'Code', type: 'textarea' },
+		{ key: 'code', label: 'Code', type: 'code', lang: ( a ) => a.lang },
 		{ key: 'lang', label: 'Language', type: 'select', options: [ [ 'JavaScript', 'js' ], [ 'JSX', 'jsx' ], [ 'CSS', 'css' ], [ 'HTML', 'html' ], [ 'Shell', 'sh' ] ] },
 	],
 	preview: ( p ) => <Code key={ p.lang } lang={ p.lang }>{ p.code || '' }</Code>,

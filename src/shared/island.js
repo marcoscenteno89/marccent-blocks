@@ -5,7 +5,8 @@
  *
  *   { key, label, type, help, options, min, max, step, fields }
  *   type: text, textarea, number, range, toggle, select (options: [ [ label, value ] ]), icon (a Font Awesome name),
- *   image (its URL, from the media library), url, list (rows of fields: tabs, events, items…; itemLabel names one).
+ *   image (its URL, from the media library), url, code (the theme's Code as an editor; lang: a language, or a function
+ *   of the block's attributes), list (rows of fields: tabs, events, items…; itemLabel names one).
  *
  * In the editor the block shows the component itself, drawn from those props (preview), so what's edited is what
  * the page shows; or, for a component whose items are blocks (tabs, a stat card's buttons), those blocks to edit.
@@ -14,6 +15,7 @@ import { Component as ReactComponent } from '@wordpress/element';
 import { InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl } from '@wordpress/components';
 import { register } from './register';
+import { CodeField } from './code-field';
 
 const opt = ( [ label, value ] ) => ( { label, value } );
 
@@ -49,9 +51,10 @@ const ImageField = ( { f, value, onChange } ) => (
 	</div>
 );
 
-const Field = ( { f, value, onChange } ) => {
+const Field = ( { f, value, onChange, values = {} } ) => {
 	const common = { label: f.label, help: f.help };
 	switch ( f.type ) {
+		case 'code': return <CodeField { ...common } lang={ typeof f.lang === 'function' ? f.lang( values ) : f.lang } value={ value ?? '' } onChange={ onChange } />;
 		case 'textarea': return <TextareaControl { ...common } value={ value ?? '' } onChange={ onChange } />;
 		case 'number': return <TextControl { ...common } type="number" value={ value ?? '' } onChange={ ( v ) => onChange( v === '' ? undefined : Number( v ) ) } />;
 		case 'range': return <RangeControl { ...common } value={ value } min={ f.min } max={ f.max } step={ f.step } onChange={ onChange } />;
@@ -109,7 +112,7 @@ export const islandBlock = ( metadata, { fields = [], preview, toProps, inner, n
 		return (
 			<>
 				<InspectorControls>
-					{ plain.length > 0 && <PanelBody title={ metadata.title }>{ plain.map( ( f ) => <Field key={ f.key } f={ f } value={ a[ f.key ] } onChange={ ( v ) => set( { [ f.key ]: v } ) } /> ) }</PanelBody> }
+					{ plain.length > 0 && <PanelBody title={ metadata.title }>{ plain.map( ( f ) => <Field key={ f.key } f={ f } value={ a[ f.key ] } values={ a } onChange={ ( v ) => set( { [ f.key ]: v } ) } /> ) }</PanelBody> }
 					{ fields.filter( ( f ) => f.type === 'list' ).map( ( f ) => <ListField key={ f.key } f={ f } value={ a[ f.key ] } onChange={ ( v ) => set( { [ f.key ]: v } ) } /> ) }
 				</InspectorControls>
 				<div { ...blockProps }>
