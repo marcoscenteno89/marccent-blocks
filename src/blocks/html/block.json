@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/html",
+	"title": "Custom HTML",
+	"category": "marccent",
+	"icon": "html",
+	"description": "Hand-written HTML with its own CSS and JavaScript, edited in tabs (the theme’s code editor). The CSS only reaches this block; the script gets it as root. Only people who may post unfiltered HTML can edit it.",
+	"keywords": [ "html", "css", "javascript", "code", "embed", "custom" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"html": { "type": "string", "default": "" },
+		"css": { "type": "string", "default": "" },
+		"js": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "anchor": true, "customCSS": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
