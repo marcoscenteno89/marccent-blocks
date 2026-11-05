@@ -1,7 +1,7 @@
 <?php
 /**
- * The Form block's admin screens (inc/forms.php keeps and emails the entries): Forms → Entries, one entry read only,
- * and Settings → Marccent forms with the Turnstile keys. Loaded in the admin only.
+ * The Form block's admin screens (inc/forms.php keeps and emails the entries): Forms → Entries and one entry, read
+ * only. The Turnstile keys are in Appearance → Marccent settings (inc/keys.php). Loaded in the admin only.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -110,47 +110,16 @@ add_action( 'add_meta_boxes_marccent_entry', function ( WP_Post $entry ) {
 	}, 'marccent_entry', 'normal', 'high' );
 } );
 
-/* Settings → Marccent forms: the Turnstile keys */
-
-add_action( 'admin_init', function () {
-	register_setting( 'marccent_forms', 'marccent_turnstile', array(
-		'type'              => 'array',
-		'default'           => array(),
-		'sanitize_callback' => fn( $value ) => array(
-			'site'   => preg_replace( '/[^A-Za-z0-9_\-]/', '', (string) ( $value['site'] ?? '' ) ),
-			'secret' => preg_replace( '/[^A-Za-z0-9_\-]/', '', (string) ( $value['secret'] ?? '' ) ),
-		),
-	) );
-	add_settings_section( 'marccent_turnstile', __( 'Cloudflare Turnstile', 'marccent-blocks' ), function () {
-		echo '<p>' . esc_html__( 'Checks that a form’s sender is a person before it’s kept. Get a site key and a secret key from Cloudflare (Turnstile → Add widget, with this site’s domain). Without them, forms still work, unchecked for spam.', 'marccent-blocks' ) . '</p>';
-	}, 'marccent_forms' );
-	foreach ( array( 'site' => __( 'Site key', 'marccent-blocks' ), 'secret' => __( 'Secret key', 'marccent-blocks' ) ) as $key => $label ) {
-		add_settings_field( "marccent_turnstile_$key", $label, function () use ( $key ) {
-			printf( '<input type="%s" name="marccent_turnstile[%s]" value="%s" class="regular-text" autocomplete="off">', 'secret' === $key ? 'password' : 'text', esc_attr( $key ), esc_attr( marccent_forms_turnstile()[ $key ] ) );
-		}, 'marccent_forms', 'marccent_turnstile' );
-	}
-} );
-
-add_action( 'admin_menu', function () {
-	add_options_page( __( 'Marccent forms', 'marccent-blocks' ), __( 'Marccent forms', 'marccent-blocks' ), 'manage_options', 'marccent-forms', function () {
-		echo '<div class="wrap"><h1>' . esc_html__( 'Marccent forms', 'marccent-blocks' ) . '</h1><form method="post" action="options.php">';
-		settings_fields( 'marccent_forms' );
-		do_settings_sections( 'marccent_forms' );
-		submit_button();
-		echo '</form></div>';
-	} );
-} );
-
-// On the Forms screens and the settings page, while there are no Turnstile keys: spam protection is off.
+// On the Forms screens and Marccent settings, while there are no Turnstile keys: spam protection is off.
 add_action( 'admin_notices', function () {
 	$screen = get_current_screen();
-	if ( marccent_forms_turnstile_on() || ! $screen || ! current_user_can( 'manage_options' ) || ( 'marccent_entry' !== $screen->post_type && 'settings_page_marccent-forms' !== $screen->id ) ) {
+	if ( marccent_forms_turnstile_on() || ! $screen || ! current_user_can( 'manage_options' ) || ( 'marccent_entry' !== $screen->post_type && 'appearance_page_marccent-settings' !== $screen->id ) ) {
 		return;
 	}
 	printf(
 		'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
 		esc_html__( 'Spam protection is off: forms accept submissions without a Turnstile check, marked “Not checked”.', 'marccent-blocks' ),
-		esc_url( admin_url( 'options-general.php?page=marccent-forms' ) ),
+		esc_url( admin_url( 'themes.php?page=marccent-settings' ) ),
 		esc_html__( 'Add the Turnstile keys', 'marccent-blocks' )
 	);
 } );

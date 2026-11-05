@@ -278,11 +278,10 @@ function marccent_forms_rate_ok( int $post_id, string $form_id ): bool {
 	return true;
 }
 
-/* Turnstile (Settings → Marccent forms) */
+/* Turnstile (its keys: Appearance → Marccent settings, inc/keys.php) */
 
 function marccent_forms_turnstile(): array {
-	$keys = marccent_blocks_option( 'marccent_turnstile', array() );
-	return array( 'site' => (string) ( $keys['site'] ?? '' ), 'secret' => (string) ( $keys['secret'] ?? '' ) );
+	return array( 'site' => marccent_key( 'turnstile_site' ), 'secret' => marccent_key( 'turnstile_secret' ) );
 }
 
 function marccent_forms_turnstile_on(): bool {
