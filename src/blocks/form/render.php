@@ -28,11 +28,14 @@ if ( $result ) {
 		: marccent_blocks_alert( 'danger', esc_html( (string) ( $result['message'] ?? '' ) ) );
 }
 
-$turnstile = marccent_forms_turnstile();
-$widget    = '';
-if ( '' !== $turnstile['site'] ) {
+// The robot check's widget (marccent_forms_check): Turnstile's, or reCAPTCHA's checkbox.
+$widget = '';
+if ( 'turnstile' === marccent_forms_check() ) {
 	wp_enqueue_script( 'cloudflare-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', array(), null, array( 'strategy' => 'defer', 'in_footer' => true ) ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Cloudflare's, unversioned
-	$widget = sprintf( '<div class="cf-turnstile" data-sitekey="%s"></div>', esc_attr( $turnstile['site'] ) );
+	$widget = sprintf( '<div class="cf-turnstile" data-sitekey="%s"></div>', esc_attr( marccent_forms_turnstile()['site'] ) );
+} elseif ( 'recaptcha' === marccent_forms_check() ) {
+	wp_enqueue_script( 'google-recaptcha', 'https://www.google.com/recaptcha/api.js', array(), null, array( 'strategy' => 'defer', 'in_footer' => true ) ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Google's, unversioned
+	$widget = sprintf( '<div class="g-recaptcha" data-sitekey="%s"></div>', esc_attr( marccent_forms_recaptcha()['site'] ) );
 }
 
 $hidden = array(

@@ -30,6 +30,22 @@ function marccent_keys(): array {
 			'label'  => __( 'Secret key', 'marccent-blocks' ),
 			'secret' => true,
 		),
+		'google_places'    => array(
+			'group'  => __( 'Google Places (server)', 'marccent-blocks' ),
+			'label'  => __( 'API key', 'marccent-blocks' ),
+			'help'   => __( 'A server key with the Places API (New), restricted to this server’s IP address, for Fields → Sources (Google reviews). Not the Maps key: that one is a browser key.', 'marccent-blocks' ),
+			'secret' => true,
+		),
+		'recaptcha_site'   => array(
+			'group' => __( 'Google reCAPTCHA', 'marccent-blocks' ),
+			'label' => __( 'Site key', 'marccent-blocks' ),
+			'help'  => __( 'The “I’m not a robot” checkbox on forms, when there are no Turnstile keys (Turnstile comes first). Google reCAPTCHA’s admin console → a v2 Checkbox key for this site’s domain: its site key and secret key.', 'marccent-blocks' ),
+		),
+		'recaptcha_secret' => array(
+			'group'  => __( 'Google reCAPTCHA', 'marccent-blocks' ),
+			'label'  => __( 'Secret key', 'marccent-blocks' ),
+			'secret' => true,
+		),
 		'font_awesome_kit' => array(
 			'group' => __( 'Font Awesome', 'marccent-blocks' ),
 			'label' => __( 'Kit code', 'marccent-blocks' ),

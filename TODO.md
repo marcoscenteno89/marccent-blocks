@@ -30,8 +30,8 @@
       (in `wp-config.php`, only for the proxy's address) before forms go live.
 - [ ] **Turnstile's server check** is untested (no keys on crm-sample): test with Cloudflare's test keys
       (always-pass and always-fail) before relying on it.
-- [ ] **A form in a template part or synced pattern** isn't found when it's submitted (only the page's own content is
-      read).
+- [x] **A form in a template part or synced pattern** isn't found when it's submitted (only the page's own content was
+      read). Fixed 2026-11-05: synced patterns and template parts are followed, and the theme's parts searched.
 
 ## Notes
 

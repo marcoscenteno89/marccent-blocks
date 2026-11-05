@@ -110,16 +110,16 @@ add_action( 'add_meta_boxes_marccent_entry', function ( WP_Post $entry ) {
 	}, 'marccent_entry', 'normal', 'high' );
 } );
 
-// On the Forms screens and Marccent settings, while there are no Turnstile keys: spam protection is off.
+// On the Forms screens and Marccent settings, while there are no Turnstile or reCAPTCHA keys: spam protection is off.
 add_action( 'admin_notices', function () {
 	$screen = get_current_screen();
-	if ( marccent_forms_turnstile_on() || ! $screen || ! current_user_can( 'manage_options' ) || ( 'marccent_entry' !== $screen->post_type && 'appearance_page_marccent-settings' !== $screen->id ) ) {
+	if ( '' !== marccent_forms_check() || ! $screen || ! current_user_can( 'manage_options' ) || ( 'marccent_entry' !== $screen->post_type && 'appearance_page_marccent-settings' !== $screen->id ) ) {
 		return;
 	}
 	printf(
 		'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
-		esc_html__( 'Spam protection is off: forms accept submissions without a Turnstile check, marked “Not checked”.', 'marccent-blocks' ),
+		esc_html__( 'Spam protection is off: forms accept submissions without a robot check (Turnstile or reCAPTCHA), marked “Not checked”.', 'marccent-blocks' ),
 		esc_url( admin_url( 'themes.php?page=marccent-settings' ) ),
-		esc_html__( 'Add the Turnstile keys', 'marccent-blocks' )
+		esc_html__( 'Add Turnstile or reCAPTCHA keys', 'marccent-blocks' )
 	);
 } );

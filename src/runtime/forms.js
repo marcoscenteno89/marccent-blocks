@@ -71,6 +71,11 @@ const send = async ( form, button ) => {
 		say( form, 'error', json.message || 'Something went wrong. Try again.' );
 		showErrors( form, json.errors || {} );
 		window.turnstile?.reset( form.querySelector( '.cf-turnstile' ) );
+		// reCAPTCHA's checkboxes are numbered in the page's order; its token, too, only works once.
+		const box = form.querySelector( '.g-recaptcha' );
+		if ( box && window.grecaptcha ) {
+			window.grecaptcha.reset( [ ...document.querySelectorAll( '.g-recaptcha' ) ].indexOf( box ) );
+		}
 	} catch {
 		say( form, 'error', 'Couldn’t reach the site. Check the connection and try again.' );
 	} finally {

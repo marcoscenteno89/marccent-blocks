@@ -30,12 +30,21 @@ const MARCCENT_FORM_FIELDS = array( 'marccent/form-field', 'marccent/form-rating
 /* What a form is, from its page */
 
 // The Form block with this formId among blocks, at any depth.
-function marccent_forms_find( array $blocks, string $form_id ): ?array {
+function marccent_forms_find( array $blocks, string $form_id, int $depth = 0 ): ?array {
 	foreach ( $blocks as $block ) {
 		if ( 'marccent/form' === $block['blockName'] && ( $block['attrs']['formId'] ?? '' ) === $form_id ) {
 			return $block;
 		}
-		$found = marccent_forms_find( $block['innerBlocks'] ?? array(), $form_id );
+		// Into a synced pattern (a published one) or a template part, as the page shows them; not round in circles.
+		$inner = $block['innerBlocks'] ?? array();
+		if ( $depth < 5 && 'core/block' === $block['blockName'] && ! empty( $block['attrs']['ref'] ) ) {
+			$pattern = get_post( (int) $block['attrs']['ref'] );
+			$inner   = $pattern && 'wp_block' === $pattern->post_type && 'publish' === $pattern->post_status ? parse_blocks( $pattern->post_content ) : array();
+		} elseif ( $depth < 5 && 'core/template-part' === $block['blockName'] && ! empty( $block['attrs']['slug'] ) ) {
+			$part  = get_block_template( ( $block['attrs']['theme'] ?? get_stylesheet() ) . '//' . $block['attrs']['slug'], 'wp_template_part' );
+			$inner = $part ? parse_blocks( $part->content ) : array();
+		}
+		$found = marccent_forms_find( $inner, $form_id, $depth + 1 );
 		if ( $found ) {
 			return $found;
 		}
@@ -87,6 +96,13 @@ function marccent_forms_definition( int $post_id, string $form_id ): ?array {
 		return null;
 	}
 	$block = marccent_forms_find( parse_blocks( $post->post_content ), $form_id );
+	// Not in the page's own content: the theme's template parts (the header, the footer), around every page.
+	foreach ( $block ? array() : get_block_templates( array(), 'wp_template_part' ) as $part ) {
+		$block = marccent_forms_find( parse_blocks( $part->content ), $form_id );
+		if ( $block ) {
+			break;
+		}
+	}
 	return $block ? array( 'post' => $post, 'attrs' => marccent_forms_attrs( $block ), 'fields' => marccent_forms_fields( $block['innerBlocks'] ) ) : null;
 }
 
@@ -302,6 +318,42 @@ function marccent_forms_turnstile_ok( string $token ): bool {
 	return ! empty( $body['success'] );
 }
 
+/* reCAPTCHA, the v2 checkbox (its keys: Appearance → Marccent settings) */
+
+function marccent_forms_recaptcha(): array {
+	return array( 'site' => marccent_key( 'recaptcha_site' ), 'secret' => marccent_key( 'recaptcha_secret' ) );
+}
+
+// Google's answer for the token the checkbox put in the form.
+function marccent_forms_recaptcha_ok( string $token ): bool {
+	if ( '' === $token || strlen( $token ) > 4096 ) {
+		return false;
+	}
+	$response = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', array(
+		'timeout' => 10,
+		'body'    => array( 'secret' => marccent_forms_recaptcha()['secret'], 'response' => $token, 'remoteip' => marccent_forms_ip() ),
+	) );
+	$body = is_wp_error( $response ) ? null : json_decode( wp_remote_retrieve_body( $response ), true );
+	return ! empty( $body['success'] );
+}
+
+/* The robot check: Turnstile when it has both keys, else reCAPTCHA when it has both, else none ('') */
+
+function marccent_forms_check(): string {
+	if ( marccent_forms_turnstile_on() ) {
+		return 'turnstile';
+	}
+	$recaptcha = marccent_forms_recaptcha();
+	return '' !== $recaptcha['site'] && '' !== $recaptcha['secret'] ? 'recaptcha' : '';
+}
+
+// Whether a submission passes the check (its widget's token in the fields).
+function marccent_forms_check_ok( array $input ): bool {
+	return 'recaptcha' === marccent_forms_check()
+		? marccent_forms_recaptcha_ok( (string) ( $input['g-recaptcha-response'] ?? '' ) )
+		: marccent_forms_turnstile_ok( (string) ( $input['cf-turnstile-response'] ?? '' ) );
+}
+
 /* A submission */
 
 /*
@@ -324,8 +376,8 @@ function marccent_forms_submit( array $input, array $files = array() ): array {
 	if ( ! marccent_forms_rate_ok( $post_id, $form_id ) ) {
 		return $fail( 429, __( 'Too many tries. Wait a few minutes and send it again.', 'marccent-blocks' ) );
 	}
-	$verified = marccent_forms_turnstile_on();
-	if ( $verified && ! marccent_forms_turnstile_ok( (string) ( $input['cf-turnstile-response'] ?? '' ) ) ) {
+	$verified = '' !== marccent_forms_check();
+	if ( $verified && ! marccent_forms_check_ok( $input ) ) {
 		return $fail( 403, __( 'We couldn’t check that you’re not a robot. Try again.', 'marccent-blocks' ) );
 	}
 	[ $values, $errors ] = marccent_forms_validate( $form['fields'], $input, $files );
