@@ -13,9 +13,10 @@ const Edit = ( { attributes: a, setAttributes: set } ) => (
 		<InspectorControls>
 			<PanelBody title="Navbar">
 				<ToggleControl label="Show the site name by the logo" checked={ a.showName } onChange={ ( showName ) => set( { showName } ) } />
-				<ToggleControl label="Theme button (mini theme editor)" checked={ a.themeButton } onChange={ ( themeButton ) => set( { themeButton } ) } />
-				<TextareaControl label="Social links" rows={ 4 } value={ a.social } onChange={ ( social ) => set( { social } ) }
-					help="One per line: Name | URL | icon classes, e.g. Facebook | https://facebook.com/… | fa-brands fa-facebook" />
+				{ a.social && (
+					<TextareaControl label="Social links (older setting)" rows={ 4 } value={ a.social } onChange={ ( social ) => set( { social } ) }
+						help="Used only while no menu is in the Social location. Put these links in Appearance → Menus → Social instead, then clear this." />
+				) }
 			</PanelBody>
 			<PanelBody title="Call to action">
 				<TextControl label="Label" value={ a.ctaLabel } onChange={ ( ctaLabel ) => set( { ctaLabel } ) } />

@@ -10,7 +10,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The keys: id => group (a heading), label, help, secret (a password, kept out of the page).
+ * The keys: id => group (a heading), label, help, secret (a password, kept out of the page), type (email, url;
+ * else a key's characters).
  */
 function marccent_keys(): array {
 	return apply_filters( 'marccent_keys', array(
@@ -28,6 +29,29 @@ function marccent_keys(): array {
 			'group'  => __( 'Cloudflare Turnstile', 'marccent-blocks' ),
 			'label'  => __( 'Secret key', 'marccent-blocks' ),
 			'secret' => true,
+		),
+		'font_awesome_kit' => array(
+			'group' => __( 'Font Awesome', 'marccent-blocks' ),
+			'label' => __( 'Kit code', 'marccent-blocks' ),
+			'help'  => __( 'A kit’s code, from its embed line (kit.fontawesome.com/<code>.js): its icons and styles (Pro: light, thin, duotone…) on the site and in the editor, over the built-in Font Awesome Free. In Font Awesome, limit the kit to this site’s domain.', 'marccent-blocks' ),
+		),
+		'brevo'            => array(
+			'group'  => __( 'Email (Brevo)', 'marccent-blocks' ),
+			'label'  => __( 'API key', 'marccent-blocks' ),
+			'help'   => __( 'The site’s email (forms, WordPress’s own) goes out through Brevo with it, by the WP Mail SMTP plugin, set up from here. One key per site: Brevo → SMTP & API → API keys, named after the site.', 'marccent-blocks' ),
+			'secret' => true,
+		),
+		'mail_from'        => array(
+			'group' => __( 'Email (Brevo)', 'marccent-blocks' ),
+			'label' => __( 'Send from', 'marccent-blocks' ),
+			'help'  => __( 'An address on the site’s own domain (website@…), authenticated in Brevo (Senders, Domains): Brevo only sends from those.', 'marccent-blocks' ),
+			'type'  => 'email',
+		),
+		'sentry_dsn'       => array(
+			'group' => __( 'Errors (Sentry)', 'marccent-blocks' ),
+			'label' => __( 'DSN', 'marccent-blocks' ),
+			'help'  => __( 'The site’s Sentry project’s DSN (Project settings → Client Keys). The site’s PHP and JavaScript errors go there, by the WP Sentry Integration plugin, set up from here.', 'marccent-blocks' ),
+			'type'  => 'url',
 		),
 	) );
 }
@@ -48,6 +72,33 @@ function marccent_key_override( string $id ): ?string {
 function marccent_key( string $id ): string {
 	return marccent_key_override( $id ) ?? (string) ( marccent_blocks_option( 'marccent_keys', array() )[ $id ] ?? '' );
 }
+
+// Brevo and Sentry: their WordPress plugins (WP Mail SMTP, WP Sentry Integration) read wp-config.php constants, set here
+// from the keys unless wp-config.php sets them itself. Plugins load in name order, so these are defined before theirs.
+if ( '' !== marccent_key( 'brevo' ) && ! defined( 'WPMS_ON' ) ) {
+	define( 'WPMS_ON', true );
+	define( 'WPMS_MAILER', 'sendinblue' ); // Brevo, by its old name
+	define( 'WPMS_SENDINBLUE_API_KEY', marccent_key( 'brevo' ) );
+	if ( '' !== marccent_key( 'mail_from' ) ) {
+		define( 'WPMS_MAIL_FROM', marccent_key( 'mail_from' ) );
+		define( 'WPMS_MAIL_FROM_FORCE', true );
+		define( 'WPMS_MAIL_FROM_NAME', get_bloginfo( 'name' ) );
+	}
+}
+if ( '' !== marccent_key( 'sentry_dsn' ) && ! defined( 'WP_SENTRY_PHP_DSN' ) ) {
+	define( 'WP_SENTRY_PHP_DSN', marccent_key( 'sentry_dsn' ) );
+	define( 'WP_SENTRY_BROWSER_DSN', marccent_key( 'sentry_dsn' ) );
+	defined( 'WP_SENTRY_ENV' ) || define( 'WP_SENTRY_ENV', wp_get_environment_type() );
+}
+
+// A Font Awesome kit, when there's one: on the site and in the editor's canvas, beside the built-in Free icons.
+add_action( 'enqueue_block_assets', function () {
+	$kit = marccent_key( 'font_awesome_kit' );
+	if ( '' !== $kit ) {
+		wp_enqueue_script( 'marccent-font-awesome-kit', 'https://kit.fontawesome.com/' . rawurlencode( $kit ) . '.js', array(), null, array( 'strategy' => 'defer' ) ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- the kit is versioned by Font Awesome
+	}
+} );
+add_filter( 'script_loader_tag', fn( $tag, $handle ) => 'marccent-font-awesome-kit' === $handle ? str_replace( ' src=', ' crossorigin="anonymous" src=', $tag ) : $tag, 10, 2 );
 
 // Once: the keys from where they used to be (Settings → Marccent forms, Marccent Local's Settings → Business) move
 // here, and leave there.
@@ -100,7 +151,12 @@ add_action( 'admin_init', function () {
 			$saved = (array) get_option( 'marccent_keys', array() );
 			$out   = array();
 			foreach ( marccent_keys() as $id => $k ) {
-				$v = preg_replace( '/[^A-Za-z0-9_\-.]/', '', (string) ( $value[ $id ] ?? '' ) );
+				$v = (string) ( $value[ $id ] ?? '' );
+				$v = match ( $k['type'] ?? '' ) {
+					'email' => sanitize_email( $v ),
+					'url'   => esc_url_raw( trim( $v ), array( 'https', 'http' ) ),
+					default => preg_replace( '/[^A-Za-z0-9_\-.]/', '', $v ),
+				};
 				// A secret left empty keeps what's saved, unless it was asked to go.
 				if ( ! empty( $k['secret'] ) && '' === $v && empty( $value[ "$id:clear" ] ) ) {
 					$v = (string) ( $saved[ $id ] ?? '' );

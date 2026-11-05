@@ -73,7 +73,7 @@ add_action( 'template_redirect', function () {
 function marccent_blocks_theme(): array {
 	static $theme = null;
 	if ( null === $theme ) {
-		$base  = json_decode( (string) @file_get_contents( MARCCENT_BLOCKS_DIR . '/build/theme-defaults.json' ), true ) ?: array();
+		$base  = marccent_blocks_theme_base();
 		$site  = marccent_blocks_defaults();
 		$own   = $site['palettes'] ?? array();
 		$ids   = array_column( $own, 'id' );
@@ -83,6 +83,42 @@ function marccent_blocks_theme(): array {
 		) );
 	}
 	return $theme;
+}
+
+// The package's own theme defaults (build/theme-defaults.json, from marccent-theme's lib/theme.defaults.json).
+function marccent_blocks_theme_base(): array {
+	static $base = null;
+	$base ??= json_decode( (string) @file_get_contents( MARCCENT_BLOCKS_DIR . '/build/theme-defaults.json' ), true ) ?: array();
+	return $base;
+}
+
+// What the package offers a site's theme (build/theme-options.json): its design styles (id, title, description) and
+// hover effects. The theme's options panel (Marccent WP) builds its choices from it.
+function marccent_blocks_theme_options(): array {
+	static $options = null;
+	$options ??= json_decode( (string) @file_get_contents( MARCCENT_BLOCKS_DIR . '/build/theme-options.json' ), true ) ?: array( 'designs' => array(), 'hovers' => array() );
+	return $options;
+}
+
+// The site's default hover (Marccent WP's theme options): the class a button or card set to Default gets; none for "none".
+function marccent_blocks_default_hover(): string {
+	$hover = (string) ( marccent_blocks_theme()['hover'] ?? '' );
+	return '' === $hover || 'none' === $hover ? '' : 'hover-' . sanitize_html_class( $hover );
+}
+
+/*
+ * What visitors may change themselves (Marccent WP: Appearance → Marccent theme, Visitors): the full mini theme editor
+ * (the brush button: design style, light/dark, glass, the palettes and Start over), or single controls of it right in
+ * the header (only light/dark, say). A site that never chose keeps the full editor.
+ */
+function marccent_blocks_visitor_controls(): array {
+	$v    = (array) ( marccent_blocks_theme()['visitor'] ?? array() );
+	$full = (bool) ( $v['full'] ?? true );
+	return array(
+		'full'     => $full,
+		// The single controls, in the order they show; none beside the full editor, which has them all.
+		'controls' => $full ? array() : array_values( array_filter( array( 'design', 'mode', 'glass', 'palette' ), fn( $k ) => ! empty( $v[ $k ] ) ) ),
+	);
 }
 
 // The design style the site starts with.

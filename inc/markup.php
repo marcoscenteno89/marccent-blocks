@@ -363,6 +363,29 @@ function marccent_blocks_tooltip( array $t ): string {
 	);
 }
 
+/*
+ * Map: the theme's Map as its markup engine draws it (<div data-component="map" class="map" …>, core/components.js):
+ * a Google map in the theme's colors once it nears the screen, a pin on the center with marker (its title, and a
+ * Google Maps link its click opens), Google's plain embed without a key. The key is data-key, or the page's
+ * window.marccentMapsKey. What's inside (a no-script link) shows until the map draws. Only http(s) addresses.
+ */
+function marccent_blocks_map( array $m, string $inner = '', ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$url          = fn( $u ) => preg_match( '#^https?://#i', (string) $u ) ? (string) $u : '';
+	return sprintf( '<div %s>%s</div>', $attributes( array(
+		'data-component' => 'map',
+		'class'          => 'map',
+		'data-key'       => (string) ( $m['key'] ?? '' ) ?: null,
+		'data-lat'       => (string) (float) ( $m['lat'] ?? 0 ),
+		'data-lng'       => (string) (float) ( $m['lng'] ?? 0 ),
+		'data-zoom'      => (string) (int) ( $m['zoom'] ?? 10 ),
+		'data-marker'    => empty( $m['marker'] ) ? null : '',
+		'data-title'     => (string) ( $m['title'] ?? '' ) ?: null,
+		'data-link'      => $url( $m['link'] ?? '' ) ?: null,
+		'data-embed'     => $url( $m['embed'] ?? '' ) ?: null,
+	) ), $inner );
+}
+
 // Popover: a panel its button opens and closes (the browser's popover), beside it.
 function marccent_blocks_popover( array $p, string $content ): string {
 	$id = (string) $p['id'];

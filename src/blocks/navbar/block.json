@@ -5,7 +5,7 @@
 	"title": "Navbar",
 	"category": "marccent",
 	"icon": "menu",
-	"description": "The site's header bar: logo, the main menu (Appearance → Menus, the Primary location), social links, a call-to-action button and the theme button with its mini editor.",
+	"description": "The site's header bar: logo, the main menu (Appearance → Menus, the Primary location), the social links (Appearance → Menus, Social), a call-to-action button and what visitors may change of the theme (Appearance → Marccent theme).",
 	"keywords": [ "header", "menu", "navigation" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {

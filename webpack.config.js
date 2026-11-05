@@ -8,7 +8,8 @@
  * - styles/icons: every Font Awesome icon, for the editor (a page gets only its own: build/icons.php).
  * - icons.php: every icon's rule by name and the icons the scripts can render; theme-defaults.json: the package's
  *   theme defaults, so PHP can paint the starting colors; dividers.json: the section dividers' shapes, so PHP can
- *   write them; marccent-theme.json: the package's version.
+ *   write them; theme-options.json: its design styles and hover effects, for the theme's options panel (Marccent WP);
+ *   marccent-theme.json: the package's version.
  *
  * marccent-theme's components import no router (their links are plain <a>s unless a host hands them one), so they
  * build as they are. The site's starting theme reaches the package as window.marccentDefaults (printed by
@@ -44,6 +45,14 @@ class FrontEndData {
 				compilation.emitAsset( 'icons.php', new webpack.sources.RawSource( php ) );
 				compilation.emitAsset( 'dividers.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'markup/dividers.json' ) ) ) );
 				compilation.emitAsset( 'theme-defaults.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'lib/theme.defaults.json' ) ) ) );
+				// What the Marccent theme panel offers (inc/theme-panel.php): the design styles with their descriptions
+				// (lib/designs.gen.js's array) and every hover effect in styles/hovers.css.
+				const gen = fs.readFileSync( path.join( PACKAGE, 'lib/designs.gen.js' ), 'utf8' );
+				const options = {
+					designs: JSON.parse( gen.slice( gen.indexOf( '[' ), gen.lastIndexOf( ']' ) + 1 ) ).map( ( { id, title, description } ) => ( { id, title, description } ) ),
+					hovers: [ ...new Set( [ ...fs.readFileSync( path.join( PACKAGE, 'styles/hovers.css' ), 'utf8' ).matchAll( /\.hover-([a-z][a-z-]*)/g ) ].map( ( m ) => m[ 1 ] ) ) ].sort(),
+				};
+				compilation.emitAsset( 'theme-options.json', new webpack.sources.RawSource( JSON.stringify( options ) ) );
 				const { version } = JSON.parse( fs.readFileSync( path.join( PACKAGE, 'package.json' ), 'utf8' ) );
 				compilation.emitAsset( 'marccent-theme.json', new webpack.sources.RawSource( JSON.stringify( { version } ) ) );
 			} );

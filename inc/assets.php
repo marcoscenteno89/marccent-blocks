@@ -47,8 +47,11 @@ add_filter( 'render_block', function ( $html, $block ) {
 	// Theme markup the engine wires up (tooltips, popovers, dialogs, file drops, code, dividers that follow the scroll…)
 	// needs the runtime too, and so does a Form block (its enhancer sends it without leaving the page: runtime/forms.js).
 	$page['engine']   = $page['engine'] || preg_match( '/\bdata-component="[^"]*\b(?:tooltip|popover|modal|drawer|file-drop|code|toggle-button|toggle-panel|nav-bar|app-shell|menu|map)\b|\bdata-component="divider"[^>]*\bdata-scroll=|\bdata-opens=|\bdata-marccent-form=|\bclass="[^"]*\bhover-(?:tilt|spotlight|magnet)\b/', $html );
-	if ( 'marccent/navbar' === $block['blockName'] && ( $block['attrs']['themeButton'] ?? true ) ) {
-		$page['themeButton'] = true;
+	if ( 'marccent/navbar' === $block['blockName'] ) {
+		// The runtime for whatever visitors may change; every design style only when they can pick one.
+		$v                   = marccent_blocks_visitor_controls();
+		$page['themeButton'] = $v['full'] || $v['controls'];
+		$page['designs']    += $v['full'] || in_array( 'design', $v['controls'], true ) ? array( 'all' => true ) : array();
 	}
 	return $html;
 }, 10, 2 );
@@ -77,7 +80,7 @@ function marccent_blocks_enqueue( bool $late = false ): void {
 
 	wp_enqueue_style( 'marccent' );
 
-	$designs = $page['themeButton'] ? array( 'all' ) : array_keys( array( marccent_blocks_design() => true ) + $page['designs'] );
+	$designs = isset( $page['designs']['all'] ) || marccent_blocks_previewing() ? array( 'all' ) : array_keys( array( marccent_blocks_design() => true ) + $page['designs'] );
 	foreach ( $designs as $id ) {
 		if ( 'none' !== $id && ! wp_style_is( "marccent-design-$id" ) && file_exists( MARCCENT_BLOCKS_DIR . "/build/designs/$id.css" ) ) {
 			marccent_blocks_style( "marccent-design-$id", "designs/$id", array( 'marccent' ) );
@@ -114,11 +117,41 @@ function marccent_blocks_enqueue( bool $late = false ): void {
 add_action( 'wp_enqueue_scripts', fn() => marccent_blocks_enqueue(), 20 );
 add_action( 'wp_footer', fn() => marccent_blocks_enqueue( true ), 1 );
 
-// The editor's canvas: every style, design style and icon, since any block can be added there.
+/*
+ * The theme options' preview (Marccent WP: Appearance → Marccent theme shows the site in a frame with ?marccent_preview):
+ * every design style, so any one picked shows as it will, and no admin bar. Administrators only.
+ */
+function marccent_blocks_previewing(): bool {
+	return isset( $_GET['marccent_preview'] ) && current_user_can( 'manage_options' ); // phpcs:ignore WordPress.Security.NonceVerification -- only changes what's shown
+}
+add_filter( 'show_admin_bar', fn( $show ) => $show && ! marccent_blocks_previewing() );
+
+// The editor's canvas: every style, design style and icon, since any block can be added there. Its <html> gets the
+// site's theme as the front end's does (theme.php's language_attributes, which wp-admin doesn't run): the colors on
+// :root, and the design style, mode, hover and glass set on the canvas's own <html> as it loads. Without them the
+// editor shows the package's default palette and design, not the site's.
 add_action( 'enqueue_block_assets', function () {
 	if ( is_admin() ) {
 		wp_enqueue_style( 'marccent' );
 		marccent_blocks_style( 'marccent-design-all', 'designs/all', array( 'marccent' ) );
 		marccent_blocks_style( 'marccent-icons', 'styles/icons', array( 'marccent' ) );
+
+		$t    = marccent_blocks_theme();
+		$vars = marccent_blocks_theme_vars();
+		wp_add_inline_style( 'marccent', ':root{' . implode( '', array_map( fn( $k, $v ) => "$k:$v;", array_keys( $vars ), $vars ) ) . '}' );
+		$attrs = array_filter( array(
+			'id'          => 'site',
+			'data-design' => marccent_blocks_design(),
+			'data-theme'  => empty( $t['isDark'] ) ? 'light' : 'dark',
+			'data-hover'  => $t['hover'] ?? '',
+		) );
+		wp_register_script( 'marccent-canvas', false, array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters -- an inline script only
+		wp_enqueue_script( 'marccent-canvas' );
+		wp_add_inline_script( 'marccent-canvas', sprintf(
+			// Only in the canvas's iframe: wp-admin's own page (a canvas that isn't framed) keeps its look.
+			'(function(h,a){if(window.self===window.top)return;for(var k in a)h.setAttribute(k,a[k]);%s})(document.documentElement,%s);',
+			empty( $t['glass'] ) ? '' : 'h.classList.add("glass");',
+			wp_json_encode( $attrs )
+		) );
 	}
 } );

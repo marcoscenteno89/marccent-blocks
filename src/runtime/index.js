@@ -95,7 +95,7 @@ const Island = ( { el, Component, props, html } ) => {
 const start = () => {
 	const islands = [ ...document.querySelectorAll( '[data-island]' ) ].filter( ( el ) => ISLANDS[ el.dataset.island ] ).map( readIsland );
 	// The theme button lets visitors change the theme: its messages, and any hover effect (goo's needs its filter).
-	const themeButton = islands.some( ( i ) => i.props.themeButton );
+	const themeButton = islands.some( ( i ) => i.props.themeButton || i.props.controls?.length );
 	const canvases = !! document.querySelector( '[data-component~="animation"]' );
 	const goo = themeButton || !! document.querySelector( '.hover-goo, [data-hover="goo"]' );
 	enhance();

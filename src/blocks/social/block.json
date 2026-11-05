@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/social",
+	"title": "Social links",
+	"category": "marccent",
+	"icon": "share",
+	"description": "The site's social links as buttons: the menu in the Social location (Appearance → Menus), the same links the header shows. Add, remove or reorder them there.",
+	"keywords": [ "social", "facebook", "instagram", "links", "follow" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"color": { "type": "string", "default": "secondary" },
+		"hover": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

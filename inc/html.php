@@ -2,7 +2,7 @@
 /**
  * The Custom HTML block (marccent/html) keeps its code in its attributes, which WordPress's HTML filter (kses) doesn't
  * read: so, as for WordPress's own Custom HTML, only people who may post unfiltered HTML can save it. Anyone else's
- * save empties its html, css and js, wherever it is (posts, pages, templates, patterns; nested in other blocks).
+ * save empties its html, css and js, wherever it is (posts, pages, templates, patterns, block widgets; nested in other blocks).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -31,3 +31,12 @@ add_filter( 'wp_insert_post_data', function ( $data ) {
 	}
 	return $data;
 }, 20 );
+
+// Block widgets aren't posts: their content is filtered (kses) on save, but not a block's attributes. Same rule.
+add_filter( 'widget_update_callback', function ( $instance, $new, $old, $widget ) {
+	if ( $widget instanceof WP_Widget_Block && ! current_user_can( 'unfiltered_html' ) && isset( $instance['content'] )
+		&& preg_match( '#<!--\s+wp:marccent/html\b#', $instance['content'] ) ) {
+		$instance['content'] = serialize_blocks( marccent_blocks_strip_html( parse_blocks( $instance['content'] ) ) );
+	}
+	return $instance;
+}, 20, 4 );

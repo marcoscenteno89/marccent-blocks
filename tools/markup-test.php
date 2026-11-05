@@ -53,6 +53,7 @@ $render = array(
 	'drawer'    => fn( $f ) => marccent_blocks_drawer( array( 'titleId' => 'id-1', 'title' => htmlspecialchars( $f['title'] ), 'side' => $f['side'] ), $f['content'] ),
 	'tooltip'   => fn( $f ) => marccent_blocks_tooltip( array( 'id' => 'id-1' ) + $f ),
 	'popover'   => fn( $f ) => marccent_blocks_popover( array( 'id' => 'id-1' ) + $f, $f['content'] ),
+	'map'       => fn( $f ) => marccent_blocks_map( $f ),
 );
 
 // An element as a comparable tree: its name, attributes sorted (classes too), and its children; blank text dropped.

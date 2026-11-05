@@ -43,3 +43,9 @@
   it would skip `wp_get_nav_menu_items` filters that change a menu per request.
 - **The navbar's custom logo** costs 2 queries a page (`wp_get_attachment_image_src`); keep it with the cached menu
   tree.
+
+- [x] **One Settings → Marccent page for keys and site settings** — keys done (0.5.6: Appearance → Marccent settings; Brevo and Sentry added 2026-11-04, handed to WP Mail SMTP / WP Sentry Integration). Tracking codes stay in Marccent Local; no top-level menu. Was: — today they're spread out: Maps key (Settings →
+      Business), Turnstile (Settings → Marccent forms), tracking codes (Marccent Local), Brevo/Sentry only in
+      wp-config/.env. Each plugin registers its keys (a filter, as `marccent_export_parts`); a key set in .env/wp-config
+      shows locked, secrets masked and left out of exports, plus a "what's missing" check. One top-level **Marccent**
+      menu with tabs, the theme's Appearance → Marccent theme page moving into it. (found 2026-11-04)
