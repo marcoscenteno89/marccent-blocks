@@ -45,6 +45,21 @@ function marccent_blocks_href( string $href ): string {
 	return esc_url( preg_replace_callback( '/\{\{([^{}]*)\}\}/', fn( $m ) => '%7B%7B' . rawurlencode( trim( $m[1] ) ) . '%7D%7D', $href ) );
 }
 
+// The same, for a URL that isn't written into HTML (an island's props, sent as JSON): not HTML-escaped, and its tokens
+// left as written, for Marccent Content to fill there. They're set aside while esc_url_raw checks the rest's scheme
+// (javascript:{{ x }} comes back empty), then put back.
+function marccent_blocks_href_raw( string $href ): string {
+	if ( preg_match( '/^\s*(\{\{[^{}]*\}\}|%7B%7B.*?%7D%7D)\s*$/i', $href ) ) {
+		return trim( $href );
+	}
+	$tokens = array();
+	$bare   = preg_replace_callback( '/\{\{[^{}]*\}\}|%7B%7B.*?%7D%7D/i', function ( $m ) use ( &$tokens ) {
+		$tokens[] = $m[0];
+		return 'mcctoken' . ( count( $tokens ) - 1 ) . 'x';
+	}, $href );
+	return preg_replace_callback( '/mcctoken(\d+)x/', fn( $m ) => $tokens[ (int) $m[1] ] ?? '', esc_url_raw( $bare ) );
+}
+
 /**
  * Button: a link (or a <button> without an href) with an icon and its label, which is also its accessible name, since
  * it hides when the button is narrow; without an icon a text link.

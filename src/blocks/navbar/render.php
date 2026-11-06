@@ -32,8 +32,8 @@ $props   = array(
 	'social'      => $social,
 	'cta'         => $attributes['ctaLabel'] ? array(
 		'label' => $attributes['ctaLabel'],
-		// A {{ token }} (tel:{{ business.telephone }}) as it is, for Marccent Content to fill; the button escapes it.
-		'href'  => str_contains( (string) $attributes['ctaHref'], '{{' ) ? (string) $attributes['ctaHref'] : esc_url_raw( $attributes['ctaHref'] ),
+		// Its scheme checked (no javascript:), its {{ tokens }} (tel:{{ business.telephone }}) kept for Marccent Content.
+		'href'  => marccent_blocks_href_raw( (string) $attributes['ctaHref'] ),
 		'icon'  => $attributes['ctaIcon'],
 	) : null,
 	// What visitors may change (Appearance → Marccent theme, Visitors, the one place that decides it; the block's old
