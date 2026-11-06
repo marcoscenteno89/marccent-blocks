@@ -11,6 +11,13 @@ import { createElement } from '@wordpress/element';
 import { createBlock, serialize, parse, registerBlockType } from '@wordpress/blocks';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { registerCoreBlocks } from '@wordpress/block-library';
+import { addFilter } from '@wordpress/hooks';
+
+// Marccent Content's Show if (mccShowIf) on every block, as its editor adds it, so a spec's is kept.
+addFilter( 'blocks.registerBlockType', 'marccent/serialize-show-if', ( settings ) => ( {
+	...settings,
+	attributes: { ...settings.attributes, mccShowIf: { type: 'string', default: '' } },
+} ) );
 
 registerCoreBlocks();
 const ours = fs.readdirSync( `${ __dirname }/../src/blocks` );

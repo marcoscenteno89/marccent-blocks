@@ -5,7 +5,7 @@
 	"title": "Map",
 	"category": "marccent",
 	"icon": "location-alt",
-	"description": "The theme's Google map, in the site's colors, with a pin. Left empty, it shows the business (Settings → Business: its coordinates and Google Maps link); its key is the business's too. Without a key, Google's plain map.",
+	"description": "The theme's Google map, in the site's colors, with a pin. Left empty, it shows the business (Site content → Business: its coordinates and Google Maps link); its key is the business's too. Without a key, Google's plain map.",
 	"keywords": [ "map", "google", "location", "directions" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {

@@ -1,6 +1,6 @@
 /*
  * Map: rendered by the server (render.php) as the theme's map markup; its engine draws it on the site. The editor shows
- * the server's markup (the Google Maps link until the map draws). Empty fields: the business's (Settings → Business).
+ * the server's markup (the Google Maps link until the map draws). Empty fields: the business's (Site content → Business).
  */
 import { register } from '../../shared/register';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
@@ -12,7 +12,7 @@ const Edit = ( { attributes: a, setAttributes: set } ) => (
 	<>
 		<InspectorControls>
 			<PanelBody title="Map">
-				<p>Left empty, the map shows the business (Settings → Business).</p>
+				<p>Left empty, the map shows the business (Site content → Business).</p>
 				<TextControl label="Latitude" value={ a.lat } onChange={ ( lat ) => set( { lat } ) } />
 				<TextControl label="Longitude" value={ a.lng } onChange={ ( lng ) => set( { lng } ) } />
 				<RangeControl label="Zoom" min={ 3 } max={ 20 } value={ a.zoom } onChange={ ( zoom ) => set( { zoom } ) } />
