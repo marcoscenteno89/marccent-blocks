@@ -33,6 +33,21 @@
 - [x] **A form in a template part or synced pattern** isn't found when it's submitted (only the page's own content was
       read). Fixed 2026-11-05: synced patterns and template parts are followed, and the theme's parts searched.
 
+- [x] **Save entries to a Fields type** (RULES.md A9, A10): the Form block's Entries → "Keep entries in" names a post
+      type made in Fields; Marccent Content saves each entry there as a private post (its JSON field gets everything
+      sent; fields named as form fields, `form`, `page` and `status` get theirs), then the email and webhook run as
+      before. rc-imp's two forms keep theirs in its Entries type. Done 2026-11-05. (found 2026-11-05)
+- [ ] **Retire Forms → Entries (`marccent_entry`)**: it's a post type made in code (RULES.md A9), kept only as the
+      fallback for a form with no "Keep entries in" or a site without Marccent Content. Once every site's forms keep
+      theirs in a Fields type: move any old entries into it, then remove the type, its screen and its CSV export.
+      (found 2026-11-05)
+- [ ] **Entries in a Fields type have no CSV export or per-form filter** (Forms → Entries had both): a general tool
+      for any Fields type (a list's columns and an export in Marccent Content), not one for entries. (found 2026-11-05)
+
+## Bugs
+
+- [ ] **Map block's pins missing from the server markup** — `tools/markup-test.php` fails "map: pins, clustered": the theme's reference (since 1.0.0-rc.7) has `data-markers`, the server's Map writes none (found 2026-11-05)
+
 ## Notes
 
 - Speed pass, not committed: `marccent_blocks_option()` keeps `marccent_defaults` and `marccent_turnstile` autoloaded

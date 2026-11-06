@@ -7,6 +7,7 @@ import { register } from '../../shared/register';
 import { InnerBlocks, InspectorControls, store as blockEditorStore, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl, TextareaControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
 import { useEffect } from '@wordpress/element';
 import metadata from './block.json';
 
@@ -33,6 +34,10 @@ const Edit = ( { attributes: a, setAttributes: set, clientId } ) => {
 		}
 	}, [ a.formId, clash ] );
 
+	// The post types entries can be kept in: the site's own (made in Fields), not WordPress's.
+	const types = useSelect( ( select ) => ( select( coreStore ).getPostTypes( { per_page: -1 } ) ?? [] )
+		.filter( ( t ) => ! [ 'post', 'page', 'attachment', 'marccent_entry' ].includes( t.slug ) && ! t.slug.startsWith( 'wp_' ) && ! t.slug.startsWith( 'nav_' ) )
+		.map( ( t ) => ( { label: t.name, value: t.slug } ) ), [] );
 	const props = useInnerBlocksProps( useBlockProps( { className: a.layout } ), { template: TEMPLATE } );
 	return (
 		<>
@@ -43,8 +48,11 @@ const Edit = ( { attributes: a, setAttributes: set, clientId } ) => {
 					<TextControl label="Button icon" help="A Font Awesome name." value={ a.submitIcon } onChange={ ( submitIcon ) => set( { submitIcon } ) } />
 					<TextareaControl label="After it’s sent" value={ a.successMessage } onChange={ ( successMessage ) => set( { successMessage } ) } />
 				</PanelBody>
+				<PanelBody title="Entries">
+					<SelectControl label="Keep entries in" help="A post type made in Fields (best “Only in wp-admin”), with a Data (JSON) field for everything sent; a field named as a form field gets that answer too. Empty: Forms → Entries." value={ a.saveTo } options={ [ { label: 'Forms → Entries', value: '' }, ...types ] } onChange={ ( saveTo ) => set( { saveTo } ) } />
+				</PanelBody>
 				<PanelBody title="Email">
-					<TextControl label="Send entries to" type="email" help="Empty: the site’s admin email. Every entry is also kept under Forms → Entries." value={ a.emailTo } onChange={ ( emailTo ) => set( { emailTo } ) } />
+					<TextControl label="Send entries to" type="email" help="Empty: the site’s admin email. Every entry is also kept (Entries, above)." value={ a.emailTo } onChange={ ( emailTo ) => set( { emailTo } ) } />
 					<TextControl label="Subject" help="Empty: “New submission: <the page’s title>”." value={ a.emailSubject } onChange={ ( emailSubject ) => set( { emailSubject } ) } />
 				</PanelBody>
 				<PanelBody title="Send on" initialOpen={ !! a.webhook }>

@@ -400,8 +400,15 @@ function marccent_forms_submit( array $input, array $files = array() ): array {
 	return array( 'ok' => true, 'status' => 200, 'message' => $message, 'errors' => array() );
 }
 
-// The entry: a private post, the fields (label and value) as one meta value.
+// The entry: a private post of the type the form names (Save entries to: a type made in Fields, saved by Marccent
+// Content), else Forms → Entries' (marccent_entry), the fields (label and value) as one meta value.
 function marccent_forms_save( array $form, array $values, bool $verified ): int {
+	$type = sanitize_key( (string) ( $form['attrs']['saveTo'] ?? '' ) );
+	$id   = $type ? (int) apply_filters( 'marccent_forms_save_entry', 0, $type, $form, $values, $verified ) : 0;
+	if ( $id ) {
+		update_post_meta( $id, '_marccent_verified', $verified ? 1 : 0 );
+		return $id;
+	}
 	$fields = array();
 	foreach ( $form['fields'] as $name => $f ) {
 		$fields[ $name ] = array( 'label' => $f['label'], 'value' => (string) ( $values[ $name ] ?? '' ) );

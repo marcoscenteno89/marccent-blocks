@@ -46,6 +46,10 @@
 		"webhook": {
 			"type": "string",
 			"default": ""
+		},
+		"saveTo": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"supports": {
