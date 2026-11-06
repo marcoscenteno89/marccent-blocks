@@ -16,7 +16,7 @@ const Edit = ( { attributes: a, setAttributes: set, clientId } ) => (
 				<RangeControl label="At most" help="0: no limit." value={ a.max } min={ 0 } max={ 30 } onChange={ ( max ) => set( { max } ) } />
 			</PanelBody>
 		</InspectorControls>
-		<div { ...useBlockProps( { className: 'field sub-x' } ) }>
+		<div { ...useBlockProps( { className: 'field joined sub-x' } ) }>
 			<RichText tagName="label" className="field-label" value={ a.label } placeholder="Add a tag" allowedFormats={ [] } onChange={ ( label ) => set( { label } ) } />
 			<div className="input tag-input row-wrap"><span className="opacity-75">{ a.suggestions ? `e.g. ${ a.suggestions.split( ',' ).slice( 0, 3 ).join( ', ' ) }` : 'Tags…' }</span></div>
 		</div>

@@ -624,7 +624,7 @@ function marccent_forms_notes( string $id, string $help, string $error ): array 
 
 // A label beside a control, as the theme's Field (.field: the label and the input joined in one box).
 function marccent_forms_row( string $label_html, string $control ): string {
-	return '<div data-component="field" class="field sub-x">' . $label_html . $control . '</div>';
+	return '<div data-component="field" class="field joined sub-x">' . $label_html . $control . '</div>';
 }
 
 function marccent_forms_field_html( array $a ): string {

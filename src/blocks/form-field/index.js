@@ -45,7 +45,7 @@ const Edit = ( { attributes: a, setAttributes: set, clientId } ) => {
 					<TextControl label="Show only when" help="Another field’s name and value: service=Patios,Driveways (one of), contact!=Phone, or phone (filled in). Hidden, it isn’t required." value={ a.showIf } onChange={ ( showIf ) => set( { showIf } ) } />
 				</PanelBody>
 			</InspectorControls>
-			<div { ...useBlockProps( { className: 'field sub-x' } ) }>
+			<div { ...useBlockProps( { className: 'field joined sub-x' } ) }>
 				<RichText tagName="label" className="field-label" value={ a.label } placeholder="Label" allowedFormats={ [] }
 					onChange={ ( label ) => set( { label, ...( a.name && a.name !== nameOf( a.label ) ? {} : { name: nameOf( label ) } ) } ) } />
 				{ control }

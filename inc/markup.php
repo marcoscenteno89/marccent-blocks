@@ -246,7 +246,7 @@ function marccent_blocks_menu_items( array $items, bool $sub = false ): string {
 	foreach ( $items as $item ) {
 		if ( ! empty( $item['children'] ) ) {
 			$html .= sprintf(
-				'<details data-component="menu-dropdown" class="%s"><summary class="menu-link"><span class="text-truncate">%s</span></summary><div class="menu-panel bg border round shadow pad grid cols-1 gap-sm">%s</div></details>',
+				'<details data-component="menu-dropdown" class="%s"><summary class="menu-link caret"><span class="text-truncate">%s</span></summary><div class="menu-panel bg border round shadow pad grid cols-1 gap-sm">%s</div></details>',
 				$sub ? 'menu-dropdown menu-sub' : 'menu-dropdown',
 				esc_html( $item['name'] ),
 				marccent_blocks_menu_items( $item['children'], true )
@@ -280,7 +280,7 @@ function marccent_blocks_navbar( array $brand, array $items, string $end = '', s
 		. '<div class="wrap pad-0 grid layout-ends items-center gap-sm">'
 		. sprintf( '<a href="%s" class="menu-link grid auto-cols items-center gap-sm" aria-label="%s">%s%s</a>', esc_url( $brand['href'] ), esc_attr( $brand['name'] . ', home' ), $logo, $name )
 		. '<button type="button" data-component="toggle-button" data-icon="bars" data-active-icon="bars" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">' . marccent_blocks_icon( 'bars', 'btn-icon' ) . '</button>'
-		. sprintf( '<div id="site-nav" class="nav-collapse"><nav data-component="menu" class="menu grid gap-0 auto-cols" style="--cols: %d" aria-label="Main">%s</nav>%s</div>', count( $items ), marccent_blocks_menu_items( $items ), $end )
+		. sprintf( '<div id="site-nav" class="nav-collapse"><nav data-component="menu" class="menu grid gap-0 auto-cols menu-quiet" style="--cols: %d" aria-label="Main">%s</nav>%s</div>', count( $items ), marccent_blocks_menu_items( $items ), $end )
 		. $last . '</div></header>';
 }
 
@@ -309,10 +309,10 @@ function marccent_blocks_accordion( string $items, ?callable $attributes = null 
 // An accordion's item: a <details> its header opens. Items that share a name open one at a time (none: several).
 function marccent_blocks_accordion_item( string $header, string $content, ?string $name, bool $open, string $class = '' ): string {
 	return sprintf(
-		'<details %s><summary class="header pad-sm">%s</summary><div class="%s">%s</div></details>',
+		'<details %s><summary class="header pad-sm caret hover-muted focus-inset">%s</summary><div class="%s">%s</div></details>',
 		marccent_blocks_attributes( array( 'data-component' => 'accordion-item', 'name' => $name, 'open' => $open ? '' : null ) ),
 		esc_html( marccent_blocks_text( $header ) ),
-		esc_attr( marccent_blocks_cx( 'pad-sm', $class ) ),
+		esc_attr( marccent_blocks_cx( 'pad-sm border-top', $class ) ),
 		$content
 	);
 }
@@ -336,14 +336,14 @@ function marccent_blocks_modal( array $m, string $content, ?callable $attributes
 	$ticket      = 'ticket' === ( $m['variant'] ?? '' );
 	$panel       = $ticket
 		? sprintf(
-			'<div data-component="modal-panel" class="grid cols-1 gap-0"><div class="header pad bg-gradient text-center"><h2 id="%1$s" class="h4">%2$s</h2></div><div class="modal-neck bg-gradient"></div><div class="modal-flare bg"></div><div class="bg pad-x grid cols-1">%3$s</div><div class="bg pad grid auto-cols cols-center gap-sm">%4$s</div></div>',
+			'<div data-component="modal-panel" class="grid cols-1 gap-0"><div class="header pad bg-gradient text-center"><h2 id="%1$s" class="h4">%2$s</h2></div><div class="notch-bottom bg-gradient"></div><div class="notch-top bg"></div><div class="bg pad-x grid cols-1">%3$s</div><div class="bg pad grid auto-cols cols-center gap-sm">%4$s</div></div>',
 			esc_attr( $title_id ), $title, $content, marccent_blocks_close_button( true, 'gradient' )
 		)
 		: sprintf(
-			'<div data-component="modal-panel" class="grid cols-1 gap-0 divide"><div class="header pad"><h2 id="%1$s" class="h5">%2$s</h2>%3$s</div><div class="pad grid cols-1">%4$s</div><div class="grid auto-cols items-center gap-sm pad" style="justify-content:end">%5$s</div></div>',
+			'<div data-component="modal-panel" class="grid cols-1 gap-0 divide"><div class="header pad"><h2 id="%1$s" class="h5">%2$s</h2>%3$s</div><div class="pad grid cols-1">%4$s</div><div class="grid auto-cols cols-end items-center gap-sm pad">%5$s</div></div>',
 			esc_attr( $title_id ), $title, marccent_blocks_close_button(), $content, marccent_blocks_close_button( true )
 		);
-	return sprintf( '<dialog %s>%s</dialog>', $attributes( array( 'id' => $id, 'data-component' => 'modal', 'class' => marccent_blocks_cx( 'modal', $ticket ? 'ticket' : '' ), 'aria-labelledby' => $title_id ) ), $panel );
+	return sprintf( '<dialog %s>%s</dialog>', $attributes( array( 'id' => $id, 'data-component' => 'modal', 'class' => marccent_blocks_cx( 'modal', $ticket ? 'ticket' : 'bg-page border round shadow' ), 'aria-labelledby' => $title_id ) ), $panel );
 }
 
 // Drawer: a <dialog> that slides in from the start or the end, its title and ✕ on top and its content scrolling.
@@ -351,9 +351,10 @@ function marccent_blocks_drawer( array $d, string $content, ?callable $attribute
 	$attributes ??= 'marccent_blocks_attributes';
 	$id          = $d['id'] ?? null;
 	$title_id    = (string) ( $d['titleId'] ?? "$id-title" );
+	$start       = 'start' === ( $d['side'] ?? '' );
 	return sprintf(
-		'<dialog %s><div class="grid cols-1 gap-0 divide h-100" style="grid-template-rows:auto minmax(0, 1fr);grid-auto-rows:auto"><div class="header pad"><h2 id="%s" class="h5">%s</h2>%s</div><div class="pad grid cols-1 content-start overflow-auto">%s</div></div></dialog>',
-		$attributes( array( 'id' => $id, 'data-component' => 'drawer', 'data-side' => 'start' === ( $d['side'] ?? '' ) ? 'start' : 'end', 'class' => 'modal drawer', 'aria-labelledby' => $title_id ) ),
+		'<dialog %s><div class="grid cols-1 rows-body gap-0 divide h-100"><div class="header pad"><h2 id="%s" class="h5">%s</h2>%s</div><div class="pad grid cols-1 content-start overflow-auto">%s</div></div></dialog>',
+		$attributes( array( 'id' => $id, 'data-component' => 'drawer', 'data-side' => $start ? 'start' : 'end', 'class' => marccent_blocks_cx( 'modal drawer bg-page shadow', $start ? 'border-end' : 'border-start' ), 'aria-labelledby' => $title_id ) ),
 		esc_attr( $title_id ),
 		esc_html( marccent_blocks_text( (string) ( $d['title'] ?? '' ) ) ),
 		marccent_blocks_close_button(),
@@ -370,7 +371,7 @@ function marccent_blocks_opener( array $b, string $dialog ): string {
 function marccent_blocks_tooltip( array $t ): string {
 	$id = (string) $t['id'];
 	return sprintf(
-		'<button type="button" class="btn-link" id="%1$s-anchor" aria-describedby="%1$s">%2$s</button><div id="%1$s" role="tooltip" popover="manual" data-component="tooltip" data-placement="%3$s" class="float tooltip">%4$s</div>',
+		'<button type="button" class="btn-link" id="%1$s-anchor" aria-describedby="%1$s">%2$s</button><div id="%1$s" role="tooltip" popover="manual" data-component="tooltip" data-placement="%3$s" class="float bg-inverse round fs-sm pad-xs pad-x-sm pe-none shadow-sm">%4$s</div>',
 		esc_attr( $id ),
 		esc_html( marccent_blocks_text( (string) ( $t['trigger'] ?? '' ) ) ),
 		esc_attr( marccent_blocks_side( $t['side'] ?? 'top' ) ),
@@ -379,17 +380,25 @@ function marccent_blocks_tooltip( array $t ): string {
 }
 
 /*
- * Map: the theme's Map as its markup engine draws it (<div data-component="map" class="map" …>, core/components.js):
- * a Google map in the theme's colors once it nears the screen, a pin on the center with marker (its title, and a
- * Google Maps link its click opens), Google's plain embed without a key. The key is data-key, or the page's
+ * Map: the theme's Map as its markup engine draws it (<div data-component="map" class="map col-center round
+ * overflow-hidden" …>, core/components.js): a Google map in the theme's colors once it nears the screen, a pin on the
+ * center with marker (its title, and a Google Maps link its click opens), many pins with markers ([{ lat, lng, title,
+ * link }], clustered), Google's plain embed without a key. The key is data-key, or the page's
  * window.marccentMapsKey. What's inside (a no-script link) shows until the map draws. Only http(s) addresses.
  */
 function marccent_blocks_map( array $m, string $inner = '', ?callable $attributes = null ): string {
 	$attributes ??= 'marccent_blocks_attributes';
 	$url          = fn( $u ) => preg_match( '#^https?://#i', (string) $u ) ? (string) $u : '';
+	// The pins with a place, each with only what it has.
+	$pins = array();
+	foreach ( (array) ( $m['markers'] ?? array() ) as $p ) {
+		if ( is_array( $p ) && is_numeric( $p['lat'] ?? null ) && is_numeric( $p['lng'] ?? null ) ) {
+			$pins[] = array_filter( array( 'lat' => (float) $p['lat'], 'lng' => (float) $p['lng'], 'title' => (string) ( $p['title'] ?? '' ), 'link' => $url( $p['link'] ?? '' ) ), fn( $v ) => '' !== $v );
+		}
+	}
 	return sprintf( '<div %s>%s</div>', $attributes( array(
 		'data-component' => 'map',
-		'class'          => 'map',
+		'class'          => 'map col-center round overflow-hidden',
 		'data-key'       => (string) ( $m['key'] ?? '' ) ?: null,
 		'data-lat'       => (string) (float) ( $m['lat'] ?? 0 ),
 		'data-lng'       => (string) (float) ( $m['lng'] ?? 0 ),
@@ -398,6 +407,7 @@ function marccent_blocks_map( array $m, string $inner = '', ?callable $attribute
 		'data-title'     => (string) ( $m['title'] ?? '' ) ?: null,
 		'data-link'      => $url( $m['link'] ?? '' ) ?: null,
 		'data-embed'     => $url( $m['embed'] ?? '' ) ?: null,
+		'data-markers'   => $pins ? wp_json_encode( $pins, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) : null,
 	) ), $inner );
 }
 
@@ -405,7 +415,7 @@ function marccent_blocks_map( array $m, string $inner = '', ?callable $attribute
 function marccent_blocks_popover( array $p, string $content ): string {
 	$id = (string) $p['id'];
 	return sprintf(
-		'<button type="button" class="btn" id="%1$s-anchor" popovertarget="%1$s">%2$s</button><div id="%1$s" popover="auto" role="group" aria-label="%3$s" data-component="popover" data-placement="%4$s" class="float popover bg border round shadow pad-sm">%5$s</div>',
+		'<button type="button" class="btn" id="%1$s-anchor" popovertarget="%1$s">%2$s</button><div id="%1$s" popover="auto" role="group" aria-label="%3$s" data-component="popover" data-placement="%4$s" class="float bg border round shadow pad-sm">%5$s</div>',
 		esc_attr( $id ),
 		esc_html( marccent_blocks_text( (string) ( $p['trigger'] ?? '' ) ) ),
 		esc_attr( marccent_blocks_text( (string) ( $p['label'] ?? '' ) ?: (string) ( $p['trigger'] ?? '' ) ) ),

@@ -17,7 +17,7 @@ const Edit = ( { attributes: a, setAttributes: set, clientId } ) => (
 				<ToggleControl label="Required" checked={ a.required } onChange={ ( required ) => set( { required } ) } />
 			</PanelBody>
 		</InspectorControls>
-		<div { ...useBlockProps( { className: 'field sub-x' } ) }>
+		<div { ...useBlockProps( { className: 'field joined sub-x' } ) }>
 			<RichText tagName="span" className="field-label" value={ a.label } placeholder="Rating" allowedFormats={ [] } onChange={ ( label ) => set( { label } ) } />
 			<span className="input"><span className="rating">{ Array.from( { length: a.max }, ( _, i ) => <span key={ i } className="rating-star"><i className={ `fa-solid fa-${ a.icon || 'star' }` } aria-hidden="true" /></span> ) }</span></span>
 		</div>

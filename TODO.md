@@ -46,7 +46,7 @@
 
 ## Bugs
 
-- [ ] **Map block's pins missing from the server markup** — `tools/markup-test.php` fails "map: pins, clustered": the theme's reference (since 1.0.0-rc.7) has `data-markers`, the server's Map writes none (found 2026-11-05)
+- [x] **Map block's pins missing from the server markup** — `marccent_blocks_map` writes `data-markers` now (0.6.0); the test passes. Left: the Map block has no pins setting yet (found 2026-11-05)
 
 ## Notes
 
