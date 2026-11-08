@@ -44,6 +44,16 @@
 - [ ] **Entries in a Fields type have no CSV export or per-form filter** (Forms → Entries had both): a general tool
       for any Fields type (a list's columns and an export in Marccent Content), not one for entries. (found 2026-11-05)
 
+- [ ] **Navbar shows any menu made in Appearance → Menus** — a menu picker instead of the fixed Primary location, so the block is dynamic and can go anywhere (header, footer, a sidebar); the menus stay edited in wp-admin. (found 2026-11-06)
+- [ ] **Remove the Social links block** — not needed; the Social menu location and the Navbar's social links go with it (rc-imp's header uses `marccent/social`: move it to a menu). (found 2026-11-06)
+- [ ] **One Card block** — Image card (and an icon card) become patterns of the Card block, not blocks of their own (crm-sample's showcase uses `marccent/image-card`). (found 2026-11-06)
+
+- [ ] **Item lists come from field rows, not the block** — Orbit's items (and Dock, Step bar, Hex wall, Ticket card's list, Radial menu, Collage, Timeline: every block with an `items` array) are typed into the block's settings; they repeat, so they're a field group's rows (or posts) edited in wp-admin, and the block reads them from a Loop source. (found 2026-11-06)
+  - Also typed in: Data table's rows (a CSV in the block), Hex wall's people, Collage's tiles, Map's single marker (one `lat`/`lng` typed in; the places are rows, and the names should be `latitude`/`longitude`).
+  - Accordion and Tabs take only their own items (`allowedBlocks`), so a Loop can't go inside them: a FAQ from rows can't be an Accordion. Allow a Loop of items inside, or let them read a Loop source.
+  - Carousel's slides are blocks placed by hand; a Loop of slides should work inside it.
+  - Fine as they are: Form field's options (the form's own setup), Scenery's layers and Section's dividers (looks, not content).
+
 ## Bugs
 
 - [x] **Map block's pins missing from the server markup** — `marccent_blocks_map` writes `data-markers` now (0.6.0); the test passes. Left: the Map block has no pins setting yet (found 2026-11-05)
