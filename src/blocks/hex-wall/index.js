@@ -2,7 +2,7 @@
  * Hex wall: the theme's HexWall (widgets/layout.js) from a list of people.
  */
 import { islandBlock } from '../../shared/island';
-import { HexWall } from 'marccent-theme/components/widgets/layout';
+import { HexWall } from '@marccent/theme/components/widgets/layout';
 import metadata from './block.json';
 
 islandBlock( metadata, {

@@ -2,7 +2,7 @@
  * Scenery: the theme's Scenery (visuals/scenery.js) from its layers' names, back to front; its blocks sit on top.
  */
 import { islandBlock } from '../../shared/island';
-import { Scenery } from 'marccent-theme/components/visuals/scenery';
+import { Scenery } from '@marccent/theme/components/visuals/scenery';
 import metadata from './block.json';
 
 const KINDS = 'stars moon sun clouds birds mountains hills dunes canyon buttes forest trees city waves surf palms farm cliffs wisps balloons ranges treeline farcity mesas street meadow cactus beach rim'.split( ' ' );

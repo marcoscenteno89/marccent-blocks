@@ -4,7 +4,7 @@
  * Labelled and boxed like WordPress's own controls around it.
  */
 import { BaseControl, useBaseControlProps } from '@wordpress/components';
-import { Code } from 'marccent-theme/components/ui/code';
+import { Code } from '@marccent/theme/components/ui/code';
 
 export const CodeField = ( { label, help, lang = 'css', value, onChange, minLines = 6 } ) => {
 	const { baseControlProps } = useBaseControlProps( { label, help, __nextHasNoMarginBottom: true } );

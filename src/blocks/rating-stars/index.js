@@ -2,7 +2,7 @@
  * Stars: the theme's Stars (ui/rating.js), a score to read.
  */
 import { islandBlock } from '../../shared/island';
-import { Stars } from 'marccent-theme/components/ui/rating';
+import { Stars } from '@marccent/theme/components/ui/rating';
 import metadata from './block.json';
 
 islandBlock( metadata, {

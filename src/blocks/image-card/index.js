@@ -2,7 +2,7 @@
  * Image card: the theme's ImageCard (widgets/layout.js); its blocks are buttons in front of the photo.
  */
 import { islandBlock } from '../../shared/island';
-import { ImageCard } from 'marccent-theme/components/widgets/layout';
+import { ImageCard } from '@marccent/theme/components/widgets/layout';
 import { CANVASES } from '../../shared/canvases';
 import metadata from './block.json';
 

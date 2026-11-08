@@ -2,7 +2,7 @@
  * RadialMenu: the theme's RadialMenu (widgets/nav.js) from a list of items, each a link.
  */
 import { islandBlock } from '../../shared/island';
-import { RadialMenu } from 'marccent-theme/components/widgets/nav';
+import { RadialMenu } from '@marccent/theme/components/widgets/nav';
 import metadata from './block.json';
 
 islandBlock( metadata, {

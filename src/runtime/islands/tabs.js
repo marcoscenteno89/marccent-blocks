@@ -2,7 +2,7 @@
  * A marccent/tabs block: the theme's TabBar, each tab showing its blocks (the [data-tab-content] of the tab's HTML in
  * the slot; its heading is for the page without JavaScript).
  */
-import { TabBar } from 'marccent-theme/components/widgets/nav';
+import { TabBar } from '@marccent/theme/components/widgets/nav';
 import { Html } from '../../shared/html';
 
 const contentOf = ( html ) => new DOMParser().parseFromString( html, 'text/html' ).querySelector( '[data-tab-content]' )?.innerHTML ?? html;

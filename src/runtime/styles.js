@@ -6,6 +6,6 @@
  * (styles/fontawesome.css, webpack.config.js); a page's icons are printed with it (inc/assets.php). Then this
  * plugin's own WordPress fixes (wp.css).
  */
-import 'marccent-theme/styles/core.css';
-import 'marccent-theme/styles/components.css';
+import '@marccent/theme/styles/core.css';
+import '@marccent/theme/styles/components.css';
 import './wp.css';
