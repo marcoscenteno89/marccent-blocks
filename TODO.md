@@ -54,6 +54,8 @@
   - Carousel's slides are blocks placed by hand; a Loop of slides should work inside it.
   - Fine as they are: Form field's options (the form's own setup), Scenery's layers and Section's dividers (looks, not content).
 
+- [ ] **Markup test: use the theme's conformance check** — `tools/markup-render.php` prints the cases for marccent-theme's `npm run conformance`; once the pinned release ships `scripts/conformance.mjs`, `test:markup` runs it (`--reference node_modules/marccent-theme/markup/reference.json --render php tools/markup-render.php`) and the comparison in `tools/markup-test.php` goes (keep its href tests). Not covered yet: menu, toggleButton. (found 2026-11-07)
+
 ## Bugs
 
 - [x] **Map block's pins missing from the server markup** — `marccent_blocks_map` writes `data-markers` now (0.6.0); the test passes. Left: the Map block has no pins setting yet (found 2026-11-05)
