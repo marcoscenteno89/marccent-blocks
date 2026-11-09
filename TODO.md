@@ -32,7 +32,7 @@ work fixed here only; anything the theme fixes is a ticket in marccent-theme's
       request), a nonce, type checks, length limits, 5 tries per 10 minutes per visitor; entries kept (Forms → Entries,
       administrators only) then emailed; Cloudflare Turnstile once its keys are set (Settings → Marccent forms).
 
-- [ ] **Markup test: use the theme's conformance check** — `tools/markup-render.php` prints the cases for marccent-theme's `npm run conformance`; once the pinned release ships `scripts/conformance.mjs`, `test:markup` runs it (`--reference node_modules/@marccent/theme/markup/reference.json --render php tools/markup-render.php`) and the comparison in `tools/markup-test.php` goes (keep its href tests). Not covered yet: menu, toggleButton. (found 2026-11-07)
+- [ ] **Markup test: use the theme's conformance check** — `tools/markup-render.php` prints the cases for marccent-theme's `npm run conformance`; once the pinned release ships `scripts/conformance.mjs`, `test:markup` runs it (`--reference node_modules/marccent/markup/reference.json --render php tools/markup-render.php`) and the comparison in `tools/markup-test.php` goes (keep its href tests). Not covered yet: menu, toggleButton. (found 2026-11-07)
 
 - [ ] **Islands have no markup reference**: their stand-in is plain text from their props, not the component's markup.
       Adding them to marccent-theme's `markup/cases.json` would let the server write the real markup (no flash, no

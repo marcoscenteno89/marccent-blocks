@@ -17,17 +17,17 @@
 import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import { lazy, Suspense, useLayoutEffect, useState } from 'react';
-import { ThemeProvider } from '@marccent/theme/lib/context';
-import { SiteTheme, ScopeThemes } from '@marccent/theme/components/theme/core';
-import { Goo } from '@marccent/theme/components/ui/goo';
-import { PauseOffscreen } from '@marccent/theme/components/pause-offscreen';
-import { enhance } from '@marccent/theme/core/enhance';
-import '@marccent/theme/core/components';
+import { ThemeProvider } from 'marccent/lib/context';
+import { SiteTheme, ScopeThemes } from 'marccent/components/theme/core';
+import { Goo } from 'marccent/components/ui/goo';
+import { PauseOffscreen } from 'marccent/components/pause-offscreen';
+import { enhance } from 'marccent/core/enhance';
+import 'marccent/core/components';
 import { enhanceForms } from './forms';
 
 const named = ( load, name ) => lazy( () => load().then( ( m ) => ( { default: m[ name ] } ) ) );
-const CanvasScanner = named( () => import( /* webpackChunkName: "canvas-scanner" */ '@marccent/theme/components/visuals/canvas-scanner' ), 'CanvasScanner' );
-const Toast = named( () => import( /* webpackChunkName: "toast" */ '@marccent/theme/components/ui/toast' ), 'Toast' );
+const CanvasScanner = named( () => import( /* webpackChunkName: "canvas-scanner" */ 'marccent/components/visuals/canvas-scanner' ), 'CanvasScanner' );
+const Toast = named( () => import( /* webpackChunkName: "toast" */ 'marccent/components/ui/toast' ), 'Toast' );
 
 // Every file in ./islands is an island by its name (islands/timeline.js: data-island="timeline"), each its own chunk.
 const ISLAND_FILES = require.context( './islands', false, /^\.\/[a-z0-9-]+\.js$/, 'lazy' );

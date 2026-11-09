@@ -2,7 +2,7 @@
  * Stat card: the theme's StatCard (widgets/layout.js); its blocks are buttons at the bottom.
  */
 import { islandBlock } from '../../shared/island';
-import { StatCard } from '@marccent/theme/components/widgets/layout';
+import { StatCard } from 'marccent/components/widgets/layout';
 import metadata from './block.json';
 
 islandBlock( metadata, {

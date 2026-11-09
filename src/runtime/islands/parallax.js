@@ -1,5 +1,5 @@
 // A marccent/parallax block: its blocks in the theme's Parallax.
-import { Parallax } from '@marccent/theme/components/visuals/effects';
+import { Parallax } from 'marccent/components/visuals/effects';
 import { HtmlList } from '../../shared/html';
 
 export default function ParallaxIsland( { speed = 0.2, html = [] } ) {

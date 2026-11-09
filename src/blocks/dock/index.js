@@ -2,7 +2,7 @@
  * Dock: the theme's Dock (widgets/nav.js) from a list of items, each a link.
  */
 import { islandBlock } from '../../shared/island';
-import { Dock } from '@marccent/theme/components/widgets/nav';
+import { Dock } from 'marccent/components/widgets/nav';
 import metadata from './block.json';
 
 islandBlock( metadata, {

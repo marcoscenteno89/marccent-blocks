@@ -2,7 +2,7 @@
  * Clock: the theme's Clock (ui/clock.js), the live time.
  */
 import { islandBlock } from '../../shared/island';
-import { Clock } from '@marccent/theme/components/ui/clock';
+import { Clock } from 'marccent/components/ui/clock';
 import metadata from './block.json';
 
 islandBlock( metadata, {

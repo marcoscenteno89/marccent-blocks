@@ -1,5 +1,5 @@
 // A marccent/ticket-card block: the theme's TicketCard, its blocks (a button) as the action.
-import { TicketCard } from '@marccent/theme/components/widgets/layout';
+import { TicketCard } from 'marccent/components/widgets/layout';
 import { HtmlList, blocksOf } from '../../shared/html';
 
 export default function TicketCardIsland( { html = [], ...props } ) {

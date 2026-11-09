@@ -7,7 +7,7 @@ import { register } from '../../shared/register';
 import { InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { Button, PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import { SURFACES, WIDTHS, PADS_Y, GAPS, cx } from '../../shared/options';
-import { Divider, dividerClasses, DIVIDERS } from '@marccent/theme/components/widgets/divider';
+import { Divider, dividerClasses, DIVIDERS } from 'marccent/components/widgets/divider';
 import metadata from './block.json';
 import deprecated from './deprecated';
 

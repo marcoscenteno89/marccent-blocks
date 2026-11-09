@@ -1,7 +1,7 @@
 <?php
 /**
  * The server's Button, Icon, Section, Grid, Card and NavBar (inc/markup.php) against the theme's markup reference
- * (node_modules/@marccent/theme/markup/reference.json): every case rendered here must be the same HTML as the theme's
+ * (node_modules/marccent/markup/reference.json): every case rendered here must be the same HTML as the theme's
  * components render, ignoring the order of attributes and of classes, and whitespace between tags. The renderers are
  * tools/markup-render.php's (the theme's conformance check runs that one).
  *
@@ -53,7 +53,7 @@ foreach ( array( '{{link}}' => '{{link}}', '%7B%7B link %7D%7D' => '%7B%7B link 
 	printf( "%s href: %s\n", $ok ? 'ok  ' : 'FAIL', $in );
 }
 
-$file      = __DIR__ . '/../node_modules/@marccent/theme/markup/reference.json';
+$file      = __DIR__ . '/../node_modules/marccent/markup/reference.json';
 $reference = json_decode( (string) file_get_contents( $file ), true ) ?: exit( "No markup reference at $file: npm install first.\n" );
 $failed  ??= 0;
 foreach ( $render as $component => $fn ) {

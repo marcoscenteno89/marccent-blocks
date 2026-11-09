@@ -13,7 +13,7 @@ const fs = require( 'fs' );
 const path = require( 'path' );
 const postcss = require( 'postcss' );
 
-const DIR = path.dirname( require.resolve( '@fortawesome/fontawesome-free/package.json', { paths: [ path.dirname( require.resolve( '@marccent/theme/package.json' ) ) ] } ) );
+const DIR = path.dirname( require.resolve( '@fortawesome/fontawesome-free/package.json', { paths: [ path.dirname( require.resolve( 'marccent/package.json' ) ) ] } ) );
 const GENERATED = path.resolve( __dirname, '../src/generated' );
 
 // An icon rule: only .fa-<name> selectors (an icon and its aliases) and a single --fa.

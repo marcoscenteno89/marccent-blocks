@@ -2,7 +2,7 @@
  * Step bar: the theme's StepBar (widgets/nav.js) from a list of steps; one is the current step.
  */
 import { islandBlock } from '../../shared/island';
-import { StepBar } from '@marccent/theme/components/widgets/nav';
+import { StepBar } from 'marccent/components/widgets/nav';
 import metadata from './block.json';
 
 islandBlock( metadata, {

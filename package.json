@@ -14,7 +14,7 @@
     "test": "npm run test:markup && npm run test:blocks"
   },
   "dependencies": {
-    "@marccent/theme": "github:marcoscenteno89/marccent-theme#9b2c778609d98f7454b60226689b3a0050a02036"
+    "marccent": "github:marcoscenteno89/marccent-theme#3b5d195e3eba479dac554e5778a9995436d8bd09"
   },
   "devDependencies": {
     "@wordpress/block-editor": "^19.0.0",
