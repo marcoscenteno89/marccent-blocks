@@ -6,8 +6,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * A menu location's items as a tree, the shape the theme's Menu takes: { name, href, children? }. A dropdown can't
- * be a link itself (it opens on click), so its page comes first among its children. Without a menu: the top-level pages.
+ * A menu location's items as a tree, the shape the theme's Menu takes (marccent_blocks_menu_items). Without a menu
+ * there: the top-level pages.
  */
 function marccent_blocks_menu_tree( string $location ): array {
 	$locations = get_nav_menu_locations();
@@ -15,6 +15,16 @@ function marccent_blocks_menu_tree( string $location ): array {
 	if ( ! $items ) {
 		return array_map( fn( $p ) => array( 'name' => get_the_title( $p ), 'href' => esc_url_raw( get_permalink( $p ) ) ), get_pages( array( 'parent' => 0, 'sort_column' => 'menu_order' ) ) );
 	}
+	return marccent_blocks_menu_items_tree( $items );
+}
+
+/**
+ * A menu's items (wp_get_nav_menu_items) as a tree: { name, href, icon?, external?, children? }. A dropdown can't be a
+ * link itself (it opens on click), so its page comes first among its children. An item's icon is the Font Awesome
+ * classes in its CSS Classes field (Screen Options → CSS Classes: fa-brands fa-tiktok), else, for a link to another
+ * site, that site's own (marccent_blocks_link_icon); a link to another site opens in a new tab.
+ */
+function marccent_blocks_menu_items_tree( array $items ): array {
 	$by_parent = array();
 	foreach ( $items as $item ) {
 		$by_parent[ (int) $item->menu_item_parent ][] = $item;
@@ -22,10 +32,18 @@ function marccent_blocks_menu_tree( string $location ): array {
 	$build = function ( $parent ) use ( &$build, $by_parent ) {
 		$out = array();
 		foreach ( $by_parent[ $parent ] ?? array() as $item ) {
-			$node     = array( 'name' => $item->title, 'href' => esc_url_raw( $item->url ) );
+			$href     = esc_url_raw( $item->url );
+			$external = (bool) preg_match( '#^https?://#', $href ) && ! str_starts_with( $href, home_url() );
+			$icon     = implode( ' ', array_filter( (array) $item->classes, fn( $c ) => str_starts_with( $c, 'fa-' ) ) );
+			$node     = array_filter( array(
+				'name'     => $item->title,
+				'href'     => $href,
+				'icon'     => $icon ?: ( $external || str_starts_with( $href, 'mailto:' ) ? marccent_blocks_link_icon( $href ) : '' ),
+				'external' => $external,
+			) );
 			$children = $build( (int) $item->ID );
 			if ( $children ) {
-				$node['children'] = array_merge( array( array( 'name' => sprintf( __( 'All %s', 'marccent-blocks' ), $item->title ), 'href' => esc_url_raw( $item->url ) ) ), $children );
+				$node['children'] = array_merge( array( array( 'name' => sprintf( __( 'All %s', 'marccent-blocks' ), $item->title ), 'href' => $href ) ), $children );
 			}
 			$out[] = $node;
 		}
@@ -34,27 +52,18 @@ function marccent_blocks_menu_tree( string $location ): array {
 	return $build( 0 );
 }
 
-/*
- * The site's social links: the menu in the Social location (Appearance → Menus), one link each, as { name, href, icon }.
- * A link's icon is the Font Awesome classes in its CSS Classes field (Screen Options → CSS Classes: fa-brands
- * fa-tiktok), else the network's own, from the address, else a plain link icon. No menu there: none.
+/**
+ * A menu made in Appearance → Menus, by its slug ("social"), as a tree (marccent_blocks_menu_items_tree): what the Menu
+ * and Navbar blocks show. No such menu: none.
  */
-function marccent_blocks_social_links(): array {
-	$locations = get_nav_menu_locations();
-	$items     = isset( $locations['social'] ) ? wp_get_nav_menu_items( $locations['social'] ) : false;
-	$links     = array();
-	foreach ( $items ?: array() as $item ) {
-		if ( (int) $item->menu_item_parent ) {
-			continue; // a flat list: a nested item has no place in a row of buttons
-		}
-		$classes = implode( ' ', array_filter( (array) $item->classes, fn( $c ) => str_starts_with( $c, 'fa-' ) ) );
-		$links[] = array( 'name' => $item->title, 'href' => esc_url_raw( $item->url ), 'icon' => $classes ?: marccent_blocks_social_icon( $item->url ) );
-	}
-	return $links;
+function marccent_blocks_menu_by_slug( string $slug ): array {
+	$menu  = $slug ? wp_get_nav_menu_object( $slug ) : false;
+	$items = $menu ? wp_get_nav_menu_items( $menu->term_id ) : false;
+	return $items ? marccent_blocks_menu_items_tree( $items ) : array();
 }
 
-// A social network's Font Awesome icon from its address (google.com/maps → Google), else a link.
-function marccent_blocks_social_icon( string $url ): string {
+// A site's Font Awesome icon from its address (google.com/maps → Google), else a link; an email address, an envelope.
+function marccent_blocks_link_icon( string $url ): string {
 	$host  = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
 	$known = array(
 		'facebook'  => 'facebook', 'fb.com' => 'facebook', 'instagram' => 'instagram', 'google' => 'google', 'goo.gl' => 'google',

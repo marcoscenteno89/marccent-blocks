@@ -44,8 +44,9 @@
 - [ ] **Entries in a Fields type have no CSV export or per-form filter** (Forms → Entries had both): a general tool
       for any Fields type (a list's columns and an export in Marccent Content), not one for entries. (found 2026-11-05)
 
-- [ ] **Navbar shows any menu made in Appearance → Menus** — a menu picker instead of the fixed Primary location, so the block is dynamic and can go anywhere (header, footer, a sidebar); the menus stay edited in wp-admin. (found 2026-11-06)
-- [ ] **Remove the Social links block** — not needed; the Social menu location and the Navbar's social links go with it (rc-imp's header uses `marccent/social`: move it to a menu). (found 2026-11-06)
+- [x] **Any menu, anywhere** — the Menu block (2026-11-09): a menu made in Appearance → Menus, by its slug, as the theme's Menu (links, icons only, a row or a column); rc-imp's footer shows its Social menu with it.
+- [ ] **The header as a pattern** — the Navbar block is the whole header; it becomes a Header pattern (logo, the Menu block folding behind a menu button on phones, a call button, theme controls) once the theme has the Nav on its own (marccent-theme T-032), then the Navbar block retires. (found 2026-11-09)
+- [x] **Remove the Social links block** — removed with the Social menu location and the Navbar's social links (2026-11-09); rc-imp's footer shows its Site content → Profiles rows with a Loop of buttons. (found 2026-11-06)
 - [ ] **One Card block** — Image card (and an icon card) become patterns of the Card block, not blocks of their own (crm-sample's showcase uses `marccent/image-card`). (found 2026-11-06)
 
 - [ ] **Item lists come from field rows, not the block** — Orbit's items (and Dock, Step bar, Hex wall, Ticket card's list, Radial menu, Collage, Timeline: every block with an `items` array) are typed into the block's settings; they repeat, so they're a field group's rows (or posts) edited in wp-admin, and the block reads them from a Loop source. (found 2026-11-06)

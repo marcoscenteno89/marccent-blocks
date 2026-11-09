@@ -1,6 +1,6 @@
 /*
  * The site's header, as in the Next site (components/layout/header.tsx): the theme's NavBar with the brand, the main
- * menu, the end slot (social icon buttons and a call-to-action button) and, last, what visitors may change of the
+ * menu, the end slot (a call-to-action button) and, last, what visitors may change of the
  * theme (Appearance → Marccent theme, Visitors): the theme button that pulls the full mini theme editor down above
  * the bar, or single controls of it (only light/dark, say) right in the bar. Its props come from the marccent/navbar block (render.php): the menu from
  * WordPress, the rest from the block's settings.
@@ -16,7 +16,7 @@ const MiniThemeEditor = lazy( () => import( /* webpackChunkName: "mini-theme-edi
 
 const external = ( href ) => /^https?:/.test( href ) && ! href.startsWith( location.origin ) ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 
-export default function Navbar( { brand = {}, items = [], social = [], cta, themeButton = true, controls = [] } ) {
+export default function Navbar( { brand = {}, items = [], cta, themeButton = true, controls = [] } ) {
 	const [ themeOpen, setThemeOpen ] = useState( false );
 	const panel = useRef( null );
 	useEffect( () => {
@@ -35,13 +35,10 @@ export default function Navbar( { brand = {}, items = [], social = [], cta, them
 					{ brand.showName !== false && <span className="fw-bold">{ brand.name }</span> }
 				</a>
 			}
-			end={ ( social.length > 0 || cta ) && (
-				<nav aria-label="Social" className="nav-end grid auto-cols items-center gap-sm">
-					{ social.map( ( s ) => (
-						<Button key={ s.href } icon={ s.icon } href={ s.href } className="secondary hover-expand" { ...external( s.href ) }>{ s.name }</Button>
-					) ) }
-					{ cta && <Button icon={ cta.icon } href={ cta.href } className="primary">{ cta.label }</Button> }
-				</nav>
+			end={ cta && (
+				<div className="nav-end grid auto-cols items-center gap-sm">
+					<Button icon={ cta.icon } href={ cta.href } className="primary" { ...external( cta.href ) }>{ cta.label }</Button>
+				</div>
 			) }
 			last={ ( themeButton || controls.length > 0 ) && (
 				<div className="grid auto-cols items-center gap-sm col-last">

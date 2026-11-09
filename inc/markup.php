@@ -238,21 +238,57 @@ function marccent_blocks_card( array $a, string $inner, ?callable $attributes = 
 }
 
 /*
- * The theme's Menu (components/ui/menu.js) from menu items ({ name, href, children }, as marccent_blocks_menu_tree
- * gives them): a link, or a dropdown for an item with children, a submenu inside another.
+ * The theme's Menu (components/ui/menu.js): its <nav> (a label for screen readers; layout replaces "fixed", equal
+ * columns, as "auto-cols cols-center" or "cols-1"; icon only: the links show only their icons, named by aria-label)
+ * around its items. Folded (fold): behind a menu button where there's no room, the menu in the button's panel
+ * (ToggleButton's panel, a popover; menu.css .menu-fold); id: the panel's (the reference writes id-1).
  */
-function marccent_blocks_menu_items( array $items, bool $sub = false ): string {
+function marccent_blocks_menu( array $p ): string {
+	if ( ! empty( $p['fold'] ) ) {
+		$id    = $p['id'] ?? wp_unique_id( 'menu-fold-' );
+		$label = ( $p['label'] ?? '' ) . ' menu';
+		return sprintf(
+			'<div data-component="menu-fold" class="menu-fold"><button type="button" class="btn menu-fold-toggle" data-component="toggle-button" data-icon="bars" data-active-icon="xmark" aria-expanded="false" aria-controls="%1$s" aria-label="%2$s" id="%1$s-toggle" popovertarget="%1$s">%3$s</button><div id="%1$s" data-component="toggle-panel" popover="auto" role="group" aria-label="%2$s" class="toggle-panel bg border round shadow pad-sm">%4$s</div></div>',
+			esc_attr( $id ),
+			esc_attr( $label ),
+			marccent_blocks_icon( 'bars', 'btn-icon' ),
+			marccent_blocks_menu( array( 'fold' => false ) + $p )
+		);
+	}
+	return sprintf(
+		'<nav data-component="menu" class="%s" style="--cols:%d" aria-label="%s">%s</nav>',
+		esc_attr( marccent_blocks_cx( 'menu grid', $p['gap'] ?? 'gap-sm', ( $p['layout'] ?? '' ) ?: 'fixed', $p['classes'] ?? '' ) ),
+		count( $p['items'] ),
+		esc_attr( $p['label'] ?? '' ),
+		marccent_blocks_menu_items( $p['items'], false, ! empty( $p['iconOnly'] ) )
+	);
+}
+
+/*
+ * The theme's Menu's items ({ name, href, icon?, label?, external?, children? }, as marccent_blocks_menu_tree gives
+ * them): a link, or a dropdown for an item with children, a submenu inside another.
+ */
+function marccent_blocks_menu_items( array $items, bool $sub = false, bool $icon_only = false ): string {
 	$html = '';
 	foreach ( $items as $item ) {
+		$icon = ! empty( $item['icon'] ) ? sprintf( '<i class="%s" aria-hidden="true"></i>', esc_attr( $item['icon'] ) ) : '';
 		if ( ! empty( $item['children'] ) ) {
 			$html .= sprintf(
-				'<details data-component="menu-dropdown" class="%s"><summary class="menu-link caret"><span class="text-truncate">%s</span></summary><div class="menu-panel bg border round shadow pad grid cols-1 gap-sm">%s</div></details>',
+				'<details data-component="menu-dropdown" class="%s"><summary class="menu-link caret">%s<span class="text-truncate">%s</span></summary><div class="menu-panel bg border round shadow pad grid cols-1 gap-sm">%s</div></details>',
 				$sub ? 'menu-dropdown menu-sub' : 'menu-dropdown',
+				$icon,
 				esc_html( $item['name'] ),
 				marccent_blocks_menu_items( $item['children'], true )
 			);
 		} else {
-			$html .= sprintf( '<a data-component="menu-link" class="menu-link" href="%s"><span class="text-truncate">%s</span></a>', esc_url( $item['href'] ?? '' ), esc_html( $item['name'] ) );
+			$html .= sprintf(
+				'<a data-component="menu-link" class="menu-link" href="%s"%s%s>%s%s</a>',
+				esc_url( $item['href'] ?? '' ),
+				$icon_only ? sprintf( ' aria-label="%s" title="%s"', esc_attr( $item['label'] ?? $item['name'] ), esc_attr( $item['name'] ) ) : '',
+				! empty( $item['external'] ) ? ' target="_blank" rel="noopener noreferrer"' : '',
+				$icon,
+				$icon_only ? '' : sprintf( '<span class="text-truncate">%s</span>', esc_html( $item['name'] ) )
+			);
 		}
 	}
 	return $html;
@@ -427,3 +463,17 @@ function marccent_blocks_popover( array $p, string $content ): string {
 function marccent_blocks_side( string $side ): string {
 	return in_array( $side, array( 'top', 'bottom', 'start', 'end' ), true ) ? $side : 'top';
 }
+
+// WordPress's Table block in the theme's table (.table: full width, a shaded header, lines between rows): the class
+// on the <table> itself, which the block's own class setting can't reach (it goes on the <figure> around it); that
+// figure scrolls sideways on a phone (.overflow-auto). marccent-theme T-008.
+add_filter( 'render_block_core/table', function ( $html ) {
+	$tags = new WP_HTML_Tag_Processor( (string) $html );
+	if ( $tags->next_tag( 'figure' ) ) {
+		$tags->add_class( 'overflow-auto' );
+	}
+	if ( $tags->next_tag( 'table' ) ) {
+		$tags->add_class( 'table' );
+	}
+	return $tags->get_updated_html();
+} );

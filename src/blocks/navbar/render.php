@@ -2,21 +2,12 @@
 /**
  * Navbar: the header bar's markup as the NavBar component renders it (so the page looks right before scripts run and
  * nothing moves when the component takes over), inside the navbar island, with everything the component needs in data-props. The menu is the one in the Primary
- * location (Appearance → Menus), as a tree; without one, the top-level pages. The social links are the Social menu's.
+ * location (Appearance → Menus), as a tree; without one, the top-level pages.
  *
  * @var array $attributes
  */
 
 $items = marccent_blocks_menu_tree( 'primary' );
-
-// The social links: the Social menu (Appearance → Menus); without one, the block's own list (its older setting).
-$social = marccent_blocks_social_links();
-foreach ( $social ? array() : preg_split( '/\R/', (string) $attributes['social'] ) as $line ) {
-	$parts = array_map( 'trim', explode( '|', $line ) );
-	if ( count( $parts ) >= 2 && $parts[1] ) {
-		$social[] = array( 'name' => $parts[0], 'href' => esc_url_raw( $parts[1] ), 'icon' => $parts[2] ?? 'fa-solid fa-link' );
-	}
-}
 
 $logo_id = get_theme_mod( 'custom_logo' );
 $logo    = $logo_id ? wp_get_attachment_image_src( $logo_id, 'medium' ) : false;
@@ -29,7 +20,6 @@ $props   = array(
 		'showName' => (bool) $attributes['showName'],
 	),
 	'items'       => $items,
-	'social'      => $social,
 	'cta'         => $attributes['ctaLabel'] ? array(
 		'label' => $attributes['ctaLabel'],
 		// Its scheme checked (no javascript:), its {{ tokens }} (tel:{{ business.telephone }}) kept for Marccent Content.
@@ -51,14 +41,7 @@ $button = fn( string $class, string $name, string $label, string $href ): string
 	'classes' => $class,
 	'newTab'  => preg_match( '#^https?:#', $href ) && ! str_starts_with( $href, home_url() ),
 ) );
-$end = '';
-foreach ( $social as $s ) {
-	$end .= $button( 'secondary hover-expand', $s['icon'], $s['name'], $s['href'] );
-}
-if ( $props['cta'] ) {
-	$end .= $button( 'primary', $props['cta']['icon'], $props['cta']['label'], $props['cta']['href'] );
-}
-$end  = $end ? '<nav aria-label="Social" class="nav-end grid auto-cols items-center gap-sm">' . $end . '</nav>' : '';
+$end  = $props['cta'] ? '<div class="nav-end grid auto-cols items-center gap-sm">' . $button( 'primary', $props['cta']['icon'], $props['cta']['label'], $props['cta']['href'] ) . '</div>' : '';
 $top  = $props['themeButton'] ? '<div id="theme-panel" class="collapse"><div><div class="pad-y-sm"><div class="wrap pad-0 grid cols-1 justify-end"></div></div></div></div>' : '';
 $last = $props['themeButton'] ? '<button type="button" data-component="toggle-button" data-name="theme" class="btn hover-expand" aria-label="Theme" title="Theme" aria-expanded="false" aria-controls="theme-panel">' . marccent_blocks_icon( 'brush', 'btn-icon' ) . '<span class="btn-text">Theme</span></button>' : '';
 // The single controls' light/dark button (the theme's ModeToggle) as it first shows: the mode it switches to, from the

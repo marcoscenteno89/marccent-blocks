@@ -36,7 +36,7 @@ add_action( 'init', function () {
 		// skip_inner_blocks WordPress renders them first too, unused, and each one nested in another doubles that.
 		register_block_type( dirname( $file ), array( 'skip_inner_blocks' => true ) );
 	}
-	register_nav_menus( array( 'primary' => __( 'Primary', 'marccent-blocks' ), 'social' => __( 'Social', 'marccent-blocks' ) ) );
+	register_nav_menus( array( 'primary' => __( 'Primary', 'marccent-blocks' ) ) );
 } );
 
 add_filter( 'block_categories_all', function ( $categories ) {

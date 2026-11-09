@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/menu",
+	"title": "Menu",
+	"category": "marccent",
+	"icon": "menu-alt",
+	"description": "A menu made in Appearance → Menus, anywhere: a footer's links, a sidebar, the social links. Each link's icon is the Font Awesome classes in its CSS Classes field, else the site it goes to (Facebook, Instagram, Google…); links to other sites open in a new tab. It can fold behind a menu button where there’s no room (a header on a phone).",
+	"keywords": [ "menu", "navigation", "links", "social", "footer" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"menu": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"layout": { "type": "string", "default": "fixed" },
+		"iconOnly": { "type": "boolean", "default": false },
+		"fold": { "type": "boolean", "default": false }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

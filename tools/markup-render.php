@@ -30,6 +30,9 @@ function safecss_filter_attr( $css ) {
 function wp_json_encode( $data, $flags = 0 ) {
 	return json_encode( $data, $flags );
 }
+function add_filter( ...$args ) { // inc/markup.php's filters (the Table block's classes) don't run here
+	return true;
+}
 
 require __DIR__ . '/../inc/markup.php';
 
@@ -47,6 +50,7 @@ $render = array(
 	'grid'    => fn( $f ) => marccent_blocks_grid( $f, $f['content'], with_classes( $f['classes'] ) ),
 	'card'    => fn( $f ) => marccent_blocks_card( $f, $f['content'], with_classes( $f['classes'] ) ),
 	'nav'     => fn( $f ) => marccent_blocks_navbar( $f['brand'], $f['items'] ),
+	'menu'    => fn( $f ) => marccent_blocks_menu( array( 'id' => 'id-1' ) + $f ),
 	// The interactive components: ids as the reference writes them (id-1); a block makes its own.
 	'accordion' => fn( $f ) => marccent_blocks_accordion( implode( '', array_map(
 		fn( $item, $i ) => marccent_blocks_accordion_item( htmlspecialchars( $item['header'] ), $item['content'], $f['multiple'] ? null : 'id-1', $i === $f['open'] ),
