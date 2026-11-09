@@ -7,7 +7,7 @@
 import { register } from '../../shared/register';
 import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
-import { Button } from 'marccent-theme/components/ui/button';
+import { Button } from 'marccent/components/ui/button';
 import { BUTTON_COLORS, HOVERS, cx } from '../../shared/options';
 import metadata from './block.json';
 import deprecated from './deprecated';

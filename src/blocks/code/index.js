@@ -2,7 +2,7 @@
  * Code: the theme's Code (ui/code.js), highlighted with a copy button.
  */
 import { islandBlock } from '../../shared/island';
-import { Code } from 'marccent-theme/components/ui/code';
+import { Code } from 'marccent/components/ui/code';
 import metadata from './block.json';
 
 islandBlock( metadata, {

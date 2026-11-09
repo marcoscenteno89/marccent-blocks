@@ -3,7 +3,7 @@
  * reads them the same way for the page).
  */
 import { islandBlock } from '../../shared/island';
-import { DataTable } from 'marccent-theme/components/ui/data-table';
+import { DataTable } from 'marccent/components/ui/data-table';
 import metadata from './block.json';
 
 // One CSV line: commas between values, "quoted" values may hold commas and "" for a quote.

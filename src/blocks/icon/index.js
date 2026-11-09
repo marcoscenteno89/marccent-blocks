@@ -6,7 +6,7 @@
 import { register } from '../../shared/register';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { ExternalLink, PanelBody, SelectControl, TextControl } from '@wordpress/components';
-import { Icon } from 'marccent-theme/components/ui/icon';
+import { Icon } from 'marccent/components/ui/icon';
 import { SHAPES, SURFACES, cx } from '../../shared/options';
 import metadata from './block.json';
 import deprecated from './deprecated';

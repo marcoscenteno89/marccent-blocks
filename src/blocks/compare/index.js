@@ -2,7 +2,7 @@
  * Compare: the theme's Compare (ui/compare.js), two pictures split by a handle.
  */
 import { islandBlock } from '../../shared/island';
-import { Compare } from 'marccent-theme/components/ui/compare';
+import { Compare } from 'marccent/components/ui/compare';
 import metadata from './block.json';
 
 islandBlock( metadata, {

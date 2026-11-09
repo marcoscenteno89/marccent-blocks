@@ -3,8 +3,8 @@
  * stopped.
  */
 import { useState } from 'react';
-import { Counter } from 'marccent-theme/components/ui/counter';
-import { Button } from 'marccent-theme/components/ui/button';
+import { Counter } from 'marccent/components/ui/counter';
+import { Button } from 'marccent/components/ui/button';
 
 export const StopwatchOf = () => {
 	const [ active, setActive ] = useState( false );

@@ -5,7 +5,7 @@
  * Adapters gate), which compares it with the reference. Without WordPress: the few functions inc/markup.php uses are
  * stood in for below. tools/markup-test.php uses the same renderers.
  *
- *   php tools/markup-render.php [reference.json | -]   (default: node_modules/marccent-theme/markup/reference.json;
+ *   php tools/markup-render.php [reference.json | -]   (default: node_modules/marccent/markup/reference.json;
  *                                                     -: from stdin, as the conformance check sends it)
  */
 
@@ -62,7 +62,7 @@ $render = array(
 
 // Run directly: every case of the reference this server renders, as JSON.
 if ( realpath( $_SERVER['SCRIPT_FILENAME'] ?? '' ) === __FILE__ ) {
-	$file      = $argv[1] ?? __DIR__ . '/../node_modules/marccent-theme/markup/reference.json';
+	$file      = $argv[1] ?? __DIR__ . '/../node_modules/marccent/markup/reference.json';
 	$file      = '-' === $file ? 'php://stdin' : $file;
 	$reference = json_decode( (string) file_get_contents( $file ), true ) ?: exit( "No markup reference at $file: npm install first.\n" );
 	$out       = array();

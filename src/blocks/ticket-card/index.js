@@ -2,7 +2,7 @@
  * Ticket card: the theme's TicketCard (widgets/layout.js); its blocks (a button) are the action.
  */
 import { islandBlock } from '../../shared/island';
-import { TicketCard } from 'marccent-theme/components/widgets/layout';
+import { TicketCard } from 'marccent/components/widgets/layout';
 import metadata from './block.json';
 
 islandBlock( metadata, {

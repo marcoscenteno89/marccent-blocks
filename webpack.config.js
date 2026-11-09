@@ -23,7 +23,7 @@ const webpack = require( 'webpack' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const fa = require( './tools/font-awesome' );
 
-const PACKAGE = path.dirname( require.resolve( 'marccent-theme/package.json' ) );
+const PACKAGE = path.dirname( require.resolve( 'marccent/package.json' ) );
 const FA_BASE = fa.base();
 
 const designs = Object.fromEntries( fs.readdirSync( path.join( PACKAGE, 'styles/designs' ) )
@@ -70,7 +70,7 @@ const withPostcss = ( rule ) => ( {
 } );
 
 // The JS rules leave node_modules alone, but marccent-theme there is JSX source: babel compiles it too.
-const OUR_SOURCE = /node_modules\/(?!marccent-theme\/)/;
+const OUR_SOURCE = /node_modules\/(?!marccent\/)/;
 const withTheme = ( rule ) => ( String( rule.exclude ) === '/node_modules/' ? { ...rule, exclude: OUR_SOURCE } : rule );
 
 const phpString = ( s ) => `'${ String( s ).replace( /\\/g, '\\\\' ).replace( /'/g, "\\'" ) }'`;

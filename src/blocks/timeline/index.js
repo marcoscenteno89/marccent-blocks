@@ -2,7 +2,7 @@
  * Timeline: the theme's Timeline (widgets/layout.js) from a list of events (shared/island.js; runtime/islands/timeline.js).
  */
 import { islandBlock } from '../../shared/island';
-import { Timeline } from 'marccent-theme/components/widgets/layout';
+import { Timeline } from 'marccent/components/widgets/layout';
 import metadata from './block.json';
 
 islandBlock( metadata, {

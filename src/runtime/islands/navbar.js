@@ -6,13 +6,13 @@
  * WordPress, the rest from the block's settings.
  */
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { NavBar } from 'marccent-theme/components/widgets/navbar';
-import { Button } from 'marccent-theme/components/ui/button';
-import { ToggleButton } from 'marccent-theme/components/ui/toggle-button';
+import { NavBar } from 'marccent/components/widgets/navbar';
+import { Button } from 'marccent/components/ui/button';
+import { ToggleButton } from 'marccent/components/ui/toggle-button';
 import { ThemeControls } from './theme-controls';
 
 // The mini theme editor loads only when the theme button opens it.
-const MiniThemeEditor = lazy( () => import( /* webpackChunkName: "mini-theme-editor" */ 'marccent-theme/components/theme/mini-editor' ).then( ( m ) => ( { default: m.MiniThemeEditor } ) ) );
+const MiniThemeEditor = lazy( () => import( /* webpackChunkName: "mini-theme-editor" */ 'marccent/components/theme/mini-editor' ).then( ( m ) => ( { default: m.MiniThemeEditor } ) ) );
 
 const external = ( href ) => /^https?:/.test( href ) && ! href.startsWith( location.origin ) ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 

@@ -7,8 +7,8 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { useRef } from '@wordpress/element';
-import { CodeTabs } from 'marccent-theme/components/ui/code-tabs';
-import { useInverseMode } from 'marccent-theme/lib/inverse-mode';
+import { CodeTabs } from 'marccent/components/ui/code-tabs';
+import { useInverseMode } from 'marccent/lib/inverse-mode';
 import { register } from '../../shared/register';
 import metadata from './block.json';
 

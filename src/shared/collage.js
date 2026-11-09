@@ -3,8 +3,8 @@
  * only as names of its own photos (/img/<name>.webp), so the tiles are drawn here and given to it as children, with
  * its sizes and borders (copied: the theme doesn't export them).
  */
-import { Collage } from 'marccent-theme/components/widgets/collage';
-import { ImageCard } from 'marccent-theme/components/widgets/layout';
+import { Collage } from 'marccent/components/widgets/collage';
+import { ImageCard } from 'marccent/components/widgets/layout';
 
 const SIZE = {
 	square: {},
