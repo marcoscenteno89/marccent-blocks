@@ -116,25 +116,18 @@ add_action( 'enqueue_block_assets', function () {
 } );
 add_filter( 'script_loader_tag', fn( $tag, $handle ) => 'marccent-font-awesome-kit' === $handle ? str_replace( ' src=', ' crossorigin="anonymous" src=', $tag ) : $tag, 10, 2 );
 
-// Once: the keys from where they used to be (Settings → Marccent forms, Marccent Local's Settings → Business) move
-// here, and leave there.
+// Once: the keys from where they used to be (Settings → Marccent forms) move here, and leave there.
 add_action( 'init', function () {
 	if ( false !== get_option( 'marccent_keys', false ) ) {
 		return;
 	}
 	$turnstile = (array) get_option( 'marccent_turnstile', array() );
-	$local     = get_option( 'marccent_local', array() );
 	$keys      = array_filter( array(
-		'google_maps'      => (string) ( is_array( $local ) ? $local['maps_key'] ?? '' : '' ),
 		'turnstile_site'   => (string) ( $turnstile['site'] ?? '' ),
 		'turnstile_secret' => (string) ( $turnstile['secret'] ?? '' ),
 	) );
 	add_option( 'marccent_keys', $keys );
 	delete_option( 'marccent_turnstile' );
-	if ( is_array( $local ) && array_key_exists( 'maps_key', $local ) ) {
-		unset( $local['maps_key'] );
-		update_option( 'marccent_local', $local );
-	}
 } );
 
 // The maps' key, for the theme's map (window.marccentMapsKey, so it stays out of the content): on pages with a map.

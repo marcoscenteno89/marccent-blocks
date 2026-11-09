@@ -28,7 +28,7 @@
 - [ ] **Forms behind a proxy**: the rate limit is per `REMOTE_ADDR`; behind Caddy every visitor has Caddy's, so one
       person can use up a form's tries for everyone. Set the real visitor IP from a trusted proxy's `X-Forwarded-For`
       (in `wp-config.php`, only for the proxy's address) before forms go live.
-- [ ] **Turnstile's server check** is untested (no keys on crm-sample): test with Cloudflare's test keys
+- [ ] **Turnstile's server check** is untested (no keys on the test sites): test with Cloudflare's test keys
       (always-pass and always-fail) before relying on it.
 - [x] **A form in a template part or synced pattern** isn't found when it's submitted (only the page's own content was
       read). Fixed 2026-11-05: synced patterns and template parts are followed, and the theme's parts searched.
@@ -47,7 +47,7 @@
 - [x] **Any menu, anywhere** — the Menu block (2026-11-09): a menu made in Appearance → Menus, by its slug, as the theme's Menu (links, icons only, a row or a column); rc-imp's footer shows its Social menu with it.
 - [ ] **The header as a pattern** — the Navbar block is the whole header; it becomes a Header pattern (logo, the Menu block folding behind a menu button on phones, a call button, theme controls) once the theme has the Nav on its own (marccent-theme T-032), then the Navbar block retires. (found 2026-11-09)
 - [x] **Remove the Social links block** — removed with the Social menu location and the Navbar's social links (2026-11-09); rc-imp's footer shows its Site content → Profiles rows with a Loop of buttons. (found 2026-11-06)
-- [ ] **One Card block** — Image card (and an icon card) become patterns of the Card block, not blocks of their own (crm-sample's showcase uses `marccent/image-card`). (found 2026-11-06)
+- [ ] **One Card block** — Image card (and an icon card) become patterns of the Card block, not blocks of their own. (found 2026-11-06)
 
 - [ ] **Item lists come from field rows, not the block** — Orbit's items (and Dock, Step bar, Hex wall, Ticket card's list, Radial menu, Collage, Timeline: every block with an `items` array) are typed into the block's settings; they repeat, so they're a field group's rows (or posts) edited in wp-admin, and the block reads them from a Loop source. (found 2026-11-06)
   - Also typed in: Data table's rows (a CSV in the block), Hex wall's people, Collage's tiles, Map's single marker (one `lat`/`lng` typed in; the places are rows, and the names should be `latitude`/`longitude`).

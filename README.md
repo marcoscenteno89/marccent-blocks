@@ -13,7 +13,7 @@ Each page loads only what it uses: the core styles, the site's design style, the
 ## One theme for every Marccent plugin
 
 This plugin is the one place WordPress gets the Marccent theme: it registers the theme's styles (the `marccent` style
-handle) and its runtime once. The Marccent WP theme and the Marccent Local and Content plugins depend on it instead of
+handle) and its runtime once. The Marccent WP theme and the Marccent Content plugin depend on it instead of
 bundling a copy, so a site running all of them loads the theme once, at one version. `marccent_blocks_theme_version()`
 says which.
 
