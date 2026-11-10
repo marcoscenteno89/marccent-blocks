@@ -57,6 +57,8 @@
 
 - [ ] **Markup test: use the theme's conformance check** — `tools/markup-render.php` prints the cases for marccent-theme's `npm run conformance`; once the pinned release ships `scripts/conformance.mjs`, `test:markup` runs it (`--reference node_modules/marccent-theme/markup/reference.json --render php tools/markup-render.php`) and the comparison in `tools/markup-test.php` goes (keep its href tests). Not covered yet: menu, toggleButton. (found 2026-11-07)
 
+- [ ] **The Stopwatch block draws its own stopwatch** (`src/shared/stopwatch.js`), not the theme's: adapters only translate (PRODUCT-LINE.md 4.6). Use the theme's Counter (its markup case: `counter`), or ticket the theme for what it lacks. (found 2026-11-09)
+
 ## Bugs
 
 - [x] **Map block's pins missing from the server markup** — `marccent_blocks_map` writes `data-markers` now (0.6.0); the test passes. Left: the Map block has no pins setting yet (found 2026-11-05)
