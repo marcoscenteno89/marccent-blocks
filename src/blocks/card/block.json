@@ -15,7 +15,8 @@
 		"hover": { "type": "string", "default": "hover-holographic" },
 		"center": { "type": "boolean", "default": false },
 		"round": { "type": "boolean", "default": true },
-		"rows": { "type": "number", "default": 0 }
+		"rows": { "type": "number", "default": 0 },
+		"variant": { "type": "string", "default": "" }
 	},
 	"supports": { "anchor": true, "html": false },
 	"editorScript": "file:./index.js",

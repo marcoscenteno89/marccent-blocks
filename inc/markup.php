@@ -233,7 +233,7 @@ function marccent_blocks_grid( array $a, string $inner, ?callable $attributes = 
 function marccent_blocks_card( array $a, string $inner, ?callable $attributes = null ): string {
 	$attributes ??= 'marccent_blocks_attributes';
 	$layout = ! empty( $a['rows'] ) ? 'sub rows-' . (int) $a['rows'] : marccent_blocks_cx( 'grid cols-1 content-start', $a['gap'] ?? 'gap-sm' );
-	$class  = marccent_blocks_cx( $a['surface'] ?? 'bg border', ( $a['round'] ?? true ) ? 'round' : '', $a['pad'] ?? 'pad', $layout, $a['hover'] ?? '', ! empty( $a['center'] ) ? 'text-center justify-center' : '' );
+	$class  = marccent_blocks_cx( $a['surface'] ?? 'bg border', ( $a['round'] ?? true ) ? 'round' : '', $a['pad'] ?? 'pad', $layout, $a['hover'] ?? '', ! empty( $a['center'] ) ? 'text-center justify-center' : '', ! empty( $a['variant'] ) ? 'variant-' . sanitize_html_class( $a['variant'] ) : '' );
 	return sprintf( '<article %s>%s</article>', $attributes( array( 'class' => $class ) ), $inner );
 }
 

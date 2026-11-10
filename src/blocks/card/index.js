@@ -13,7 +13,9 @@ import metadata from './block.json';
 import deprecated from './deprecated';
 
 const layout = ( a ) => ( a.rows ? `sub rows-${ a.rows }` : cx( 'grid cols-1 content-start', a.gap ) );
-const classes = ( a ) => cx( a.surface, a.round && 'round', a.pad, layout( a ), a.hover, a.center && 'text-center justify-center' );
+// The theme's variants a card takes (marccent-theme markup/variants.json): one class each.
+const VARIANTS = [ { label: 'None', value: '' }, { label: 'Ticket (notches and a tear line)', value: 'ticket' } ];
+const classes = ( a ) => cx( a.surface, a.round && 'round', a.pad, layout( a ), a.hover, a.center && 'text-center justify-center', a.variant && `variant-${ a.variant }` );
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const props = useInnerBlocksProps( useBlockProps( { className: classes( a ) } ), {
@@ -29,6 +31,7 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 						value={ a.rows } min={ 0 } max={ 10 } onChange={ ( rows ) => set( { rows: rows === 1 ? 2 : rows } ) } />
 					{ ! a.rows && <SelectControl label="Space between items" value={ a.gap } options={ GAPS } onChange={ ( gap ) => set( { gap } ) } /> }
 					<SelectControl label="Hover effect" value={ a.hover } options={ HOVERS } onChange={ ( hover ) => set( { hover } ) } />
+					<SelectControl label="Variant" help="A shape of its own for the card." value={ a.variant } options={ VARIANTS } onChange={ ( variant ) => set( { variant } ) } />
 					<ToggleControl label="Rounded corners" checked={ a.round } onChange={ ( round ) => set( { round } ) } />
 					<ToggleControl label="Center" checked={ a.center } onChange={ ( center ) => set( { center } ) } />
 				</PanelBody>

@@ -30,6 +30,9 @@ function safecss_filter_attr( $css ) {
 function wp_json_encode( $data, $flags = 0 ) {
 	return json_encode( $data, $flags );
 }
+function sanitize_html_class( $class ) {
+	return preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $class );
+}
 function add_filter( ...$args ) { // inc/markup.php's filters (the Table block's classes) don't run here
 	return true;
 }
