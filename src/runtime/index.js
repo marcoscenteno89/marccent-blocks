@@ -71,7 +71,10 @@ const readIsland = ( el ) => {
 		props = cleanProps( JSON.parse( el.dataset.props || '{}' ) );
 	} catch {}
 	const slot = el.querySelector( ':scope [data-slot]' );
-	const html = slot ? [ ...slot.children ].map( ( c ) => c.outerHTML ) : [];
+	// A Loop among them (Marccent Content's marccent/loop) gives its items, each one child: a Carousel's slides, an
+	// Accordion's items from a field group's rows (PRODUCT-LINE.md 6.2).
+	const children = slot ? [ ...slot.children ].flatMap( ( c ) => ( c.matches( '.wp-block-marccent-loop' ) ? [ ...c.children ] : [ c ] ) ) : [];
+	const html = children.map( ( c ) => c.outerHTML );
 	return { el, Component: ISLANDS[ el.dataset.island ], props, html };
 };
 
