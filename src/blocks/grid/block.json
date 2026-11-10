@@ -14,7 +14,9 @@
 		"min": { "type": "string", "default": "" },
 		"gap": { "type": "string", "default": "" },
 		"alignItems": { "type": "string", "default": "" },
-		"center": { "type": "boolean", "default": false }
+		"center": { "type": "boolean", "default": false },
+		"dense": { "type": "boolean", "default": false },
+		"row": { "type": "string", "default": "" }
 	},
 	"supports": { "anchor": true, "html": false },
 	"editorScript": "file:./index.js",

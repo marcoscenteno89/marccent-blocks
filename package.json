@@ -10,11 +10,12 @@
     "start": "wp-scripts start --webpack-copy-php",
     "serialize": "wp-scripts test-unit-js --config tools/jest.config.js",
     "test:blocks": "MARCCENT_TEST=deprecated wp-scripts test-unit-js --config tools/jest.config.js",
-    "test:markup": "php tools/markup-test.php",
-    "test": "npm run test:markup && npm run test:blocks"
+    "test:markup": "node node_modules/marccent-theme/scripts/conformance.mjs --adapter marccent-blocks --reference node_modules/marccent-theme/markup/reference.json --render php tools/markup-render.php",
+    "test": "npm run test:href && npm run test:markup && npm run test:blocks",
+    "test:href": "php tools/href-test.php"
   },
   "dependencies": {
-    "marccent-theme": "github:marcoscenteno89/marccent-theme#v1.0.0-rc.20"
+    "marccent-theme": "github:marcoscenteno89/marccent-theme#v1.0.0-rc.21"
   },
   "devDependencies": {
     "@wordpress/block-editor": "^19.0.0",

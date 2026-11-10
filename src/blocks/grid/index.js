@@ -15,9 +15,13 @@ const EQUAL = [ 'cols', 'fixed' ];
 const classes = ( a ) => cx(
 	a.layout === 'row-wrap' ? 'row-wrap' : 'grid',
 	a.layout === 'cols' ? `cols-${ a.cols }` : a.layout === 'fixed' ? `fixed cols-${ a.cols }` : a.layout !== 'row-wrap' && a.layout,
-	a.gap, a.alignItems, a.center && 'cols-center justify-center text-center'
+	a.gap, a.alignItems, a.center && 'cols-center justify-center text-center', a.dense && 'dense', a.row && 'rows-min'
 );
-const style = ( a ) => ( a.min && EQUAL.includes( a.layout ) ? { '--min': a.min } : undefined );
+const style = ( a ) => {
+	const min = a.min && EQUAL.includes( a.layout ) ? { '--min': a.min } : {};
+	const row = a.row ? { '--row': a.row } : {};
+	return a.min && EQUAL.includes( a.layout ) || a.row ? { ...min, ...row } : undefined;
+};
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const props = useInnerBlocksProps( useBlockProps( { className: classes( a ), style: style( a ) } ), {
@@ -38,6 +42,8 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 					<SelectControl label="Gap" value={ a.gap } options={ GAPS } onChange={ ( gap ) => set( { gap } ) } />
 					<SelectControl label="Align items" value={ a.alignItems } options={ ALIGN_ITEMS } onChange={ ( alignItems ) => set( { alignItems } ) } />
 					<ToggleControl label="Center" checked={ a.center } onChange={ ( center ) => set( { center } ) } />
+					<ToggleControl label="Pack densely" help="Items of different sizes fill the holes (a collage)." checked={ a.dense } onChange={ ( dense ) => set( { dense } ) } />
+					<TextControl label="Minimum row height" help="Every row at least this tall, growing to fit: 11rem." value={ a.row } onChange={ ( row ) => set( { row } ) } />
 				</PanelBody>
 			</InspectorControls>
 			<div { ...props } />

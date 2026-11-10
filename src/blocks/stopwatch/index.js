@@ -1,8 +1,8 @@
 /*
- * Stopwatch: Start and Stop around the theme's Counter (shared/stopwatch.js).
+ * Stopwatch: the theme's Counter with its own controls (Start / Stop and the last time).
  */
 import { islandBlock } from '../../shared/island';
-import { StopwatchOf } from '../../shared/stopwatch';
+import { Counter } from 'marccent-theme/components/ui/counter';
 import metadata from './block.json';
 
-islandBlock( metadata, { preview: () => <StopwatchOf /> } );
+islandBlock( metadata, { preview: () => <Counter controls /> } );

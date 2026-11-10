@@ -55,9 +55,9 @@
   - Carousel's slides are blocks placed by hand; a Loop of slides should work inside it.
   - Fine as they are: Form field's options (the form's own setup), Scenery's layers and Section's dividers (looks, not content).
 
-- [ ] **Markup test: use the theme's conformance check** — `tools/markup-render.php` prints the cases for marccent-theme's `npm run conformance`; once the pinned release ships `scripts/conformance.mjs`, `test:markup` runs it (`--reference node_modules/marccent-theme/markup/reference.json --render php tools/markup-render.php`) and the comparison in `tools/markup-test.php` goes (keep its href tests). Not covered yet: menu, toggleButton. (found 2026-11-07)
+- [x] **Markup test: use the theme's conformance check** — done 2026-11-09: `npm run test:markup` runs marccent-theme's `scripts/conformance.mjs` against the pinned reference with `tools/markup-render.php`; `tools/href-test.php` keeps the link tests (from 1.0.0-rc.21, where parse5 is a dependency).
 
-- [ ] **The Stopwatch block draws its own stopwatch** (`src/shared/stopwatch.js`), not the theme's: adapters only translate (PRODUCT-LINE.md 4.6). Use the theme's Counter (its markup case: `counter`), or ticket the theme for what it lacks. (found 2026-11-09)
+- [x] **The Stopwatch block draws its own stopwatch** — done 2026-11-09: it's the theme's Counter with `controls` (1.0.0-rc.21); `src/shared/stopwatch.js` removed.
 
 ## Bugs
 

@@ -95,6 +95,33 @@ function marccent_blocks_button( array $b, ?callable $attributes = null ): strin
 }
 
 /*
+ * The theme's ToggleButton (components/ui/toggle-button.js) as a disclosure: a button that opens and closes what it
+ * controls (aria-expanded, aria-controls), its icon swapping to activeIcon while open (the plain-JS engine does it).
+ */
+function marccent_blocks_toggle_button( array $t ): string {
+	$label  = marccent_blocks_text( (string) ( $t['label'] ?? '' ) );
+	$icon   = (string) ( $t['icon'] ?? '' );
+	$active = (string) ( ( $t['activeIcon'] ?? '' ) ?: $icon );
+	$open   = ! empty( $t['open'] );
+	return sprintf(
+		'<button %s>%s%s</button>',
+		marccent_blocks_attributes( array_filter( array(
+			'type'             => 'button',
+			'class'            => marccent_blocks_cx( 'btn', $t['classes'] ?? '' ),
+			'aria-label'       => $label,
+			'title'            => $label,
+			'data-component'   => 'toggle-button',
+			'data-icon'        => $icon,
+			'data-active-icon' => $active,
+			'aria-expanded'    => $open ? 'true' : 'false',
+			'aria-controls'    => (string) ( $t['controls'] ?? '' ),
+		), fn( $v ) => '' !== $v ) ),
+		marccent_blocks_icon( $open ? $active : $icon, 'btn-icon' ),
+		'' !== $label ? '<span class="btn-text">' . esc_html( $label ) . '</span>' : ''
+	);
+}
+
+/*
  * A block's wrapper attributes (get_block_wrapper_attributes: its class, anchor…) with these; empty ones left out. A
  * post saved before the block rendered on the server keeps its anchor in the old markup (the block's own HTML), not in
  * its attributes: it's read from there.
@@ -224,8 +251,8 @@ function marccent_blocks_grid( array $a, string $inner, ?callable $attributes = 
 	$cols   = 'cols-' . (int) ( $a['cols'] ?? 3 );
 	$shape  = $equal ? marccent_blocks_cx( 'grid', 'fixed' === $layout ? 'fixed' : '', $cols ) : ( 'row-wrap' === $layout ? 'row-wrap' : marccent_blocks_cx( 'grid', $layout ) );
 	$attrs  = array(
-		'class' => marccent_blocks_cx( $shape, $a['gap'] ?? '', $a['alignItems'] ?? '', ! empty( $a['center'] ) ? 'cols-center justify-center text-center' : '' ),
-		'style' => $equal ? marccent_blocks_css( array( '--min' => $a['min'] ?? '' ) ) : null,
+		'class' => marccent_blocks_cx( $shape, $a['gap'] ?? '', $a['alignItems'] ?? '', ! empty( $a['center'] ) ? 'cols-center justify-center text-center' : '', ! empty( $a['dense'] ) ? 'dense' : '', ! empty( $a['row'] ) ? 'rows-min' : '' ),
+		'style' => marccent_blocks_css( array( '--min' => $equal ? ( $a['min'] ?? '' ) : '', '--row' => $a['row'] ?? '' ) ) ?: null,
 	);
 	return sprintf( '<div %s>%s</div>', $attributes( $attrs ), $inner );
 }
