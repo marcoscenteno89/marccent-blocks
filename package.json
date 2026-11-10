@@ -14,6 +14,7 @@
     "test": "npm run test:settings && npm run test:href && npm run test:markup && npm run test:blocks && npm run test:upgrade",
     "test:href": "php tools/href-test.php",
     "test:settings": "node tools/settings.mjs",
+    "theme:update": "node tools/theme-update.mjs",
     "test:upgrade": "php tools/upgrade-test.php && MARCCENT_TEST=upgrade wp-scripts test-unit-js --config tools/jest.config.js"
   },
   "dependencies": {
