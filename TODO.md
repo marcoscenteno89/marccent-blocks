@@ -25,7 +25,7 @@
 - [ ] **File drop** in forms: uploads from the public need type and size checks, storage outside the media library and
       cleanup; a separate security review.
 - [ ] **A Carousel of a Loop's items**: a Loop inside a Carousel is one slide (with Marccent Content's Loop).
-- [ ] **Forms behind a proxy**: the rate limit is per `REMOTE_ADDR`; behind Caddy every visitor has Caddy's, so one
+- [x] **Forms behind a proxy** (done 2026-11-09: the wp repo's WordPress image sets REMOTE_ADDR from Caddy's X-Forwarded-For with mod_remoteip, trusting only Docker's networks): the rate limit is per `REMOTE_ADDR`; behind Caddy every visitor has Caddy's, so one
       person can use up a form's tries for everyone. Set the real visitor IP from a trusted proxy's `X-Forwarded-For`
       (in `wp-config.php`, only for the proxy's address) before forms go live.
 - [ ] **Turnstile's server check** is untested (no keys on crm-sample): test with Cloudflare's test keys

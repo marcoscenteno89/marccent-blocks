@@ -274,7 +274,8 @@ function marccent_forms_store_file( array $file ): string {
 }
 
 // The visitor's address, as the server got it (not X-Forwarded-For, which anyone can write). Behind a proxy, the host
-// should set REMOTE_ADDR to the visitor's, or every visitor shares one rate limit.
+// sets REMOTE_ADDR to the visitor's (the wp repo's image: mod_remoteip, trusting only the proxy), or every visitor
+// would share one rate limit.
 function marccent_forms_ip(): string {
 	return (string) filter_var( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ), FILTER_VALIDATE_IP ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- validated as an IP
 }
