@@ -6,10 +6,6 @@ work fixed here only; anything the theme fixes is a ticket in marccent-theme's
 
 ## Bugs
 
-- [ ] **Forms behind a proxy**: the rate limit is per `REMOTE_ADDR`; behind Caddy every visitor has Caddy's, so one
-      person can use up a form's tries for everyone. Set the real visitor IP from a trusted proxy's `X-Forwarded-For`
-      (in `wp-config.php`, only for the proxy's address) before forms go live. (found 2026-10-31)
-
 - [x] **A form in a template part or synced pattern** isn't found when it's submitted (only the page's own content was
       read). Fixed 2026-11-05: synced patterns and template parts are followed, and the theme's parts searched. (found 2026-11-05)
 
@@ -31,8 +27,6 @@ work fixed here only; anything the theme fixes is a ticket in marccent-theme's
     - Forms: Form, Field, Rating, Tags (`inc/forms.php`): the form's fields read from the published page (never the
       request), a nonce, type checks, length limits, 5 tries per 10 minutes per visitor; entries kept (Forms → Entries,
       administrators only) then emailed; Cloudflare Turnstile once its keys are set (Settings → Marccent forms).
-
-- [ ] **Markup test: use the theme's conformance check** — `tools/markup-render.php` prints the cases for marccent-theme's `npm run conformance`; once the pinned release ships `scripts/conformance.mjs`, `test:markup` runs it (`--reference node_modules/marccent-theme/markup/reference.json --render php tools/markup-render.php`) and the comparison in `tools/markup-test.php` goes (keep its href tests). Not covered yet: menu, toggleButton. (found 2026-11-07)
 
 - [ ] **Islands have no markup reference**: their stand-in is plain text from their props, not the component's markup.
       Adding them to marccent-theme's `markup/cases.json` would let the server write the real markup (no flash, no
