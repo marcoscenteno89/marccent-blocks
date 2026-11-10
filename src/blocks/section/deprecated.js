@@ -4,6 +4,7 @@
  */
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import metadata from './block.json';
+import { legacyAttributes, upgradeLegacy } from '../../shared/upgrade';
 
 const cx = ( ...c ) => c.filter( Boolean ).join( ' ' );
 const outer = ( a ) => cx( 'wrap wrap-fluid', a.imageUrl ? 'stack' : a.surface );
@@ -32,6 +33,7 @@ const save = ( { attributes: a } ) => {
 };
 
 // Those posts were saved when padY's default was pad-y-lg (before the theme's section rhythm): an unset padY meant it.
-const attributes = { ...metadata.attributes, padY: { ...metadata.attributes.padY, default: 'pad-y-lg' } };
+const legacy = legacyAttributes( metadata );
+const attributes = { ...legacy, padY: { ...legacy.padY, default: 'pad-y-lg' } };
 
-export default [ { attributes, supports: metadata.supports, save } ];
+export default [ { attributes, supports: metadata.supports, save, migrate: upgradeLegacy( metadata.name ) } ];

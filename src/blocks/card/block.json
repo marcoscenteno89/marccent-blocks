@@ -10,13 +10,14 @@
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"surface": { "type": "string", "default": "bg border" },
-		"pad": { "type": "string", "default": "pad" },
-		"gap": { "type": "string", "default": "gap-sm" },
-		"hover": { "type": "string", "default": "hover-holographic" },
-		"center": { "type": "boolean", "default": false },
 		"round": { "type": "boolean", "default": true },
-		"rows": { "type": "number", "default": 0 },
-		"variant": { "type": "string", "default": "" }
+		"padding": { "type": "string", "default": "pad" },
+		"gap": { "type": "string", "default": "gap-sm" },
+		"hover": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": false },
+		"rows": { "type": "number" },
+		"variant": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "anchor": true, "html": false },
 	"editorScript": "file:./index.js",

@@ -26,7 +26,8 @@
 				}
 			]
 		},
-		"start": { "type": "number", "default": 1 }
+		"start": { "type": "number", "default": 0 },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

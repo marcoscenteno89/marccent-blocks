@@ -10,7 +10,8 @@
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"slideWidth": { "type": "string", "default": "17rem" },
-		"label": { "type": "string", "default": "Carousel" }
+		"label": { "type": "string", "default": "Carousel" },
+		"version": { "type": "number" }
 	},
 	"supports": { "anchor": true, "html": false },
 	"editorScript": "file:./index.js",

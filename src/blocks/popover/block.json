@@ -9,9 +9,10 @@
 	"keywords": [ "dropdown", "panel", "flyout", "menu" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"trigger": { "type": "string", "default": "Open" },
 		"label": { "type": "string", "default": "" },
-		"side": { "type": "string", "default": "bottom" }
+		"side": { "type": "string", "default": "bottom" },
+		"trigger": { "type": "string", "default": "Open" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

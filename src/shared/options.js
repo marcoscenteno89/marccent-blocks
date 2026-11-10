@@ -1,23 +1,50 @@
 /*
  * The theme's class vocabulary as editor choices: each option's value is the class (or classes) a block saves, so
- * the saved HTML is the same markup the Next site writes by hand.
+ * the saved HTML is the same markup the Next site writes by hand. A choice a setting has is marccent-theme's
+ * (markup/settings.json, PRODUCT-LINE.md 5): only its label is here. The lists below them (button looks, shapes, grid
+ * layouts) are classes, not a setting's choices.
  */
 import { __ } from '@wordpress/i18n';
+import SETTINGS from 'marccent-theme/markup/settings.json';
 
 const opt = ( label, value ) => ( { label, value } );
 
-// Box backgrounds (styles/tokens/colors.css; .bg is the page's surface, raised).
-export const SURFACES = [
-	opt( __( 'None' ), '' ),
-	opt( 'Surface', 'bg' ),
-	opt( 'Surface + border', 'bg border' ),
-	opt( 'Primary', 'bg-primary' ),
-	opt( 'Primary, darker', 'bg-primary-darker' ),
-	opt( 'Secondary', 'bg-secondary' ),
-	opt( 'Gradient', 'bg-gradient' ),
-	opt( 'Gradient, darker', 'bg-gradient-darker' ),
-	opt( 'Glass', 'glass' ),
-];
+// Labels for the settings' choices; a choice without one shows its value (a hover's name).
+const LABELS = {
+	'': __( 'None' ), bg: 'Surface', 'bg border': 'Surface + border', 'bg-primary': 'Primary', 'bg-primary-darker': 'Primary, darker',
+	'bg-secondary': 'Secondary', 'bg-gradient': 'Gradient', 'bg-gradient-darker': 'Gradient, darker', glass: 'Glass',
+	'pad-0': 'None', 'pad-xs': 'Extra small', 'pad-sm': 'Small', pad: 'Normal', 'pad-md': 'Medium', 'pad-lg': 'Large', 'pad-xl': 'Extra large',
+	'gap-0': 'None', 'gap-xs': 'Extra small', 'gap-sm': 'Small', 'gap-md': 'Medium', 'gap-lg': 'Large', 'gap-xl': 'Extra large',
+	'pad-y-section': 'Section', 'pad-y-section-sm': 'Section, small', 'pad-y-section-lg': 'Section, large', 'pad-y-0': 'None',
+	'pad-y-sm': 'Small', 'pad-y': 'Normal', 'pad-y-md': 'Medium', 'pad-y-lg': 'Large', 'pad-y-xl': 'Extra large', 'pad-y-2xl': 'Double',
+	wrap: 'Normal', 'wrap wrap-sm': 'Narrow', 'wrap wrap-lg': 'Wide', 'wrap wrap-fluid': 'Full',
+	'items-start': 'Top', 'items-center': 'Center', 'items-end': 'Bottom',
+	'hover-none': 'None', ticket: 'Ticket (notches and a tear line)',
+	top: 'Above', bottom: 'Below', start: 'Before (left)', end: 'After (right)',
+	js: 'JavaScript', jsx: 'JSX', css: 'CSS', html: 'HTML', sh: 'Shell',
+};
+// What the empty choice means, where it isn't None.
+const EMPTY = { 'Card.hover': 'Default', 'Card.gap': 'Normal', 'Grid.gap': 'Normal', 'Section.gap': 'Normal', 'Grid.alignItems': 'Stretch', 'Menu.gap': 'Normal' };
+
+// A setting's choices as options: choices( 'Card', 'surface' ). none: a None first, for a setting whose choices
+// don't include the empty one (Card's variant).
+export const choices = ( component, key, { none = false } = {} ) => {
+	const list = SETTINGS[ component ]?.settings?.[ key ]?.choices;
+	if ( ! list ) {
+		throw new Error( `markup/settings.json has no choices for ${ component }.${ key }` );
+	}
+	const label = ( v ) => ( v === '' ? EMPTY[ `${ component }.${ key }` ] ?? LABELS[ '' ] : LABELS[ v ] ?? v.replace( /^hover-/, '' ) );
+	return [ ...( none && ! list.includes( '' ) ? [ opt( LABELS[ '' ], '' ) ] : [] ), ...list.map( ( v ) => opt( label( v ), v ) ) ];
+};
+
+export const SURFACES = choices( 'Card', 'surface' );
+export const HOVERS = choices( 'Card', 'hover' );
+export const PADS = choices( 'Card', 'padding' );
+export const GAPS = choices( 'Grid', 'gap' );
+export const ALIGN_ITEMS = choices( 'Grid', 'alignItems' );
+export const WIDTHS = choices( 'Section', 'width' );
+export const PADS_Y = choices( 'Section', 'verticalPadding' );
+export const ANIMATIONS = choices( 'Animation', 'name' );
 
 // Button looks (.btn modifiers in colors.css).
 export const BUTTON_COLORS = [
@@ -33,29 +60,10 @@ export const BUTTON_COLORS = [
 	opt( 'Danger', 'danger' ),
 ];
 
-// Hover effects (styles/hovers.css). Empty: the default (buttons take the site's, data-hover on <html>).
-export const HOVERS = [ opt( 'Default', '' ), opt( 'None', 'hover-none' ), ...[
-	'holographic', 'bloom', 'corners', 'dash', 'double', 'expand', 'fill', 'flip', 'float', 'frame', 'glow', 'goo', 'grow',
-	'halo', 'inset-ring', 'morph', 'offset', 'pill', 'pop', 'press', 'rings', 'rise', 'shine', 'slide', 'spin', 'split',
-	'spread', 'stripes', 'tabs', 'trace', 'underline', 'wipe', 'x',
-].map( ( h ) => opt( h, `hover-${ h }` ) ) ];
-
 // Shapes for an icon's box (utilities.css .shape-*).
 export const SHAPES = [ opt( 'None', '' ), ...[
 	'hexagon', 'hexagon-flat', 'circle', 'squircle', 'diamond', 'octagon', 'pentagon', 'blob', 'star', 'bevel', 'leaf', 'pill', 'egg',
 ].map( ( s ) => opt( s, `shape-${ s }` ) ) ];
-
-// Canvas animations (components/visuals/canvas-scanner.js NAMES).
-export const ANIMATIONS = [ 'blob', 'fire', 'wave', 'network-loop', 'particle-flowfield', 'orbit', 'snow', 'fireflies', 'leaves', 'rain', 'bubbles' ].map( ( a ) => opt( a, a ) );
-
-// Page widths (.wrap sizes in layout.css).
-export const WIDTHS = [ opt( 'Normal', 'wrap' ), opt( 'Narrow', 'wrap wrap-sm' ), opt( 'Wide', 'wrap wrap-lg' ), opt( 'Full', 'wrap wrap-fluid' ) ];
-
-// Section's padding: the section rhythm (fluid, the theme's --section-space) first, then the space scale.
-export const PADS_Y = [ opt( 'Section', 'pad-y-section' ), opt( 'Section, small', 'pad-y-section-sm' ), opt( 'Section, large', 'pad-y-section-lg' ),
-	opt( 'None', 'pad-y-0' ), opt( 'Small', 'pad-y-sm' ), opt( 'Normal', 'pad-y' ), opt( 'Medium', 'pad-y-md' ), opt( 'Large', 'pad-y-lg' ), opt( 'Extra large', 'pad-y-xl' ), opt( 'Double', 'pad-y-2xl' ) ];
-export const PADS = [ opt( 'None', 'pad-0' ), opt( 'Extra small', 'pad-xs' ), opt( 'Small', 'pad-sm' ), opt( 'Normal', 'pad' ), opt( 'Medium', 'pad-md' ), opt( 'Large', 'pad-lg' ), opt( 'Extra large', 'pad-xl' ) ];
-export const GAPS = [ opt( 'None', 'gap-0' ), opt( 'Extra small', 'gap-xs' ), opt( 'Small', 'gap-sm' ), opt( 'Normal', '' ), opt( 'Medium', 'gap-md' ), opt( 'Large', 'gap-lg' ), opt( 'Extra large', 'gap-xl' ) ];
 
 // Grid shapes (layout.css): equal columns, or the uneven layouts that go to one column on narrow screens.
 export const LAYOUTS = [
@@ -70,8 +78,6 @@ export const LAYOUTS = [
 	opt( '1 : 2 : 1', 'layout-1-2-1' ),
 	opt( 'Ends (start … end)', 'layout-ends' ),
 ];
-
-export const ALIGN_ITEMS = [ opt( 'Stretch', '' ), opt( 'Top', 'items-start' ), opt( 'Center', 'items-center' ), opt( 'Bottom', 'items-end' ) ];
 
 // Joins class names, skipping empty ones (lib/cx.js does the same in the package).
 export const cx = ( ...c ) => c.filter( Boolean ).join( ' ' );

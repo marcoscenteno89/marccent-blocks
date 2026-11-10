@@ -10,13 +10,14 @@
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"layout": { "type": "string", "default": "cols" },
-		"cols": { "type": "number", "default": 3 },
-		"min": { "type": "string", "default": "" },
+		"columns": { "type": "number", "default": 3 },
+		"minimumColumnWidth": { "type": "string", "default": "" },
 		"gap": { "type": "string", "default": "" },
 		"alignItems": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": false },
 		"dense": { "type": "boolean", "default": false },
-		"row": { "type": "string", "default": "" }
+		"minimumRowHeight": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "anchor": true, "html": false },
 	"editorScript": "file:./index.js",

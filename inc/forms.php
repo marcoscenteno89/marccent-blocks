@@ -55,7 +55,8 @@ function marccent_forms_find( array $blocks, string $form_id, int $depth = 0 ): 
 // A block's attributes with its block.json defaults (parse_blocks leaves out the ones at their default).
 function marccent_forms_attrs( array $block ): array {
 	$type = WP_Block_Type_Registry::get_instance()->get_registered( $block['blockName'] );
-	return $type ? $type->prepare_attributes_for_render( $block['attrs'] ?? array() ) : (array) ( $block['attrs'] ?? array() );
+	$attrs = marccent_blocks_upgrade( (string) $block['blockName'], (array) ( $block['attrs'] ?? array() ) );
+	return $type ? $type->prepare_attributes_for_render( $attrs ) : $attrs;
 }
 
 // A form's fields, name => definition, in their order; a name used twice keeps the first. At most 50.
@@ -72,7 +73,7 @@ function marccent_forms_fields( array $blocks, array $fields = array() ): array 
 					'label'    => marccent_blocks_text( (string) ( $a['label'] ?? '' ) ) ?: $name,
 					'required' => ! empty( $a['required'] ),
 					'options'  => 'select' === ( $a['type'] ?? '' ) ? marccent_forms_options( (string) $a['options'] ) : array(),
-					'max'      => max( 0, (int) ( $a['max'] ?? 0 ) ),
+					'max'      => max( 0, (int) ( $a['maximum'] ?? 0 ) ),
 					'show_if'  => trim( (string) ( $a['showIf'] ?? '' ) ),
 				);
 			}
@@ -683,7 +684,7 @@ function marccent_forms_rating_html( array $a ): string {
 		return '';
 	}
 	$value                 = (int) $value;
-	$max                   = max( 1, min( 10, (int) $a['max'] ) );
+	$max                   = max( 1, min( 10, (int) $a['maximum'] ) );
 	[ $described, $notes ] = marccent_forms_notes( $id, '', $error );
 	$stars                 = '';
 	for ( $i = 1; $i <= $max; $i++ ) {

@@ -9,7 +9,23 @@
 	"keywords": [ "history", "milestones", "process", "steps", "events" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"events": { "type": "array", "default": [ { "date": "2024", "title": "Founded", "text": "Where it started.", "icon": "flag" }, { "date": "2026", "title": "Today", "icon": "star" } ] }
+		"events": {
+			"type": "array",
+			"default": [
+				{
+					"date": "2024",
+					"title": "Founded",
+					"text": "Where it started.",
+					"icon": "flag"
+				},
+				{
+					"date": "2026",
+					"title": "Today",
+					"icon": "star"
+				}
+			]
+		},
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

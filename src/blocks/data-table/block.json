@@ -9,10 +9,14 @@
 	"keywords": [ "table", "csv", "data", "sort", "search", "spreadsheet" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"csv": { "type": "string", "default": "Name,City,Work orders\nTeton Ridge Builders,Idaho Falls,4\nSnake River Family Clinic,Pocatello,2\nWasatch Grill,Ogden,1" },
-		"label": { "type": "string", "default": "Accounts" },
+		"label": { "type": "string", "default": "" },
 		"pageSize": { "type": "number", "default": 10 },
-		"search": { "type": "boolean", "default": true }
+		"search": { "type": "boolean", "default": true },
+		"csv": {
+			"type": "string",
+			"default": "Name,City,Work orders\nTeton Ridge Builders,Idaho Falls,4\nSnake River Family Clinic,Pocatello,2\nWasatch Grill,Ogden,1"
+		},
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

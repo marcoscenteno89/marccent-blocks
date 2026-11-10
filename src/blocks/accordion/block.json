@@ -10,7 +10,8 @@
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"open": { "type": "number", "default": 0 },
-		"multiple": { "type": "boolean", "default": false }
+		"multiple": { "type": "boolean", "default": false },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

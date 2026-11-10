@@ -9,7 +9,8 @@
 	"keywords": [ "time", "clock", "live", "date" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"format": { "type": "string", "default": "h:mm:ss A" }
+		"format": { "type": "string", "default": "h:mm:ss A" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

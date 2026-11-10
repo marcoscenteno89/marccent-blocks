@@ -30,7 +30,8 @@
 				}
 			]
 		},
-		"label": { "type": "string", "default": "Dock" }
+		"label": { "type": "string", "default": "Dock" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

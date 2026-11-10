@@ -9,7 +9,8 @@
 	"keywords": [ "faq", "question", "answer" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"header": { "type": "string", "default": "" }
+		"header": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

@@ -44,14 +44,28 @@ function with_classes( string $classes ): callable {
 	return fn( $attrs ) => marccent_blocks_attributes( array( 'class' => marccent_blocks_cx( $attrs['class'] ?? '', $classes ) ) + $attrs );
 }
 
+// A case's fields are the component's props (pad, cols); a block's attributes are the settings' names (padding,
+// columns): settings-upgrade.json's props, the other way round.
+function settings_names( string $block, array $fields ): array {
+	static $upgrade;
+	$upgrade ??= json_decode( (string) file_get_contents( __DIR__ . '/../settings-upgrade.json' ), true );
+	foreach ( $upgrade[ "marccent/$block" ]['props'] ?? array() as $name => $prop ) {
+		if ( array_key_exists( $prop, $fields ) ) {
+			$fields[ $name ] = $fields[ $prop ];
+			unset( $fields[ $prop ] );
+		}
+	}
+	return $fields;
+}
+
 // Each case's fields (the theme's markup/cases.json) as the server takes them (a block's attributes): a button's label
 // as the editor stores it (RichText: HTML, so "<" is "&lt;").
 $render = array(
 	'button'  => fn( $f ) => marccent_blocks_button( array( 'label' => htmlspecialchars( $f['label'] ) ) + $f ),
 	'icon'    => fn( $f ) => marccent_blocks_icon( $f['name'], $f['classes'], $f['family'] ),
-	'section' => fn( $f ) => marccent_blocks_section( array( 'tagName' => $f['tag'], 'imageUrl' => $f['image'] ) + $f, $f['content'], with_classes( $f['classes'] ) ),
-	'grid'    => fn( $f ) => marccent_blocks_grid( $f, $f['content'], with_classes( $f['classes'] ) ),
-	'card'    => fn( $f ) => marccent_blocks_card( $f, $f['content'], with_classes( $f['classes'] ) ),
+	'section' => fn( $f ) => marccent_blocks_section( array( 'as' => $f['tag'] ) + settings_names( 'section', $f ), $f['content'], with_classes( $f['classes'] ) ),
+	'grid'    => fn( $f ) => marccent_blocks_grid( settings_names( 'grid', $f ), $f['content'], with_classes( $f['classes'] ) ),
+	'card'    => fn( $f ) => marccent_blocks_card( settings_names( 'card', $f ), $f['content'], with_classes( $f['classes'] ) ),
 	'nav'     => fn( $f ) => marccent_blocks_navbar( $f['brand'], $f['items'] ),
 	'menu'    => fn( $f ) => marccent_blocks_menu( array( 'id' => 'id-1' ) + $f ),
 	'toggleButton' => fn( $f ) => marccent_blocks_toggle_button( $f ),

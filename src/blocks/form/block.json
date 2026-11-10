@@ -15,42 +15,16 @@
 	],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"formId": {
-			"type": "string",
-			"default": ""
-		},
-		"submitLabel": {
-			"type": "string",
-			"default": "Send"
-		},
-		"submitIcon": {
-			"type": "string",
-			"default": "paper-plane"
-		},
-		"successMessage": {
-			"type": "string",
-			"default": "Thanks! We got it and will be in touch."
-		},
-		"emailTo": {
-			"type": "string",
-			"default": ""
-		},
-		"emailSubject": {
-			"type": "string",
-			"default": ""
-		},
-		"layout": {
-			"type": "string",
-			"default": "grid gap-sm pairs"
-		},
-		"webhook": {
-			"type": "string",
-			"default": ""
-		},
-		"saveTo": {
-			"type": "string",
-			"default": ""
-		}
+		"submitLabel": { "type": "string", "default": "Submit" },
+		"submitIcon": { "type": "string", "default": "paper-plane" },
+		"formId": { "type": "string", "default": "" },
+		"successMessage": { "type": "string", "default": "Thanks! We got it and will be in touch." },
+		"emailTo": { "type": "string", "default": "" },
+		"emailSubject": { "type": "string", "default": "" },
+		"layout": { "type": "string", "default": "grid gap-sm pairs" },
+		"webhook": { "type": "string", "default": "" },
+		"saveTo": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": {
 		"html": false

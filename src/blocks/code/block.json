@@ -9,11 +9,9 @@
 	"keywords": [ "code", "snippet", "syntax", "pre", "highlight" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"code": {
-			"type": "string",
-			"default": "const hello = ( name ) => `Hello, ${ name }!`;"
-		},
-		"lang": { "type": "string", "default": "js" }
+		"language": { "type": "string", "default": "jsx" },
+		"code": { "type": "string", "default": "const hello = ( name ) => `Hello, ${ name }!`;" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

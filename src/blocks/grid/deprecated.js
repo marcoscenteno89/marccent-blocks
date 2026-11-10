@@ -4,6 +4,7 @@
  */
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import metadata from './block.json';
+import { legacyAttributes, upgradeLegacy } from '../../shared/upgrade';
 
 const cx = ( ...c ) => c.filter( Boolean ).join( ' ' );
 const EQUAL = [ 'cols', 'fixed' ];
@@ -16,4 +17,5 @@ const style = ( a ) => ( a.min && EQUAL.includes( a.layout ) ? { '--min': a.min 
 
 const save = ( { attributes: a } ) => <div { ...useInnerBlocksProps.save( useBlockProps.save( { className: classes( a ), style: style( a ) } ) ) } />;
 
-export default [ { attributes: metadata.attributes, supports: metadata.supports, save } ];
+// Its attributes as they were then (old names and defaults), brought to today's by migrate (src/shared/upgrade.js).
+export default [ { attributes: legacyAttributes( metadata ), supports: metadata.supports, save, migrate: upgradeLegacy( metadata.name ) } ];

@@ -9,11 +9,12 @@
 	"keywords": [ "menu", "navigation", "links", "social", "footer" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"menu": { "type": "string", "default": "" },
 		"label": { "type": "string", "default": "" },
-		"layout": { "type": "string", "default": "fixed" },
 		"iconOnly": { "type": "boolean", "default": false },
-		"fold": { "type": "boolean", "default": false }
+		"layout": { "type": "string", "default": "fixed" },
+		"fold": { "type": "boolean", "default": false },
+		"menu": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

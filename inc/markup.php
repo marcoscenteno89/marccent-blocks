@@ -160,13 +160,13 @@ function marccent_blocks_css( array $style ): ?string {
 }
 
 /*
- * Section, Grid and Card: the theme's components (components/widgets/section.js) in PHP, from a block's attributes,
- * around $inner (HTML). $attributes turns the root's attributes into HTML, as for Button.
+ * Section, Grid and Card: the theme's components (components/widgets/section.js) in PHP, from a block's attributes
+ * (the settings' full-word names: verticalPadding, columns, padding; markup/settings.json), around $inner (HTML). $attributes turns the root's attributes into HTML, as for Button.
  */
 function marccent_blocks_section( array $a, string $inner, ?callable $attributes = null ): string {
 	$attributes ??= 'marccent_blocks_attributes';
-	$tag   = in_array( $a['tagName'] ?? '', array( 'section', 'div', 'header', 'footer', 'aside' ), true ) ? $a['tagName'] : 'section';
-	$image = (string) ( $a['imageUrl'] ?? '' );
+	$tag   = in_array( $a['as'] ?? '', array( 'section', 'div', 'header', 'footer', 'aside' ), true ) ? $a['as'] : 'section';
+	$image = (string) ( $a['image'] ?? '' );
 	$min   = (string) ( $a['minHeight'] ?? '' );
 	// A least height makes the band a one-cell grid, so its content box can center in it (not .grid: that brings columns).
 	$outer = array(
@@ -176,7 +176,7 @@ function marccent_blocks_section( array $a, string $inner, ?callable $attributes
 	);
 	// Over an image: the content on top of the image and shade, centered in the band, in light text.
 	$content = array(
-		'class' => marccent_blocks_cx( $a['width'] ?? 'wrap', $a['padY'] ?? 'pad-y-lg', 'grid cols-1', $a['gap'] ?? '', ! empty( $a['center'] ) ? 'text-center justify-center' : '', $image ? $a['surface'] ?? '' : '' ),
+		'class' => marccent_blocks_cx( $a['width'] ?? 'wrap', $a['verticalPadding'] ?? 'pad-y-lg', 'grid cols-1', $a['gap'] ?? '', ! empty( $a['center'] ) ? 'text-center justify-center' : '', $image ? $a['surface'] ?? '' : '' ),
 		'style' => $image ? 'position: relative; align-content: center; color: #fff' : ( $min ? 'align-content: center' : null ),
 	);
 	$background = $image ? sprintf(
@@ -248,11 +248,11 @@ function marccent_blocks_grid( array $a, string $inner, ?callable $attributes = 
 	$attributes ??= 'marccent_blocks_attributes';
 	$layout = (string) ( $a['layout'] ?? 'cols' );
 	$equal  = in_array( $layout, array( 'cols', 'fixed' ), true );
-	$cols   = 'cols-' . (int) ( $a['cols'] ?? 3 );
+	$cols   = 'cols-' . (int) ( $a['columns'] ?? 3 );
 	$shape  = $equal ? marccent_blocks_cx( 'grid', 'fixed' === $layout ? 'fixed' : '', $cols ) : ( 'row-wrap' === $layout ? 'row-wrap' : marccent_blocks_cx( 'grid', $layout ) );
 	$attrs  = array(
-		'class' => marccent_blocks_cx( $shape, $a['gap'] ?? '', $a['alignItems'] ?? '', ! empty( $a['center'] ) ? 'cols-center justify-center text-center' : '', ! empty( $a['dense'] ) ? 'dense' : '', ! empty( $a['row'] ) ? 'rows-min' : '' ),
-		'style' => marccent_blocks_css( array( '--min' => $equal ? ( $a['min'] ?? '' ) : '', '--row' => $a['row'] ?? '' ) ) ?: null,
+		'class' => marccent_blocks_cx( $shape, $a['gap'] ?? '', $a['alignItems'] ?? '', ! empty( $a['center'] ) ? 'cols-center justify-center text-center' : '', ! empty( $a['dense'] ) ? 'dense' : '', ! empty( $a['minimumRowHeight'] ) ? 'rows-min' : '' ),
+		'style' => marccent_blocks_css( array( '--min' => $equal ? ( $a['minimumColumnWidth'] ?? '' ) : '', '--row' => $a['minimumRowHeight'] ?? '' ) ) ?: null,
 	);
 	return sprintf( '<div %s>%s</div>', $attributes( $attrs ), $inner );
 }
@@ -260,7 +260,7 @@ function marccent_blocks_grid( array $a, string $inner, ?callable $attributes = 
 function marccent_blocks_card( array $a, string $inner, ?callable $attributes = null ): string {
 	$attributes ??= 'marccent_blocks_attributes';
 	$layout = ! empty( $a['rows'] ) ? 'sub rows-' . (int) $a['rows'] : marccent_blocks_cx( 'grid cols-1 content-start', $a['gap'] ?? 'gap-sm' );
-	$class  = marccent_blocks_cx( $a['surface'] ?? 'bg border', ( $a['round'] ?? true ) ? 'round' : '', $a['pad'] ?? 'pad', $layout, $a['hover'] ?? '', ! empty( $a['center'] ) ? 'text-center justify-center' : '', ! empty( $a['variant'] ) ? 'variant-' . sanitize_html_class( $a['variant'] ) : '' );
+	$class  = marccent_blocks_cx( $a['surface'] ?? 'bg border', ( $a['round'] ?? true ) ? 'round' : '', $a['padding'] ?? 'pad', $layout, $a['hover'] ?? '', ! empty( $a['center'] ) ? 'text-center justify-center' : '', ! empty( $a['variant'] ) ? 'variant-' . sanitize_html_class( $a['variant'] ) : '' );
 	return sprintf( '<article %s>%s</article>', $attributes( array( 'class' => $class ) ), $inner );
 }
 

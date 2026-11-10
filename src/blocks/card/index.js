@@ -8,14 +8,14 @@
 import { register } from '../../shared/register';
 import { InnerBlocks, InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, ToggleControl } from '@wordpress/components';
-import { SURFACES, PADS, GAPS, HOVERS, cx } from '../../shared/options';
+import { SURFACES, PADS, GAPS, HOVERS, choices, cx } from '../../shared/options';
 import metadata from './block.json';
 import deprecated from './deprecated';
 
 const layout = ( a ) => ( a.rows ? `sub rows-${ a.rows }` : cx( 'grid cols-1 content-start', a.gap ) );
-// The theme's variants a card takes (marccent-theme markup/variants.json): one class each.
-const VARIANTS = [ { label: 'None', value: '' }, { label: 'Ticket (notches and a tear line)', value: 'ticket' } ];
-const classes = ( a ) => cx( a.surface, a.round && 'round', a.pad, layout( a ), a.hover, a.center && 'text-center justify-center', a.variant && `variant-${ a.variant }` );
+// The theme's variants a card takes (Card's variant in markup/settings.json): one class each.
+const VARIANTS = choices( 'Card', 'variant', { none: true } );
+const classes = ( a ) => cx( a.surface, a.round && 'round', a.padding, layout( a ), a.hover, a.center && 'text-center justify-center', a.variant && `variant-${ a.variant }` );
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const props = useInnerBlocksProps( useBlockProps( { className: classes( a ) } ), {
@@ -26,7 +26,7 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 			<InspectorControls>
 				<PanelBody title="Card">
 					<SelectControl label="Background" value={ a.surface } options={ SURFACES } onChange={ ( surface ) => set( { surface } ) } />
-					<SelectControl label="Padding" value={ a.pad } options={ PADS } onChange={ ( pad ) => set( { pad } ) } />
+					<SelectControl label="Padding" value={ a.padding } options={ PADS } onChange={ ( padding ) => set( { padding } ) } />
 					<RangeControl label="Rows" help="Line up with the cards beside it: one row per block in the card. 0 is off."
 						value={ a.rows } min={ 0 } max={ 10 } onChange={ ( rows ) => set( { rows: rows === 1 ? 2 : rows } ) } />
 					{ ! a.rows && <SelectControl label="Space between items" value={ a.gap } options={ GAPS } onChange={ ( gap ) => set( { gap } ) } /> }

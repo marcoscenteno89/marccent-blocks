@@ -19,7 +19,7 @@ const boxProps = ( a ) => a.shape
 
 const Glyph = ( { a } ) => (
 	<>
-		<Icon name={ a.icon } family={ a.family } />
+		<Icon name={ a.name } family={ a.family } />
 		{ a.label && <span className="screen-reader-text">{ a.label }</span> }
 	</>
 );
@@ -28,7 +28,7 @@ const Edit = ( { attributes: a, setAttributes: set } ) => (
 	<>
 		<InspectorControls>
 			<PanelBody title="Icon">
-				<TextControl label="Icon name" value={ a.icon } onChange={ ( icon ) => set( { icon: icon.replace( /^fa-/, '' ) } ) }
+				<TextControl label="Icon name" value={ a.name } onChange={ ( icon ) => set( { name: icon.replace( /^fa-/, '' ) } ) }
 					help={ <ExternalLink href="https://fontawesome.com/search?ic=free">Find one</ExternalLink> } />
 				<SelectControl label="Style" value={ a.family } options={ FAMILIES } onChange={ ( family ) => set( { family } ) } />
 				<SelectControl label="Shape" value={ a.shape } options={ SHAPES } onChange={ ( shape ) => set( { shape } ) } />

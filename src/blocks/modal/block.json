@@ -9,12 +9,13 @@
 	"keywords": [ "dialog", "popup", "lightbox", "overlay" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"title": { "type": "string", "default": "Title" },
+		"title": { "type": "string", "default": "" },
 		"variant": { "type": "string", "default": "" },
 		"buttonLabel": { "type": "string", "default": "Open" },
 		"buttonIcon": { "type": "string", "default": "arrow-up-right-from-square" },
 		"buttonColor": { "type": "string", "default": "primary" },
-		"dialogId": { "type": "string", "default": "" }
+		"dialogId": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

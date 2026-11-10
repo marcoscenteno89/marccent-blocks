@@ -9,9 +9,10 @@
 	"keywords": [ "hint", "help", "title", "info" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"trigger": { "type": "string", "default": "Hover me" },
 		"content": { "type": "string", "default": "A short hint." },
-		"side": { "type": "string", "default": "top" }
+		"side": { "type": "string", "default": "top" },
+		"trigger": { "type": "string", "default": "Hover me" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

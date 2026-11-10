@@ -6,6 +6,13 @@ work fixed here only; anything the theme fixes is a ticket in marccent-theme's
 
 ## Bugs
 
+- [ ] **The Hex wall block is broken** since marccent-theme 1.0.0-rc.21: it imports `HexWall`, which that release
+      removed (webpack: "export 'HexWall' was not found"), so its editor preview and its island draw nothing. It
+      retires (a HexGrid of HexFlips, the 1.0 checklist); until then it's broken on any page that has one. (found 2026-11-10)
+
+- [ ] **Drawer from the top or bottom**: settings.json's Drawer `side` takes top, bottom, start and end; the server
+      (`marccent_blocks_drawer`) and the block offer only start and end. (found 2026-11-10)
+
 - [x] **A form in a template part or synced pattern** isn't found when it's submitted (only the page's own content was
       read). Fixed 2026-11-05: synced patterns and template parts are followed, and the theme's parts searched. (found 2026-11-05)
 
@@ -109,7 +116,7 @@ work fixed here only; anything the theme fixes is a ticket in marccent-theme's
 - [ ] **[T-026](https://github.com/marcoscenteno89/marccent-theme/blob/master/TICKETS.md)** — a Date block (found 2026-11-08)
 - [ ] **[T-027](https://github.com/marcoscenteno89/marccent-theme/blob/master/TICKETS.md)** — a Contact block (found 2026-11-08)
 - [ ] **[T-028](https://github.com/marcoscenteno89/marccent-theme/blob/master/TICKETS.md)** — text formats in the block editor (Raised, Muted, Badge) (found 2026-11-08)
-- [ ] **[T-029](https://github.com/marcoscenteno89/marccent-theme/blob/master/TICKETS.md)** — read the theme's settings file instead of `block.json`'s and `src/shared/options.js`'s own copies (found 2026-11-08)
+- [x] **[T-029](https://github.com/marcoscenteno89/marccent-theme/blob/master/TICKETS.md)** — read the theme's settings file instead of `block.json`'s and `src/shared/options.js`'s own copies — done 2026-11-10: `tools/settings.mjs` writes each block.json's attributes from settings.json and `npm run test:settings` fails on any difference not listed with its reason in `tools/settings-map.json`; the full-word names (padding, columns, verticalPadding, language, maximum, name, as, image), content saved before upgraded by its version (`settings-upgrade.json`, `src/shared/upgrade.js`, `inc/upgrade.php`); the editor's choices are settings.json's. Left (in the map): 31 settings not offered yet, 12 kept in the block's own shape, 10 blocks without a component (found 2026-11-08)
 
 ## After 1.0
 

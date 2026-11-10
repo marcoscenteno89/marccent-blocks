@@ -9,12 +9,13 @@
 	"keywords": [ "map", "google", "location", "directions" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"lat": { "type": "string", "default": "" },
-		"lng": { "type": "string", "default": "" },
 		"zoom": { "type": "number", "default": 10 },
 		"marker": { "type": "boolean", "default": true },
 		"title": { "type": "string", "default": "" },
-		"link": { "type": "string", "default": "" }
+		"lat": { "type": "string", "default": "" },
+		"lng": { "type": "string", "default": "" },
+		"link": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

@@ -15,7 +15,8 @@
 		"afterLabel": { "type": "string", "default": "After" },
 		"start": { "type": "number", "default": 50 },
 		"label": { "type": "string", "default": "Before and after" },
-		"ratio": { "type": "string", "default": "16 / 9" }
+		"ratio": { "type": "string", "default": "16 / 9" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

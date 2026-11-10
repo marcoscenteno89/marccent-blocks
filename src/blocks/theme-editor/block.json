@@ -8,7 +8,9 @@
 	"description": "The theme’s full editor: the palette, mode, design style, hover effect and more, for visitors to make the site theirs.",
 	"keywords": [ "theme", "palette", "design", "customizer", "settings" ],
 	"textdomain": "marccent-blocks",
-	"attributes": {},
+	"attributes": {
+		"version": { "type": "number" }
+	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"

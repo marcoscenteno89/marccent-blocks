@@ -18,7 +18,7 @@ $suggestions = marccent_forms_options( str_replace( ',', "\n", (string) $attribu
 $props = array(
 	'name'         => $name,
 	'label'        => $label,
-	'max'          => max( 0, (int) $attributes['max'] ),
+	'max'          => max( 0, (int) $attributes['maximum'] ),
 	'suggestions'  => $suggestions ?: null,
 	'defaultValue' => array_values( array_filter( array_map( 'trim', explode( ',', $value ) ), 'strlen' ) ),
 );

@@ -1,0 +1,323 @@
+{
+	"about": "Each block's marccent-theme component (markup/settings.json) and every place WordPress differs, with why. Read by tools/settings.mjs (npm run test:settings).",
+	"blocks": {
+		"accordion": {
+			"component": "Accordion"
+		},
+		"accordion-item": {
+			"component": "AccordionItem"
+		},
+		"alert": {
+			"component": "Alert",
+			"later": {
+				"active": "false renders nothing: on WordPress that's the Show if tune (Marccent Content)"
+			}
+		},
+		"animation": {
+			"component": "Animation",
+			"wordpress": {
+				"minHeight": "the block's height: the Animation fills its parent, and the block is that parent",
+				"surface": "a background behind the canvas, a class on the block"
+			}
+		},
+		"button": {
+			"component": "Button",
+			"wordpress": {
+				"label": "its content (the content setting) kept in an attribute",
+				"color": "the .btn look, a class (the classes tune)",
+				"hover": "a hover class (hover-*); empty takes the site's",
+				"newTab": "target=_blank on the link"
+			},
+			"differs": {
+				"icon": "settings.json's default is false, which isn't a text: kept as arrow-right until the theme fixes it (Button.icon)"
+			},
+			"later": {
+				"disabled": "a disabled link isn't one; for buttons in forms, not offered yet"
+			}
+		},
+		"card": {
+			"component": "Card"
+		},
+		"carousel": {
+			"component": "Carousel"
+		},
+		"clock": {
+			"component": "Clock"
+		},
+		"code": {
+			"component": "Code",
+			"wordpress": {
+				"code": "its content (the content setting) kept in an attribute"
+			},
+			"later": {
+				"label": "not passed by render.php yet",
+				"minLines": "not passed by render.php yet"
+			}
+		},
+		"collage": {
+			"component": null,
+			"why": "Collage is a pattern now, leaving (T-033): the block retires"
+		},
+		"compare": {
+			"component": "Compare",
+			"wordpress": {
+				"ratio": "the block's aspect ratio, a style on its wrapper"
+			}
+		},
+		"countdown": {
+			"component": null,
+			"why": "the theme's Countdown has no entry in settings.json yet (asked: stays or goes?)"
+		},
+		"data-table": {
+			"component": "DataTable",
+			"wordpress": {
+				"csv": "the rows typed as CSV until they come from a field group (PRODUCT-LINE.md 6.1, admin data)"
+			},
+			"later": {
+				"columns": "read from the CSV's first line until the rows are admin data (6.1)",
+				"rows": "admin data: a field group's rows (6.1)"
+			}
+		},
+		"dock": {
+			"component": "Dock",
+			"differs": {
+				"items": "sample items typed in the block; they become Dock item children (T-034)"
+			}
+		},
+		"drawer": {
+			"component": "Drawer",
+			"wordpress": {
+				"buttonLabel": "the button that opens it: the theme's Drawer takes show and setShow, the block draws that Button",
+				"buttonIcon": "the opening button's icon",
+				"buttonColor": "the opening button's look",
+				"dialogId": "the id that links the button to the dialog"
+			}
+		},
+		"form": {
+			"component": "Form",
+			"wordpress": {
+				"formId": "the form's id for its entries (forms admin data)",
+				"successMessage": "what the visitor reads once it's sent",
+				"emailTo": "who's emailed (forms admin data)",
+				"emailSubject": "the email's subject (forms admin data)",
+				"layout": "the fields' grid classes",
+				"webhook": "where entries are also sent (forms admin data)",
+				"saveTo": "the Fields type its entries are kept in (forms admin data)"
+			}
+		},
+		"form-field": {
+			"component": "Field",
+			"wordpress": {
+				"type": "the input's type (text, email, a list, a file…); Field's as follows from it",
+				"required": "the input's own attribute, checked on the server too",
+				"options": "a list's choices, one per line",
+				"placeholder": "the input's own attribute",
+				"help": "a line under the field",
+				"showIf": "shown only when another field's answer matches (the form's own steps)",
+				"accept": "a file input's types"
+			},
+			"later": {
+				"as": "chosen from type: select for a list, textarea for long text"
+			}
+		},
+		"form-rating": {
+			"component": "Rating",
+			"differs": {
+				"name": "a form field needs a name to be sent: a new block starts with rating"
+			},
+			"later": {
+				"defaultValue": "a starting score: not offered in forms yet",
+				"disabled": "a locked field: not offered in forms yet"
+			}
+		},
+		"form-tags": {
+			"component": "TagInput",
+			"differs": {
+				"name": "a form field needs a name to be sent: a new block starts with tags",
+				"suggestions": "typed as one line, comma-separated, and split on the server"
+			},
+			"later": {
+				"defaultValue": "starting tags: not offered in forms yet"
+			}
+		},
+		"grid": {
+			"component": "Grid"
+		},
+		"hex-wall": {
+			"component": null,
+			"why": "HexWall is gone (rc.21), a HexGrid of HexFlips: the block retires"
+		},
+		"html": {
+			"component": null,
+			"why": "WordPress's own: hand-written HTML, no theme component"
+		},
+		"icon": {
+			"component": "Icon",
+			"rename": {
+				"icon": "name"
+			},
+			"wordpress": {
+				"shape": "the icon's box, a class (shape-*): Icon is the glyph only",
+				"surface": "the box's background, a class",
+				"size": "the box's size, a style",
+				"label": "its aria-label (none: hidden from screen readers)"
+			},
+			"differs": {
+				"name": "a new block starts with a star, so it shows something to change"
+			}
+		},
+		"image-card": {
+			"component": null,
+			"why": "ImageCard is a pattern now, leaving (T-033): the block retires"
+		},
+		"map": {
+			"component": "Map",
+			"wordpress": {
+				"lat": "the place typed in: becomes center ({ lat, lng }) once places are a field group's rows (6.1)",
+				"lng": "see lat",
+				"link": "a link under the map to open it in Google Maps"
+			},
+			"differs": {
+				"marker": "a pin at the place, on or off; settings.json's marker is that pin's text"
+			},
+			"later": {
+				"apiKey": "the site's key, from Appearance → Marccent settings (admin data), not the block",
+				"center": "from lat and lng",
+				"markers": "the places: a field group's rows (6.1)",
+				"cluster": "not offered yet",
+				"fit": "not offered yet",
+				"embed": "not offered yet",
+				"recenter": "not offered yet",
+				"overlay": "not offered yet"
+			}
+		},
+		"menu": {
+			"component": "Menu",
+			"wordpress": {
+				"menu": "which menu, by its slug, from Appearance → Menus (admin data)"
+			},
+			"later": {
+				"gap": "not offered yet: the theme's default gap-sm",
+				"hover": "not offered yet: dropdowns open on a click"
+			}
+		},
+		"mini-theme-editor": {
+			"component": "MiniThemeEditor",
+			"wordpress": {
+				"align": "where the block sits in its row (justify-self)"
+			}
+		},
+		"modal": {
+			"component": "Modal",
+			"wordpress": {
+				"buttonLabel": "the button that opens it: the theme's Modal takes show and setShow, the block draws that Button",
+				"buttonIcon": "the opening button's icon",
+				"buttonColor": "the opening button's look",
+				"dialogId": "the id that links the button to the dialog"
+			}
+		},
+		"navbar": {
+			"component": null,
+			"why": "NavBar is a pattern, leaving (T-032): the block becomes the Header pattern"
+		},
+		"orbit": {
+			"component": "Orbit",
+			"wordpress": {
+				"kind": "items on a ring, or the theme's OrbitClock or SolarSystem"
+			},
+			"differs": {
+				"items": "sample items typed in the block; they become Orbit item children (T-034)"
+			},
+			"later": {
+				"start": "not offered yet",
+				"wheel": "not offered yet",
+				"center": "not offered yet",
+				"hub": "not offered yet",
+				"offset": "not offered yet",
+				"sync": "not offered yet"
+			}
+		},
+		"parallax": {
+			"component": null,
+			"why": "the theme's Parallax has no entry in settings.json yet (asked: stays or goes?)"
+		},
+		"popover": {
+			"component": "Popover",
+			"wordpress": {
+				"trigger": "the button's text: Popover's children"
+			}
+		},
+		"radial-menu": {
+			"component": "RadialMenu",
+			"differs": {
+				"items": "sample items typed in the block; they become Radial menu item children (T-034)"
+			}
+		},
+		"rating-stars": {
+			"component": null,
+			"why": "the theme's Stars has no entry in settings.json yet (asked: stays or goes?)"
+		},
+		"scenery": {
+			"component": "Scenery",
+			"differs": {
+				"layers": "typed as one line, comma-separated, and split in render.php"
+			}
+		},
+		"section": {
+			"component": "Section",
+			"rename": {
+				"tagName": "as",
+				"imageUrl": "image"
+			},
+			"wordpress": {
+				"imageId": "the image's id in the media library"
+			}
+		},
+		"stat-card": {
+			"component": null,
+			"why": "StatCard's settings aren't written: it's planned to drop its box (T-033)"
+		},
+		"step-bar": {
+			"component": "StepBar",
+			"differs": {
+				"steps": "sample steps typed in the block; they become Step bar step children (T-034)"
+			}
+		},
+		"stopwatch": {
+			"component": "Counter",
+			"later": {
+				"active": "its own Start and Stop run it",
+				"controls": "always on: the Stopwatch block is Counter with controls"
+			}
+		},
+		"tab": {
+			"component": null,
+			"why": "Tab's settings aren't written: it's planned as Tab bar's child (T-034)"
+		},
+		"tabs": {
+			"component": "TabBar",
+			"later": {
+				"tabs": "its Tab blocks inside"
+			}
+		},
+		"theme-editor": {
+			"component": "ThemeEditor"
+		},
+		"timeline": {
+			"component": "Timeline",
+			"differs": {
+				"events": "sample events typed in the block; they become Timeline item children (T-034)"
+			}
+		},
+		"tooltip": {
+			"component": "Tooltip",
+			"wordpress": {
+				"trigger": "the text it's on: Tooltip's children"
+			},
+			"later": {
+				"delay": "not offered yet: the theme's 150ms",
+				"interactive": "not offered yet"
+			}
+		}
+	}
+}

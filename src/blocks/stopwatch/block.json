@@ -8,7 +8,9 @@
 	"description": "A stopwatch with Start and Stop: the elapsed time while it runs.",
 	"keywords": [ "timer", "stopwatch", "counter", "elapsed" ],
 	"textdomain": "marccent-blocks",
-	"attributes": {},
+	"attributes": {
+		"version": { "type": "number" }
+	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"

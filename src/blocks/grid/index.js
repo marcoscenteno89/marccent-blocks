@@ -14,19 +14,19 @@ const EQUAL = [ 'cols', 'fixed' ];
 
 const classes = ( a ) => cx(
 	a.layout === 'row-wrap' ? 'row-wrap' : 'grid',
-	a.layout === 'cols' ? `cols-${ a.cols }` : a.layout === 'fixed' ? `fixed cols-${ a.cols }` : a.layout !== 'row-wrap' && a.layout,
-	a.gap, a.alignItems, a.center && 'cols-center justify-center text-center', a.dense && 'dense', a.row && 'rows-min'
+	a.layout === 'cols' ? `cols-${ a.columns }` : a.layout === 'fixed' ? `fixed cols-${ a.columns }` : a.layout !== 'row-wrap' && a.layout,
+	a.gap, a.alignItems, a.center && 'cols-center justify-center text-center', a.dense && 'dense', a.minimumRowHeight && 'rows-min'
 );
 const style = ( a ) => {
-	const min = a.min && EQUAL.includes( a.layout ) ? { '--min': a.min } : {};
-	const row = a.row ? { '--row': a.row } : {};
-	return a.min && EQUAL.includes( a.layout ) || a.row ? { ...min, ...row } : undefined;
+	const min = a.minimumColumnWidth && EQUAL.includes( a.layout ) ? { '--min': a.minimumColumnWidth } : {};
+	const row = a.minimumRowHeight ? { '--row': a.minimumRowHeight } : {};
+	return a.minimumColumnWidth && EQUAL.includes( a.layout ) || a.minimumRowHeight ? { ...min, ...row } : undefined;
 };
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const props = useInnerBlocksProps( useBlockProps( { className: classes( a ), style: style( a ) } ), {
 		template: [ [ 'core/paragraph' ], [ 'core/paragraph' ], [ 'core/paragraph' ] ],
-		orientation: a.layout === 'cols' && a.cols === 1 ? 'vertical' : 'horizontal',
+		orientation: a.layout === 'cols' && a.columns === 1 ? 'vertical' : 'horizontal',
 	} );
 	return (
 		<>
@@ -35,15 +35,15 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 					<SelectControl label="Layout" value={ a.layout } options={ LAYOUTS } onChange={ ( layout ) => set( { layout } ) } />
 					{ EQUAL.includes( a.layout ) && (
 						<>
-							<RangeControl label="Columns" value={ a.cols } min={ 1 } max={ 10 } onChange={ ( cols ) => set( { cols } ) } />
-							<TextControl label="Narrowest column" help="Below this, columns wrap to the next row (the theme's default is 14rem)." value={ a.min } onChange={ ( min ) => set( { min } ) } />
+							<RangeControl label="Columns" value={ a.columns } min={ 1 } max={ 10 } onChange={ ( columns ) => set( { columns } ) } />
+							<TextControl label="Narrowest column" help="Below this, columns wrap to the next row (the theme's default is 14rem)." value={ a.minimumColumnWidth } onChange={ ( minimumColumnWidth ) => set( { minimumColumnWidth } ) } />
 						</>
 					) }
 					<SelectControl label="Gap" value={ a.gap } options={ GAPS } onChange={ ( gap ) => set( { gap } ) } />
 					<SelectControl label="Align items" value={ a.alignItems } options={ ALIGN_ITEMS } onChange={ ( alignItems ) => set( { alignItems } ) } />
 					<ToggleControl label="Center" checked={ a.center } onChange={ ( center ) => set( { center } ) } />
 					<ToggleControl label="Pack densely" help="Items of different sizes fill the holes (a collage)." checked={ a.dense } onChange={ ( dense ) => set( { dense } ) } />
-					<TextControl label="Minimum row height" help="Every row at least this tall, growing to fit: 11rem." value={ a.row } onChange={ ( row ) => set( { row } ) } />
+					<TextControl label="Minimum row height" help="Every row at least this tall, growing to fit: 11rem." value={ a.minimumRowHeight } onChange={ ( minimumRowHeight ) => set( { minimumRowHeight } ) } />
 				</PanelBody>
 			</InspectorControls>
 			<div { ...props } />

@@ -4,6 +4,7 @@
  */
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import metadata from './block.json';
+import { legacyAttributes, upgradeLegacy } from '../../shared/upgrade';
 
 const cx = ( ...c ) => c.filter( Boolean ).join( ' ' );
 const layout = ( a ) => ( a.rows ? `sub rows-${ a.rows }` : cx( 'grid cols-1 content-start', a.gap ) );
@@ -11,4 +12,5 @@ const classes = ( a ) => cx( a.surface, a.round && 'round', a.pad, layout( a ), 
 
 const save = ( { attributes: a } ) => <article { ...useInnerBlocksProps.save( useBlockProps.save( { className: classes( a ) } ) ) } />;
 
-export default [ { attributes: metadata.attributes, supports: metadata.supports, save } ];
+// Its attributes as they were then (old names and defaults), brought to today's by migrate (src/shared/upgrade.js).
+export default [ { attributes: legacyAttributes( metadata ), supports: metadata.supports, save, migrate: upgradeLegacy( metadata.name ) } ];

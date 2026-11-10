@@ -4,6 +4,7 @@
  */
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import metadata from './block.json';
+import { legacyAttributes, upgradeLegacy } from '../../shared/upgrade';
 
 const cx = ( ...c ) => c.filter( Boolean ).join( ' ' );
 const outer = ( a ) => ( { className: cx( 'wrap wrap-fluid pad-0 stack', a.surface ), style: { minHeight: a.minHeight || undefined } } );
@@ -17,4 +18,5 @@ const save = ( { attributes: a } ) => (
 	</section>
 );
 
-export default [ { attributes: metadata.attributes, supports: metadata.supports, save } ];
+// Its attributes as they were then (old names and defaults), brought to today's by migrate (src/shared/upgrade.js).
+export default [ { attributes: legacyAttributes( metadata ), supports: metadata.supports, save, migrate: upgradeLegacy( metadata.name ) } ];

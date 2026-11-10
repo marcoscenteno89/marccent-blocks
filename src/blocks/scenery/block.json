@@ -12,7 +12,8 @@
 		"layers": { "type": "string", "default": "stars, moon, ranges, mountains, forest, meadow" },
 		"height": { "type": "string", "default": "22rem" },
 		"parallax": { "type": "boolean", "default": true },
-		"min": { "type": "string", "default": "" }
+		"minimumHeight": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

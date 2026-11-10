@@ -12,7 +12,8 @@
 		"name": { "type": "string", "default": "tags" },
 		"label": { "type": "string", "default": "Add a tag" },
 		"suggestions": { "type": "string", "default": "" },
-		"max": { "type": "number", "default": 0 }
+		"maximum": { "type": "number", "default": 0 },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

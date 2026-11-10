@@ -1,0 +1,305 @@
+{
+	"marccent/accordion": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/accordion-item": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/alert": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/animation": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"fps": null
+			}
+		},
+		"version": 1
+	},
+	"marccent/button": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/card": {
+		"0": {
+			"rename": {
+				"pad": "padding"
+			},
+			"defaults": {
+				"hover": "hover-holographic",
+				"rows": 0
+			}
+		},
+		"version": 1,
+		"props": {
+			"padding": "pad"
+		}
+	},
+	"marccent/carousel": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/clock": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/code": {
+		"0": {
+			"rename": {
+				"lang": "language"
+			},
+			"defaults": {
+				"language": "js"
+			}
+		},
+		"version": 1,
+		"props": {
+			"language": "lang"
+		}
+	},
+	"marccent/compare": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/data-table": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"label": "Accounts"
+			}
+		},
+		"version": 1
+	},
+	"marccent/dock": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/drawer": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"title": "Title"
+			}
+		},
+		"version": 1
+	},
+	"marccent/form": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"submitLabel": "Send"
+			}
+		},
+		"version": 1
+	},
+	"marccent/form-field": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/form-rating": {
+		"0": {
+			"rename": {
+				"max": "maximum"
+			},
+			"defaults": {}
+		},
+		"version": 1,
+		"props": {
+			"maximum": "max"
+		}
+	},
+	"marccent/form-tags": {
+		"0": {
+			"rename": {
+				"max": "maximum"
+			},
+			"defaults": {}
+		},
+		"version": 1,
+		"props": {
+			"maximum": "max"
+		}
+	},
+	"marccent/grid": {
+		"0": {
+			"rename": {
+				"cols": "columns",
+				"min": "minimumColumnWidth",
+				"row": "minimumRowHeight"
+			},
+			"defaults": {}
+		},
+		"version": 2,
+		"props": {
+			"columns": "cols",
+			"minimumColumnWidth": "min",
+			"minimumRowHeight": "row"
+		}
+	},
+	"marccent/icon": {
+		"0": {
+			"rename": {
+				"icon": "name"
+			},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/map": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/menu": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 2
+	},
+	"marccent/mini-theme-editor": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/modal": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"title": "Title"
+			}
+		},
+		"version": 1
+	},
+	"marccent/orbit": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"startAngle": -90,
+				"autoPlay": true
+			}
+		},
+		"version": 1
+	},
+	"marccent/popover": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/radial-menu": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/scenery": {
+		"0": {
+			"rename": {
+				"min": "minimumHeight"
+			},
+			"defaults": {}
+		},
+		"version": 1,
+		"props": {
+			"minimumHeight": "min"
+		}
+	},
+	"marccent/section": {
+		"0": {
+			"rename": {
+				"tagName": "as",
+				"padY": "verticalPadding",
+				"imageUrl": "image"
+			},
+			"defaults": {
+				"image": null
+			}
+		},
+		"version": 1,
+		"props": {
+			"verticalPadding": "padY"
+		}
+	},
+	"marccent/step-bar": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"start": 1
+			}
+		},
+		"version": 1
+	},
+	"marccent/stopwatch": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 2
+	},
+	"marccent/tabs": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/theme-editor": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/timeline": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/tooltip": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	}
+}

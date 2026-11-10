@@ -12,7 +12,7 @@ $box = $a['shape']
 	: array( 'class' => 'grid', 'style' => marccent_blocks_css( array( '--icon-size' => $a['size'] ) ) );
 ?>
 <div <?php echo marccent_blocks_wrapper( $block, $box ); // phpcs:ignore WordPress.Security.EscapeOutput ?>><?php
-	echo marccent_blocks_icon( (string) $a['icon'], '', (string) $a['family'] ); // phpcs:ignore WordPress.Security.EscapeOutput
+	echo marccent_blocks_icon( (string) $a['name'], '', (string) $a['family'] ); // phpcs:ignore WordPress.Security.EscapeOutput
 	if ( $a['label'] ) {
 		printf( '<span class="screen-reader-text">%s</span>', esc_html( $a['label'] ) );
 	}

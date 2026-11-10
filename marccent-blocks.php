@@ -19,6 +19,7 @@ require __DIR__ . '/inc/theme.php';  // the site's starting theme, painted on <h
 require __DIR__ . '/inc/keys.php';   // Appearance → Marccent settings: every API key, in one place (marccent_key)
 require __DIR__ . '/inc/assets.php'; // the styles and scripts, only what each page uses
 require __DIR__ . '/inc/menu.php';   // menus in the shape the theme's components take
+require __DIR__ . '/inc/upgrade.php'; // content saved before the settings: old names and defaults (settings-upgrade.json)
 require __DIR__ . '/inc/markup.php'; // the theme's markup, written by the server (the blocks' render.php)
 require __DIR__ . '/inc/islands.php'; // blocks the theme's React components draw: data-island, props, a stand-in
 require __DIR__ . '/inc/forms.php';   // the Form block's server side: checks, entries (Forms → Entries), email, Turnstile

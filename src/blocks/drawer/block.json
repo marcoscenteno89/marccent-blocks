@@ -9,12 +9,13 @@
 	"keywords": [ "sidebar", "panel", "offcanvas", "slide" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"title": { "type": "string", "default": "Title" },
+		"title": { "type": "string", "default": "" },
 		"side": { "type": "string", "default": "end" },
 		"buttonLabel": { "type": "string", "default": "Open" },
 		"buttonIcon": { "type": "string", "default": "bars" },
 		"buttonColor": { "type": "string", "default": "primary" },
-		"dialogId": { "type": "string", "default": "" }
+		"dialogId": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

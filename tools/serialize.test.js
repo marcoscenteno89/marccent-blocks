@@ -12,6 +12,7 @@ import { createBlock, serialize, parse, registerBlockType } from '@wordpress/blo
 import { InnerBlocks } from '@wordpress/block-editor';
 import { registerCoreBlocks } from '@wordpress/block-library';
 import { addFilter } from '@wordpress/hooks';
+import { upgrade } from '../src/shared/upgrade';
 
 // Marccent Content's Show if (mccShowIf) on every block, as its editor adds it, so a spec's is kept.
 addFilter( 'blocks.registerBlockType', 'marccent/serialize-show-if', ( settings ) => ( {
@@ -33,8 +34,9 @@ if ( fs.existsSync( content ) ) {
 	} );
 }
 
+// A spec's attributes in the old names (cols, padY) or today's, saved with the settings version (src/shared/upgrade.js).
 const toBlock = ( [ name, attributes = {}, inner = [] ] ) => {
-	const block = createBlock( name, attributes, inner.map( toBlock ) );
+	const block = createBlock( name, upgrade( name, attributes ), inner.map( toBlock ) );
 	// Custom HTML has no save(): it's serialized from its innerContent, as parsed blocks carry it.
 	if ( name === 'core/html' ) {
 		block.innerContent = [ attributes.content ];

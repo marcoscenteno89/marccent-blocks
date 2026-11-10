@@ -11,9 +11,10 @@
 	"attributes": {
 		"name": { "type": "string", "default": "rating" },
 		"label": { "type": "string", "default": "Rating" },
-		"max": { "type": "number", "default": 5 },
+		"maximum": { "type": "number", "default": 5 },
 		"icon": { "type": "string", "default": "star" },
-		"required": { "type": "boolean", "default": false }
+		"required": { "type": "boolean", "default": false },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

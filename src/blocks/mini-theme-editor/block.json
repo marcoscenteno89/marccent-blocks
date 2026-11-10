@@ -9,7 +9,8 @@
 	"keywords": [ "theme", "palette", "dark mode", "switcher", "customizer" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"align": { "type": "string", "default": "start" }
+		"align": { "type": "string", "default": "start" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

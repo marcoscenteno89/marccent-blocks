@@ -30,7 +30,8 @@
 			]
 		},
 		"radius": { "type": "string", "default": "5rem" },
-		"label": { "type": "string", "default": "Quick menu" }
+		"label": { "type": "string", "default": "Quick menu" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

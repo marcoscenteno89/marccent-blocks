@@ -8,7 +8,9 @@
 	"description": "Tabs over a panel, a gradient bar sliding under the picked one; each tab’s blocks show when it’s picked. Arrow keys move between them.",
 	"keywords": [ "tab", "panels", "switch", "sections" ],
 	"textdomain": "marccent-blocks",
-	"attributes": {},
+	"attributes": {
+		"version": { "type": "number" }
+	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",

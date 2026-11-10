@@ -13,7 +13,7 @@ const Edit = ( { attributes: a, setAttributes: set, clientId } ) => (
 			<PanelBody title="Tags">
 				<NameControl clientId={ clientId } name={ a.name } onChange={ ( name ) => set( { name } ) } />
 				<TextControl label="Suggestions" help="Comma-separated: offered as they type." value={ a.suggestions } onChange={ ( suggestions ) => set( { suggestions } ) } />
-				<RangeControl label="At most" help="0: no limit." value={ a.max } min={ 0 } max={ 30 } onChange={ ( max ) => set( { max } ) } />
+				<RangeControl label="At most" help="0: no limit." value={ a.maximum } min={ 0 } max={ 30 } onChange={ ( maximum ) => set( { maximum } ) } />
 			</PanelBody>
 		</InspectorControls>
 		<div { ...useBlockProps( { className: 'field joined sub-x' } ) }>

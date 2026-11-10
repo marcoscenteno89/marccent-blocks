@@ -9,7 +9,8 @@
 	"keywords": [ "notice", "message", "callout", "warning" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"tone": { "type": "string", "default": "primary" }
+		"tone": { "type": "string", "default": "primary" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",

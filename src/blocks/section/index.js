@@ -12,19 +12,19 @@ import metadata from './block.json';
 import deprecated from './deprecated';
 
 // The band pads the sides (.wrap); the content's .wrap inside it is narrower by that padding (layout.css).
-const outer = ( a ) => cx( 'wrap wrap-fluid', a.imageUrl ? 'stack' : a.surface, dividerClasses( a.dividerTop, a.dividerBottom ) );
-const inner = ( a ) => cx( a.width, a.padY, 'grid cols-1', a.gap, a.center && 'text-center justify-center', a.imageUrl && a.surface );
+const outer = ( a ) => cx( 'wrap wrap-fluid', a.image ? 'stack' : a.surface, dividerClasses( a.dividerTop, a.dividerBottom ) );
+const inner = ( a ) => cx( a.width, a.verticalPadding, 'grid cols-1', a.gap, a.center && 'text-center justify-center', a.image && a.surface );
 // A least height makes the band a one-cell grid, so its content box can center in it (not .grid: that brings columns).
-const outerStyle = ( a ) => ( a.minHeight ? { minHeight: a.minHeight, ...( ! a.imageUrl && { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)' } ) } : undefined );
+const outerStyle = ( a ) => ( a.minHeight ? { minHeight: a.minHeight, ...( ! a.image && { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)' } ) } : undefined );
 // Over an image: the content on top of the image and shade (position), centered in the band, in light text.
 const innerStyle = ( a ) => {
-	if ( a.imageUrl ) return { position: 'relative', alignContent: 'center', color: '#fff' };
+	if ( a.image ) return { position: 'relative', alignContent: 'center', color: '#fff' };
 	return a.minHeight ? { alignContent: 'center' } : undefined;
 };
 
-const Background = ( { a } ) => a.imageUrl && (
+const Background = ( { a } ) => a.image && (
 	<>
-		<img className="cover-img" src={ a.imageUrl } alt={ a.imageAlt } loading="lazy" decoding="async" />
+		<img className="cover-img" src={ a.image } alt={ a.imageAlt } loading="lazy" decoding="async" />
 		<div aria-hidden="true" style={ { background: `rgb(0 0 0 / ${ a.shade }%)` } } />
 	</>
 );
@@ -56,7 +56,7 @@ const DividerControls = ( { label, value: d, onChange } ) => {
 };
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
-	const Tag = a.tagName;
+	const Tag = a.as;
 	const blockProps = useBlockProps( { className: outer( a ), style: outerStyle( a ), 'data-theme': a.mode || undefined } );
 	const innerProps = useInnerBlocksProps( { className: inner( a ), style: innerStyle( a ) }, {
 		template: [ [ 'core/heading', { placeholder: 'Section title' } ], [ 'core/paragraph' ] ],
@@ -66,26 +66,26 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 			<InspectorControls>
 				<PanelBody title="Layout">
 					<SelectControl label="Content width" value={ a.width } options={ WIDTHS } onChange={ ( width ) => set( { width } ) } />
-					<SelectControl label="Space above and below" value={ a.padY } options={ PADS_Y } onChange={ ( padY ) => set( { padY } ) } />
+					<SelectControl label="Space above and below" value={ a.verticalPadding } options={ PADS_Y } onChange={ ( verticalPadding ) => set( { verticalPadding } ) } />
 					<SelectControl label="Space between items" value={ a.gap } options={ GAPS } onChange={ ( gap ) => set( { gap } ) } />
 					<ToggleControl label="Center the content" checked={ a.center } onChange={ ( center ) => set( { center } ) } />
 					<TextControl label="Least height" help="Any CSS length: 60vh, 30rem…" value={ a.minHeight } onChange={ ( minHeight ) => set( { minHeight } ) } />
-					<SelectControl label="HTML element" value={ a.tagName } options={ [ 'section', 'div', 'header', 'footer', 'aside' ].map( ( t ) => ( { label: t, value: t } ) ) } onChange={ ( tagName ) => set( { tagName } ) } />
+					<SelectControl label="HTML element" value={ a.as } options={ [ 'section', 'div', 'header', 'footer', 'aside' ].map( ( t ) => ( { label: t, value: t } ) ) } onChange={ ( as ) => set( { as } ) } />
 				</PanelBody>
 				<PanelBody title="Background">
 					<SelectControl label="Mode" help="Light or dark here, whatever the page's." value={ a.mode }
 						options={ [ { label: 'The page\'s', value: '' }, { label: 'Light', value: 'light' }, { label: 'Dark', value: 'dark' } ] } onChange={ ( mode ) => set( { mode } ) } />
-					<SelectControl label="Color" help={ a.imageUrl ? 'Over an image, the color goes on the content box.' : undefined } value={ a.surface } options={ SURFACES } onChange={ ( surface ) => set( { surface } ) } />
+					<SelectControl label="Color" help={ a.image ? 'Over an image, the color goes on the content box.' : undefined } value={ a.surface } options={ SURFACES } onChange={ ( surface ) => set( { surface } ) } />
 					<MediaUploadCheck>
 						<MediaUpload allowedTypes={ [ 'image' ] } value={ a.imageId }
-							onSelect={ ( m ) => set( { imageId: m.id, imageUrl: m.url, imageAlt: m.alt ?? '' } ) }
-							render={ ( { open } ) => <Button variant="secondary" onClick={ open }>{ a.imageUrl ? 'Replace image' : 'Background image' }</Button> } />
+							onSelect={ ( m ) => set( { imageId: m.id, image: m.url, imageAlt: m.alt ?? '' } ) }
+							render={ ( { open } ) => <Button variant="secondary" onClick={ open }>{ a.image ? 'Replace image' : 'Background image' }</Button> } />
 					</MediaUploadCheck>
-					{ a.imageUrl && (
+					{ a.image && (
 						<>
-							<img src={ a.imageUrl } alt="" style={ { width: '100%', marginBlock: 8 } } />
+							<img src={ a.image } alt="" style={ { width: '100%', marginBlock: 8 } } />
 							<RangeControl label="Shade over the image (%)" value={ a.shade } min={ 0 } max={ 90 } onChange={ ( shade ) => set( { shade } ) } />
-							<Button variant="link" isDestructive onClick={ () => set( { imageId: undefined, imageUrl: undefined, imageAlt: '' } ) }>Remove image</Button>
+							<Button variant="link" isDestructive onClick={ () => set( { imageId: undefined, image: undefined, imageAlt: '' } ) }>Remove image</Button>
 						</>
 					) }
 				</PanelBody>

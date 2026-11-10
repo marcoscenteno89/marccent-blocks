@@ -15,42 +15,16 @@
 	],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"name": {
-			"type": "string",
-			"default": ""
-		},
-		"label": {
-			"type": "string",
-			"default": ""
-		},
-		"type": {
-			"type": "string",
-			"default": "text"
-		},
-		"required": {
-			"type": "boolean",
-			"default": false
-		},
-		"options": {
-			"type": "string",
-			"default": ""
-		},
-		"placeholder": {
-			"type": "string",
-			"default": ""
-		},
-		"help": {
-			"type": "string",
-			"default": ""
-		},
-		"showIf": {
-			"type": "string",
-			"default": ""
-		},
-		"accept": {
-			"type": "string",
-			"default": ""
-		}
+		"name": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"type": { "type": "string", "default": "text" },
+		"required": { "type": "boolean", "default": false },
+		"options": { "type": "string", "default": "" },
+		"placeholder": { "type": "string", "default": "" },
+		"help": { "type": "string", "default": "" },
+		"showIf": { "type": "string", "default": "" },
+		"accept": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": {
 		"html": false

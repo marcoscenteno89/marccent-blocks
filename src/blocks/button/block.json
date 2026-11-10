@@ -9,13 +9,14 @@
 	"keywords": [ "link", "cta", "call to action" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"label": { "type": "string", "default": "" },
-		"href": { "type": "string", "default": "" },
 		"icon": { "type": "string", "default": "arrow-right" },
+		"href": { "type": "string", "default": "" },
+		"trace": { "type": "boolean", "default": false },
+		"label": { "type": "string", "default": "" },
 		"color": { "type": "string", "default": "primary" },
 		"hover": { "type": "string", "default": "" },
 		"newTab": { "type": "boolean", "default": false },
-		"trace": { "type": "boolean", "default": false }
+		"version": { "type": "number" }
 	},
 	"supports": { "anchor": true, "html": false },
 	"editorScript": "file:./index.js",

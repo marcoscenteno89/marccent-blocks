@@ -9,7 +9,6 @@
 	"keywords": [ "orbit", "circle", "wheel", "clock", "solar system" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"kind": { "type": "string", "default": "items" },
 		"items": {
 			"type": "array",
 			"default": [
@@ -27,9 +26,11 @@
 				}
 			]
 		},
-		"startAngle": { "type": "number", "default": -90 },
-		"autoPlay": { "type": "boolean", "default": true },
-		"interval": { "type": "number", "default": 4000 }
+		"startAngle": { "type": "number", "default": 0 },
+		"autoPlay": { "type": "boolean", "default": false },
+		"interval": { "type": "number", "default": 4000 },
+		"kind": { "type": "string", "default": "items" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

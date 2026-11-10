@@ -4,6 +4,7 @@
  */
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import metadata from './block.json';
+import { legacyAttributes, upgradeLegacy } from '../../shared/upgrade';
 
 const outer = ( a ) => ( {
 	'data-island': 'carousel',
@@ -15,4 +16,5 @@ const save = ( { attributes: a } ) => (
 	<div { ...useBlockProps.save( outer( a ) ) }><div { ...useInnerBlocksProps.save( { 'data-slot': '' } ) } /></div>
 );
 
-export default [ { attributes: metadata.attributes, supports: metadata.supports, save } ];
+// Its attributes as they were then (old names and defaults), brought to today's by migrate (src/shared/upgrade.js).
+export default [ { attributes: legacyAttributes( metadata ), supports: metadata.supports, save, migrate: upgradeLegacy( metadata.name ) } ];
