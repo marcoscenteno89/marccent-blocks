@@ -1,8 +1,8 @@
 # Marccent Blocks
 
-The [Marccent theme](https://github.com/marcoscenteno89/marccent-theme) in WordPress: its styles, its live theme engine (palettes, light / dark, design styles) and its components as Gutenberg blocks (section, grid, card, icon, button, animation, carousel, navbar).
+The [Marccent theme](https://github.com/marcoscenteno89/marccent-theme) in WordPress: its styles, its live theme engine (palettes, light / dark, design styles) and its components as Gutenberg blocks (section, grid, card, icon, button, animation, carousel, menu).
 
-The server writes every block's markup (`render.php`, the theme's Button, Icon, Section, Grid, Card and NavBar in
+The server writes every block's markup (`render.php`, the theme's Button, Icon, Section, Grid, Card and Menu in
 `inc/markup.php`); a post stores
 only the blocks' settings, so a new theme release changes the markup of every page at once, with nothing for the
 editor to flag as invalid. Posts saved by 0.3.1 and earlier (static markup) still open: each block's `deprecated.js`
@@ -29,7 +29,7 @@ npm run serialize  # a block spec (MARCCENT_SPEC) into validated post content (M
 npm test           # the checks CI runs: test:markup and test:blocks
 ```
 
-- `npm run test:markup` (PHP): the server's Button, Icon, Section, Grid, Card and NavBar render each case of the
+- `npm run test:markup` (PHP): the server's Button, Icon, Section, Grid, Card and Menu render each case of the
   theme's markup reference
   (`marccent-theme/markup/`) as the components do.
 - `npm run test:blocks`: posts saved by 0.3.1 (`tools/fixtures/0.3.1.json`) open as valid blocks and save in the

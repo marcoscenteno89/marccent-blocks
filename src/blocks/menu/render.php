@@ -1,21 +1,23 @@
 <?php
 /**
- * Menu: the menu picked (Appearance → Menus, by its slug) as the theme's Menu (inc/markup.php marccent_blocks_menu).
- * Its name for screen readers is the label, else the menu's own name. No menu picked or found: nothing, and a note
- * in the editor.
+ * Menu: the menu picked (Appearance → Menus, by its slug), or the one in a location (the Primary location, the
+ * header's main menu: without one there, the top-level pages), as the theme's Menu (inc/markup.php marccent_blocks_menu).
+ * Its name for screen readers is the label, else the menu's own name (Main for a location). No menu picked or found:
+ * nothing, and a note in the editor.
  *
  * @var array $attributes
  */
 
-$items = marccent_blocks_menu_by_slug( (string) $attributes['menu'] );
+$location = (string) ( $attributes['location'] ?? '' );
+$items    = $location ? marccent_blocks_menu_tree( $location ) : marccent_blocks_menu_by_slug( (string) $attributes['menu'] );
 if ( ! $items ) {
 	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 		printf( '<p %s>%s</p>', get_block_wrapper_attributes(), esc_html__( 'Pick a menu (made in Appearance → Menus) in the block’s settings.', 'marccent-blocks' ) );
 	}
 	return;
 }
-$menu  = wp_get_nav_menu_object( (string) $attributes['menu'] );
-$label = trim( (string) $attributes['label'] ) ?: $menu->name;
+$menu  = $location ? null : wp_get_nav_menu_object( (string) $attributes['menu'] );
+$label = trim( (string) $attributes['label'] ) ?: ( $menu ? $menu->name : __( 'Main', 'marccent-blocks' ) );
 $html  = marccent_blocks_menu( array(
 	'items'    => $items,
 	'label'    => $label,

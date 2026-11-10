@@ -5,7 +5,7 @@
 	"title": "Menu",
 	"category": "marccent",
 	"icon": "menu-alt",
-	"description": "A menu made in Appearance → Menus, anywhere: a footer's links, a sidebar, the social links. Each link's icon is the Font Awesome classes in its CSS Classes field, else the site it goes to (Facebook, Instagram, Google…); links to other sites open in a new tab. It can fold behind a menu button where there’s no room (a header on a phone).",
+	"description": "A menu made in Appearance → Menus (or the one in the Primary location: the header's main menu), anywhere: a footer's links, a sidebar, the social links. Each link's icon is the Font Awesome classes in its CSS Classes field, else the site it goes to (Facebook, Instagram, Google…); links to other sites open in a new tab. It can fold behind a menu button where there’s no room (a header on a phone).",
 	"keywords": [ "menu", "navigation", "links", "social", "footer" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
@@ -14,6 +14,7 @@
 		"layout": { "type": "string", "default": "fixed" },
 		"fold": { "type": "boolean", "default": false },
 		"menu": { "type": "string", "default": "" },
+		"location": { "type": "string", "default": "" },
 		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
