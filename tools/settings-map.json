@@ -194,7 +194,8 @@
 		"menu": {
 			"component": "Menu",
 			"wordpress": {
-				"menu": "which menu, by its slug, from Appearance → Menus (admin data)"
+				"menu": "which menu, by its slug, from Appearance → Menus (admin data)",
+				"location": "or the menu in a location (Primary: the header's main menu; admin data)"
 			},
 			"later": {
 				"gap": "not offered yet: the theme's default gap-sm",
@@ -204,7 +205,8 @@
 		"mini-theme-editor": {
 			"component": "MiniThemeEditor",
 			"wordpress": {
-				"align": "where the block sits in its row (justify-self)"
+				"align": "where the block sits in its row (justify-self)",
+				"visitors": "what Appearance → Marccent theme, Visitors allows instead (the header's: a Theme button, or single controls)"
 			}
 		},
 		"modal": {
@@ -215,10 +217,6 @@
 				"buttonColor": "the opening button's look",
 				"dialogId": "the id that links the button to the dialog"
 			}
-		},
-		"navbar": {
-			"component": null,
-			"why": "NavBar is a pattern, leaving (T-032): the block becomes the Header pattern"
 		},
 		"orbit": {
 			"component": "Orbit",

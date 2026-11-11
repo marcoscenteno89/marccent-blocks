@@ -66,7 +66,6 @@ $render = array(
 	'section' => fn( $f ) => marccent_blocks_section( array( 'as' => $f['tag'] ) + settings_names( 'section', $f ), $f['content'], with_classes( $f['classes'] ) ),
 	'grid'    => fn( $f ) => marccent_blocks_grid( settings_names( 'grid', $f ), $f['content'], with_classes( $f['classes'] ) ),
 	'card'    => fn( $f ) => marccent_blocks_card( settings_names( 'card', $f ), $f['content'], with_classes( $f['classes'] ) ),
-	'nav'     => fn( $f ) => marccent_blocks_navbar( $f['brand'], $f['items'] ),
 	'menu'    => fn( $f ) => marccent_blocks_menu( array( 'id' => 'id-1' ) + $f ),
 	'toggleButton' => fn( $f ) => marccent_blocks_toggle_button( $f ),
 	// The interactive components: ids as the reference writes them (id-1); a block makes its own.

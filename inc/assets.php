@@ -46,9 +46,9 @@ add_filter( 'render_block', function ( $html, $block ) {
 	$page['canvas']   = $page['canvas'] || preg_match( '/\bdata-component="[^"]*\banimation\b/', $html );
 	// Theme markup the engine wires up (tooltips, popovers, dialogs, file drops, code, dividers that follow the scroll…)
 	// needs the runtime too, and so does a Form block (its enhancer sends it without leaving the page: runtime/forms.js).
-	$page['engine']   = $page['engine'] || preg_match( '/\bdata-component="[^"]*\b(?:tooltip|popover|modal|drawer|file-drop|code|toggle-button|toggle-panel|nav-bar|app-shell|menu|map)\b|\bdata-component="divider"[^>]*\bdata-scroll=|\bdata-opens=|\bdata-marccent-form=|\bclass="[^"]*\bhover-(?:tilt|spotlight|magnet)\b/', $html );
-	if ( 'marccent/navbar' === $block['blockName'] ) {
-		// The runtime for whatever visitors may change; every design style only when they can pick one.
+	$page['engine']   = $page['engine'] || preg_match( '/\bdata-component="[^"]*\b(?:tooltip|popover|modal|drawer|file-drop|code|toggle-button|toggle-panel|sidebar|menu|map)\b|\bdata-component="divider"[^>]*\bdata-scroll=|\bdata-opens=|\bdata-marccent-form=|\bclass="[^"]*\bhover-(?:tilt|spotlight|magnet)\b/', $html );
+	if ( 'marccent/mini-theme-editor' === $block['blockName'] && ! empty( $block['attrs']['visitors'] ) ) {
+		// What Visitors allows (a header's): the runtime for it; every design style only when they can pick one.
 		$v                   = marccent_blocks_visitor_controls();
 		$page['themeButton'] = $v['full'] || $v['controls'];
 		$page['designs']    += $v['full'] || in_array( 'design', $v['controls'], true ) ? array( 'all' => true ) : array();

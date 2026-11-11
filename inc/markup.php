@@ -1,7 +1,7 @@
 <?php
 /**
  * The theme's markup, written by the server: what the blocks render (build/blocks/<name>/render.php). The Button,
- * Icon, Section, Grid, Card and NavBar here are the theme's components in PHP; tools/markup-test.php checks them
+ * Icon, Section, Grid, Card and Menu here are the theme's components in PHP; tools/markup-test.php checks them
  * against the theme's markup reference (marccent-theme/markup/reference.json), so they can't drift apart unnoticed.
  */
 
@@ -319,32 +319,6 @@ function marccent_blocks_menu_items( array $items, bool $sub = false, bool $icon
 		}
 	}
 	return $html;
-}
-
-/**
- * NavBar: the theme's (components/widgets/navbar.js) header bar, its main menu folding behind a toggle.
- *
- * @param array  $brand name, href, logo (a URL, or empty), logoSize ([ width, height ], optional), showName (default true).
- * @param array  $items The main menu (marccent_blocks_menu_items).
- * @param string $end   HTML that folds with the menu (its root .nav-end).
- * @param string $last  HTML always at the row's end (its root .col-last).
- * @param string $top   HTML in a row above the bar.
- */
-function marccent_blocks_navbar( array $brand, array $items, string $end = '', string $last = '', string $top = '' ): string {
-	$size = $brand['logoSize'] ?? null;
-	$logo = empty( $brand['logo'] ) ? '' : sprintf(
-		'<img src="%s" alt="%s"%s style="height: 2.5rem; width: auto">',
-		esc_url( $brand['logo'] ),
-		esc_attr( $brand['name'] ),
-		$size ? sprintf( ' width="%d" height="%d"', $size[0], $size[1] ) : ''
-	);
-	$name = ( $brand['showName'] ?? true ) ? '<span class="fw-bold">' . esc_html( $brand['name'] ) . '</span>' : '';
-	return '<header data-component="nav-bar" class="nav wrap wrap-fluid pad-y-sm bg border-bottom sticky-top grid cols-1 gap-sm">' . $top
-		. '<div class="wrap pad-0 grid layout-ends items-center gap-sm">'
-		. sprintf( '<a href="%s" class="menu-link grid auto-cols items-center gap-sm" aria-label="%s">%s%s</a>', esc_url( $brand['href'] ), esc_attr( $brand['name'] . ', home' ), $logo, $name )
-		. '<button type="button" data-component="toggle-button" data-icon="bars" data-active-icon="bars" class="btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">' . marccent_blocks_icon( 'bars', 'btn-icon' ) . '</button>'
-		. sprintf( '<div id="site-nav" class="nav-collapse"><nav data-component="menu" class="menu grid gap-0 auto-cols menu-quiet" style="--cols: %d" aria-label="Main">%s</nav>%s</div>', count( $items ), marccent_blocks_menu_items( $items ), $end )
-		. $last . '</div></header>';
 }
 
 /*

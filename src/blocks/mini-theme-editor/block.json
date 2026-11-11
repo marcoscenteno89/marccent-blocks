@@ -5,11 +5,12 @@
 	"title": "Mini theme editor",
 	"category": "marccent",
 	"icon": "admin-customizer",
-	"description": "The theme’s row of controls (light / dark, glass, the palette, the design style, reset) so visitors pick how the site looks, anywhere on a page.",
+	"description": "The theme’s row of controls (light / dark, glass, the palette, the design style, reset) so visitors pick how the site looks, anywhere on a page; or only what Appearance → Marccent theme, Visitors allows (a header's: a Theme button, or single controls).",
 	"keywords": [ "theme", "palette", "dark mode", "switcher", "customizer" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"align": { "type": "string", "default": "start" },
+		"visitors": { "type": "boolean", "default": false },
 		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },

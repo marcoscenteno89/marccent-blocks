@@ -17,11 +17,15 @@ const LAYOUTS = [
 	{ label: 'A column', value: 'cols-1' },
 ];
 
+// The menu locations (marccent-blocks.php register_nav_menus).
+const LOCATIONS = [ { label: 'None: the menu picked below', value: '' }, { label: 'Primary', value: 'primary' } ];
+
 const Edit = ( { attributes: a, setAttributes: set } ) => (
 	<>
 		<InspectorControls>
 			<PanelBody title="Menu">
-				<MenuSelect value={ a.menu } onChange={ ( menu ) => set( { menu } ) } />
+				<SelectControl label="Location" help="The menu in a location instead of one picked below: Primary is the header's main menu (the top-level pages until one is set)." value={ a.location } options={ LOCATIONS } onChange={ ( location ) => set( { location } ) } />
+				{ ! a.location && <MenuSelect value={ a.menu } onChange={ ( menu ) => set( { menu } ) } /> }
 				<TextControl label="Name for screen readers" help="Empty: the menu's name." value={ a.label } onChange={ ( label ) => set( { label } ) } />
 				<SelectControl label="Layout" value={ a.layout } options={ LAYOUTS } onChange={ ( layout ) => set( { layout } ) } />
 				<ToggleControl label="Icons only" help="Each link shows only its icon; its name is still read out." checked={ a.iconOnly } onChange={ ( iconOnly ) => set( { iconOnly } ) } />
