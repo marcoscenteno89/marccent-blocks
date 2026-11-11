@@ -142,10 +142,6 @@
 		"grid": {
 			"component": "Grid"
 		},
-		"hex-wall": {
-			"component": null,
-			"why": "HexWall is gone (rc.21), a HexGrid of HexFlips: the block retires"
-		},
 		"html": {
 			"component": null,
 			"why": "WordPress's own: hand-written HTML, no theme component"
