@@ -282,10 +282,12 @@ function marccent_blocks_menu( array $p ): string {
 			marccent_blocks_menu( array( 'fold' => false ) + $p )
 		);
 	}
+	// --cols only for the fixed layout (one column per item); any other layout sets its own columns (.cols-1, auto-cols).
+	$layout = ( $p['layout'] ?? '' ) ?: 'fixed';
 	return sprintf(
-		'<nav data-component="menu" class="%s" style="--cols:%d" aria-label="%s">%s</nav>',
-		esc_attr( marccent_blocks_cx( 'menu grid', $p['gap'] ?? 'gap-sm', ( $p['layout'] ?? '' ) ?: 'fixed', $p['classes'] ?? '' ) ),
-		count( $p['items'] ),
+		'<nav data-component="menu" class="%s"%s aria-label="%s">%s</nav>',
+		esc_attr( marccent_blocks_cx( 'menu grid', $p['gap'] ?? 'gap-sm', $layout, $p['classes'] ?? '' ) ),
+		preg_match( '/\bfixed\b/', $layout ) ? sprintf( ' style="--cols:%d"', count( $p['items'] ) ) : '',
 		esc_attr( $p['label'] ?? '' ),
 		marccent_blocks_menu_items( $p['items'], false, ! empty( $p['iconOnly'] ) )
 	);
