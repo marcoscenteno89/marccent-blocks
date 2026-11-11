@@ -1,13 +1,13 @@
 /*
- * Timeline: the theme's Timeline (widgets/layout.js) from a list of events (shared/island.js; runtime/islands/timeline.js).
+ * Timeline: the theme's Timeline (widgets/layout.js); its events are Timeline item blocks, or a Loop of them
+ * (runtime/islands/timeline.js).
  */
 import { islandBlock } from '../../shared/island';
-import { Timeline } from 'marccent-theme/components/widgets/layout';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 islandBlock( metadata, {
-	fields: [ { key: 'events', label: 'Events', type: 'list', itemLabel: 'Event', fields: [
-		{ key: 'date', label: 'Date' }, { key: 'title', label: 'Title' }, { key: 'text', label: 'Text', type: 'textarea' }, { key: 'icon', label: 'Icon', type: 'icon' },
-	] } ],
-	preview: ( p ) => <Timeline events={ p.events || [] } />,
+	note: 'Timeline: its events are the items below, or a Loop of them.',
+	inner: { allowedBlocks: metadata.allowedBlocks, template: [ [ 'marccent/timeline-item', { date: '2024', title: 'Founded', text: 'Where it started.', icon: 'flag' } ], [ 'marccent/timeline-item', { date: '2026', title: 'Today', icon: 'star' } ] ] },
+	deprecated,
 } );

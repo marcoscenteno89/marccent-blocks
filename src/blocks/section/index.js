@@ -15,11 +15,11 @@ import deprecated from './deprecated';
 const outer = ( a ) => cx( 'wrap wrap-fluid', a.image ? 'stack' : a.surface, dividerClasses( a.dividerTop, a.dividerBottom ) );
 const inner = ( a ) => cx( a.width, a.verticalPadding, 'grid cols-1', a.gap, a.center && 'text-center justify-center', a.image && a.surface );
 // A least height makes the band a one-cell grid, so its content box can center in it (not .grid: that brings columns).
-const outerStyle = ( a ) => ( a.minHeight ? { minHeight: a.minHeight, ...( ! a.image && { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)' } ) } : undefined );
+const outerStyle = ( a ) => ( a.minimumHeight ? { minHeight: a.minimumHeight, ...( ! a.image && { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)' } ) } : undefined );
 // Over an image: the content on top of the image and shade (position), centered in the band, in light text.
 const innerStyle = ( a ) => {
 	if ( a.image ) return { position: 'relative', alignContent: 'center', color: '#fff' };
-	return a.minHeight ? { alignContent: 'center' } : undefined;
+	return a.minimumHeight ? { alignContent: 'center' } : undefined;
 };
 
 const Background = ( { a } ) => a.image && (
@@ -69,7 +69,7 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 					<SelectControl label="Space above and below" value={ a.verticalPadding } options={ PADS_Y } onChange={ ( verticalPadding ) => set( { verticalPadding } ) } />
 					<SelectControl label="Space between items" value={ a.gap } options={ GAPS } onChange={ ( gap ) => set( { gap } ) } />
 					<ToggleControl label="Center the content" checked={ a.center } onChange={ ( center ) => set( { center } ) } />
-					<TextControl label="Least height" help="Any CSS length: 60vh, 30rem…" value={ a.minHeight } onChange={ ( minHeight ) => set( { minHeight } ) } />
+					<TextControl label="Least height" help="Any CSS length: 60vh, 30rem…" value={ a.minimumHeight } onChange={ ( minimumHeight ) => set( { minimumHeight } ) } />
 					<SelectControl label="HTML element" value={ a.as } options={ [ 'section', 'div', 'header', 'footer', 'aside' ].map( ( t ) => ( { label: t, value: t } ) ) } onChange={ ( as ) => set( { as } ) } />
 				</PanelBody>
 				<PanelBody title="Background">

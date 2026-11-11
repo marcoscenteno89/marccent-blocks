@@ -16,8 +16,11 @@
 		"animation": {
 			"component": "Animation",
 			"wordpress": {
-				"minHeight": "the block's height: the Animation fills its parent, and the block is that parent",
+				"minimumHeight": "the block's height: the Animation fills its parent, and the block is that parent",
 				"surface": "a background behind the canvas, a class on the block"
+			},
+			"rename": {
+				"fps": "frameRate"
 			}
 		},
 		"button": {
@@ -51,12 +54,8 @@
 			},
 			"later": {
 				"label": "not passed by render.php yet",
-				"minLines": "not passed by render.php yet"
+				"minimumLines": "not passed by render.php yet"
 			}
-		},
-		"collage": {
-			"component": null,
-			"why": "Collage is a pattern now, leaving (T-033): the block retires"
 		},
 		"compare": {
 			"component": "Compare",
@@ -79,10 +78,10 @@
 			}
 		},
 		"dock": {
-			"component": "Dock",
-			"differs": {
-				"items": "sample items typed in the block; they become Dock item children (T-034)"
-			}
+			"component": "Dock"
+		},
+		"dock-item": {
+			"component": "DockItem"
 		},
 		"drawer": {
 			"component": "Drawer",
@@ -166,10 +165,6 @@
 				"name": "a new block starts with a star, so it shows something to change"
 			}
 		},
-		"image-card": {
-			"component": null,
-			"why": "ImageCard is a pattern now, leaving (T-033): the block retires"
-		},
 		"map": {
 			"component": "Map",
 			"wordpress": {
@@ -223,16 +218,20 @@
 			"wordpress": {
 				"kind": "items on a ring, or the theme's OrbitClock or SolarSystem"
 			},
-			"differs": {
-				"items": "sample items typed in the block; they become Orbit item children (T-034)"
-			},
 			"later": {
 				"start": "not offered yet",
 				"wheel": "not offered yet",
 				"center": "not offered yet",
 				"hub": "not offered yet",
 				"offset": "not offered yet",
-				"sync": "not offered yet"
+				"sync": "not offered yet",
+				"positions": "not offered yet"
+			}
+		},
+		"orbit-item": {
+			"component": "OrbitItem",
+			"wordpress": {
+				"image": "an image instead of the icon (the theme's OrbitItem takes it as a node)"
 			}
 		},
 		"parallax": {
@@ -246,10 +245,10 @@
 			}
 		},
 		"radial-menu": {
-			"component": "RadialMenu",
-			"differs": {
-				"items": "sample items typed in the block; they become Radial menu item children (T-034)"
-			}
+			"component": "RadialMenu"
+		},
+		"radial-menu-item": {
+			"component": "RadialMenuItem"
 		},
 		"rating-stars": {
 			"component": null,
@@ -265,21 +264,24 @@
 			"component": "Section",
 			"rename": {
 				"tagName": "as",
-				"imageUrl": "image"
+				"imageUrl": "image",
+				"minHeight": "minimumHeight"
 			},
 			"wordpress": {
 				"imageId": "the image's id in the media library"
 			}
 		},
 		"stat-card": {
-			"component": null,
-			"why": "StatCard's settings aren't written: it's planned to drop its box (T-033)"
+			"component": "StatCard",
+			"later": {
+				"name": "not offered yet"
+			}
 		},
 		"step-bar": {
-			"component": "StepBar",
-			"differs": {
-				"steps": "sample steps typed in the block; they become Step bar step children (T-034)"
-			}
+			"component": "StepBar"
+		},
+		"step-bar-step": {
+			"component": "StepBarStep"
 		},
 		"stopwatch": {
 			"component": "Counter",
@@ -289,23 +291,19 @@
 			}
 		},
 		"tab": {
-			"component": null,
-			"why": "Tab's settings aren't written: it's planned as Tab bar's child (T-034)"
+			"component": "Tab"
 		},
 		"tabs": {
-			"component": "TabBar",
-			"later": {
-				"tabs": "its Tab blocks inside"
-			}
+			"component": "TabBar"
 		},
 		"theme-editor": {
 			"component": "ThemeEditor"
 		},
 		"timeline": {
-			"component": "Timeline",
-			"differs": {
-				"events": "sample events typed in the block; they become Timeline item children (T-034)"
-			}
+			"component": "Timeline"
+		},
+		"timeline-item": {
+			"component": "TimelineItem"
 		},
 		"tooltip": {
 			"component": "Tooltip",

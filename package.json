@@ -18,7 +18,7 @@
     "test:upgrade": "php tools/upgrade-test.php && MARCCENT_TEST=upgrade wp-scripts test-unit-js --config tools/jest.config.js"
   },
   "dependencies": {
-    "marccent-theme": "github:marcoscenteno89/marccent-theme#51d6de477831fa96d905d50eebcae212c5a6eaf8"
+    "marccent-theme": "github:marcoscenteno89/marccent-theme#dafb19437366654ab68bf1cbf66649347b2065ce"
   },
   "devDependencies": {
     "@wordpress/block-editor": "^19.0.0",

@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/orbit-item",
+	"title": "Orbit item",
+	"category": "marccent",
+	"icon": "marker",
+	"description": "One circle on an Orbit's ring: its icon (or an image), and the title and text shown in the middle once it's picked.",
+	"keywords": [ "item", "ring" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"icon": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"image": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/orbit" ]
+}

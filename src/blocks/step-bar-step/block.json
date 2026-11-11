@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/step-bar-step",
+	"title": "Step bar step",
+	"category": "marccent",
+	"icon": "arrow-right-alt",
+	"description": "One step of a Step bar: its name.",
+	"keywords": [ "step", "stage" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"label": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/step-bar" ]
+}

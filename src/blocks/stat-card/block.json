@@ -9,14 +9,13 @@
 	"keywords": [ "stat", "number", "kpi", "metric", "counter" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"icon": { "type": "string", "default": "users" },
-		"value": { "type": "string", "default": "1,200" },
-		"label": { "type": "string", "default": "Customers" },
+		"icon": { "type": "string", "default": "" },
+		"value": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"accent": { "type": "boolean", "default": false },
+		"fill": { "type": "number" },
 		"text": { "type": "string", "default": "" },
-		"accent": { "type": "boolean", "default": true },
-		"fill": {
-			"type": "number"
-		}
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

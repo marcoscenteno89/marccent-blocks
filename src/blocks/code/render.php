@@ -7,4 +7,4 @@
  */
 
 $lang = in_array( $attributes['language'], array( 'js', 'jsx', 'css', 'html', 'sh' ), true ) ? $attributes['language'] : 'jsx';
-echo marccent_blocks_island( $block, 'code', array( 'code' => (string) $attributes['code'], 'lang' => $lang ), '<pre><code>' . esc_html( (string) $attributes['code'] ) . '</code></pre>' ); // phpcs:ignore WordPress.Security.EscapeOutput
+echo marccent_blocks_island( $block, 'code', array( 'code' => (string) $attributes['code'], 'language' => $lang ), '<pre><code>' . esc_html( (string) $attributes['code'] ) . '</code></pre>' ); // phpcs:ignore WordPress.Security.EscapeOutput

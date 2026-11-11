@@ -1,15 +1,14 @@
 /*
- * Step bar: the theme's StepBar (widgets/nav.js) from a list of steps; one is the current step.
+ * Step bar: the theme's StepBar (widgets/nav.js); its steps are Step bar step blocks, or a Loop of them, and one is
+ * the current step (runtime/islands/step-bar.js).
  */
 import { islandBlock } from '../../shared/island';
-import { StepBar } from 'marccent-theme/components/widgets/nav';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 islandBlock( metadata, {
-	fields: [
-		{ key: 'steps', label: 'Steps', type: 'list', itemLabel: 'Step', fields: [ { key: 'label', label: 'Label' } ] },
-		{ key: 'start', label: 'The current step', help: '0 the first: the ones before it show as done.', type: 'range', min: 0, max: 10 },
-	],
-	toProps: ( a ) => ( { steps: ( a.steps || [] ).map( ( s ) => s.label ).filter( Boolean ), start: a.start } ),
-	preview: ( p ) => p.steps.length > 0 && <StepBar key={ `${ p.start }-${ p.steps.join() }` } steps={ p.steps } start={ Math.min( p.start, p.steps.length - 1 ) } />,
+	fields: [ { key: 'start', label: 'The current step', help: '0 the first: the ones before it show as done.', type: 'range', min: 0, max: 10 } ],
+	note: 'Step bar: its steps are the items below, or a Loop of them.',
+	inner: { allowedBlocks: metadata.allowedBlocks, template: [ [ 'marccent/step-bar-step', { label: 'Order' } ], [ 'marccent/step-bar-step', { label: 'Pay' } ], [ 'marccent/step-bar-step', { label: 'Ship' } ], [ 'marccent/step-bar-step', { label: 'Done' } ] ] },
+	deprecated,
 } );

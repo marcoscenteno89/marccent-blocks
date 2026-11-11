@@ -14,5 +14,5 @@
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
-	"allowedBlocks": [ "marccent/tab" ]
+	"allowedBlocks": [ "marccent/tab", "marccent/loop" ]
 }

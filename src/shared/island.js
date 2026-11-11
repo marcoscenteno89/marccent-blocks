@@ -5,11 +5,12 @@
  *
  *   { key, label, type, help, options, min, max, step, fields }
  *   type: text, textarea, number, range, toggle, select (options: [ [ label, value ] ]), icon (a Font Awesome name),
- *   image (its URL, from the media library), url, code (the theme's Code as an editor; lang: a language, or a function
+ *   image (its URL, from the media library), url, code (the theme's Code as an editor; language: a language, or a function
  *   of the block's attributes), list (rows of fields: tabs, events, items…; itemLabel names one).
  *
  * In the editor the block shows the component itself, drawn from those props (preview), so what's edited is what
- * the page shows; or, for a component whose items are blocks (tabs, a stat card's buttons), those blocks to edit.
+ * the page shows; or, for a component whose items are blocks (tabs, a timeline's items, a stat card's buttons), those
+ * blocks to edit.
  */
 import { Component as ReactComponent } from '@wordpress/element';
 import { InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
@@ -51,10 +52,10 @@ const ImageField = ( { f, value, onChange } ) => (
 	</div>
 );
 
-const Field = ( { f, value, onChange, values = {} } ) => {
+export const Field = ( { f, value, onChange, values = {} } ) => {
 	const common = { label: f.label, help: f.help };
 	switch ( f.type ) {
-		case 'code': return <CodeField { ...common } lang={ typeof f.lang === 'function' ? f.lang( values ) : f.lang } value={ value ?? '' } onChange={ onChange } />;
+		case 'code': return <CodeField { ...common } language={ typeof f.language === 'function' ? f.language( values ) : f.language } value={ value ?? '' } onChange={ onChange } />;
 		case 'textarea': return <TextareaControl { ...common } value={ value ?? '' } onChange={ onChange } />;
 		case 'number': return <TextControl { ...common } type="number" value={ value ?? '' } onChange={ ( v ) => onChange( v === '' ? undefined : Number( v ) ) } />;
 		case 'range': return <RangeControl { ...common } value={ value } min={ f.min } max={ f.max } step={ f.step } onChange={ onChange } />;
@@ -103,7 +104,7 @@ const ListField = ( { f, value, onChange } ) => {
 // The block's props for the component: its fields' values (toProps reshapes them when the component wants more).
 export const propsOf = ( fields, a ) => Object.fromEntries( fields.map( ( f ) => [ f.key, a[ f.key ] ] ) );
 
-export const islandBlock = ( metadata, { fields = [], preview, toProps, inner, note } ) => {
+export const islandBlock = ( metadata, { fields = [], preview, toProps, inner, note, deprecated } ) => {
 	const Edit = ( { attributes: a, setAttributes: set } ) => {
 		const props = ( toProps || ( ( x ) => propsOf( fields, x ) ) )( a );
 		const blockProps = useBlockProps();
@@ -123,5 +124,5 @@ export const islandBlock = ( metadata, { fields = [], preview, toProps, inner, n
 			</>
 		);
 	};
-	register( metadata, { edit: Edit, save: () => ( inner ? <InnerBlocks.Content /> : null ) } );
+	register( metadata, { edit: Edit, save: () => ( inner ? <InnerBlocks.Content /> : null ), deprecated } );
 };

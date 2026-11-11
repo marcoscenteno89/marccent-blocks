@@ -27,7 +27,14 @@
 				"fps": null
 			}
 		},
-		"version": 1
+		"1": {
+			"rename": {
+				"fps": "frameRate",
+				"minHeight": "minimumHeight"
+			},
+			"defaults": {}
+		},
+		"version": 2
 	},
 	"marccent/button": {
 		"0": {
@@ -46,10 +53,7 @@
 				"rows": 0
 			}
 		},
-		"version": 1,
-		"props": {
-			"padding": "pad"
-		}
+		"version": 1
 	},
 	"marccent/carousel": {
 		"0": {
@@ -74,10 +78,11 @@
 				"language": "js"
 			}
 		},
-		"version": 1,
-		"props": {
-			"language": "lang"
-		}
+		"1": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 2
 	},
 	"marccent/compare": {
 		"0": {
@@ -96,6 +101,40 @@
 		"version": 1
 	},
 	"marccent/dock": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"1": {
+			"rename": {},
+			"defaults": {
+				"items": [
+					{
+						"icon": "house",
+						"label": "Home",
+						"href": "/"
+					},
+					{
+						"icon": "envelope",
+						"label": "Contact",
+						"href": "/contact/"
+					},
+					{
+						"icon": "fa-brands fa-github",
+						"label": "GitHub",
+						"href": "https://github.com",
+						"external": true
+					}
+				]
+			},
+			"children": {
+				"from": "items",
+				"block": "marccent/dock-item"
+			}
+		},
+		"version": 2
+	},
+	"marccent/dock-item": {
 		"0": {
 			"rename": {},
 			"defaults": {}
@@ -134,10 +173,7 @@
 			},
 			"defaults": {}
 		},
-		"version": 1,
-		"props": {
-			"maximum": "max"
-		}
+		"version": 1
 	},
 	"marccent/form-tags": {
 		"0": {
@@ -146,10 +182,7 @@
 			},
 			"defaults": {}
 		},
-		"version": 1,
-		"props": {
-			"maximum": "max"
-		}
+		"version": 1
 	},
 	"marccent/grid": {
 		"0": {
@@ -160,12 +193,7 @@
 			},
 			"defaults": {}
 		},
-		"version": 2,
-		"props": {
-			"columns": "cols",
-			"minimumColumnWidth": "min",
-			"minimumRowHeight": "row"
-		}
+		"version": 2
 	},
 	"marccent/icon": {
 		"0": {
@@ -214,7 +242,37 @@
 				"autoPlay": true
 			}
 		},
-		"version": 1
+		"1": {
+			"rename": {},
+			"defaults": {
+				"items": [
+					{
+						"title": "Plan",
+						"text": "We listen first."
+					},
+					{
+						"title": "Build",
+						"text": "Then we make it."
+					},
+					{
+						"title": "Launch",
+						"text": "And ship it."
+					}
+				]
+			},
+			"children": {
+				"from": "items",
+				"block": "marccent/orbit-item"
+			}
+		},
+		"version": 2
+	},
+	"marccent/orbit-item": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 2
 	},
 	"marccent/popover": {
 		"0": {
@@ -228,6 +286,39 @@
 			"rename": {},
 			"defaults": {}
 		},
+		"1": {
+			"rename": {},
+			"defaults": {
+				"items": [
+					{
+						"icon": "phone",
+						"label": "Call",
+						"href": "tel:+12085550100"
+					},
+					{
+						"icon": "envelope",
+						"label": "Email",
+						"href": "mailto:hello@example.com"
+					},
+					{
+						"icon": "location-dot",
+						"label": "Directions",
+						"href": "#"
+					}
+				]
+			},
+			"children": {
+				"from": "items",
+				"block": "marccent/radial-menu-item"
+			}
+		},
+		"version": 2
+	},
+	"marccent/radial-menu-item": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
 		"version": 1
 	},
 	"marccent/scenery": {
@@ -237,10 +328,7 @@
 			},
 			"defaults": {}
 		},
-		"version": 1,
-		"props": {
-			"minimumHeight": "min"
-		}
+		"version": 1
 	},
 	"marccent/section": {
 		"0": {
@@ -253,10 +341,25 @@
 				"image": null
 			}
 		},
-		"version": 1,
-		"props": {
-			"verticalPadding": "padY"
-		}
+		"1": {
+			"rename": {
+				"minHeight": "minimumHeight"
+			},
+			"defaults": {}
+		},
+		"version": 2
+	},
+	"marccent/stat-card": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"icon": "users",
+				"value": "1,200",
+				"label": "Customers",
+				"accent": true
+			}
+		},
+		"version": 1
 	},
 	"marccent/step-bar": {
 		"0": {
@@ -264,6 +367,36 @@
 			"defaults": {
 				"start": 1
 			}
+		},
+		"1": {
+			"rename": {},
+			"defaults": {
+				"steps": [
+					{
+						"label": "Order"
+					},
+					{
+						"label": "Pay"
+					},
+					{
+						"label": "Ship"
+					},
+					{
+						"label": "Done"
+					}
+				]
+			},
+			"children": {
+				"from": "steps",
+				"block": "marccent/step-bar-step"
+			}
+		},
+		"version": 2
+	},
+	"marccent/step-bar-step": {
+		"0": {
+			"rename": {},
+			"defaults": {}
 		},
 		"version": 1
 	},
@@ -274,12 +407,25 @@
 		},
 		"version": 2
 	},
+	"marccent/tab": {
+		"0": {
+			"rename": {},
+			"defaults": {
+				"label": "Tab"
+			}
+		},
+		"version": 1
+	},
 	"marccent/tabs": {
 		"0": {
 			"rename": {},
 			"defaults": {}
 		},
-		"version": 1
+		"1": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 2
 	},
 	"marccent/theme-editor": {
 		"0": {
@@ -289,6 +435,35 @@
 		"version": 1
 	},
 	"marccent/timeline": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"1": {
+			"rename": {},
+			"defaults": {
+				"events": [
+					{
+						"date": "2024",
+						"title": "Founded",
+						"text": "Where it started.",
+						"icon": "flag"
+					},
+					{
+						"date": "2026",
+						"title": "Today",
+						"icon": "star"
+					}
+				]
+			},
+			"children": {
+				"from": "events",
+				"block": "marccent/timeline-item"
+			}
+		},
+		"version": 2
+	},
+	"marccent/timeline-item": {
 		"0": {
 			"rename": {},
 			"defaults": {}

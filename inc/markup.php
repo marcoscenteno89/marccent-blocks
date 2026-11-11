@@ -167,7 +167,7 @@ function marccent_blocks_section( array $a, string $inner, ?callable $attributes
 	$attributes ??= 'marccent_blocks_attributes';
 	$tag   = in_array( $a['as'] ?? '', array( 'section', 'div', 'header', 'footer', 'aside' ), true ) ? $a['as'] : 'section';
 	$image = (string) ( $a['image'] ?? '' );
-	$min   = (string) ( $a['minHeight'] ?? '' );
+	$min   = (string) ( $a['minimumHeight'] ?? '' );
 	// A least height makes the band a one-cell grid, so its content box can center in it (not .grid: that brings columns).
 	$outer = array(
 		'data-theme' => in_array( $a['mode'] ?? '', array( 'light', 'dark' ), true ) ? $a['mode'] : null,
@@ -439,8 +439,8 @@ function marccent_blocks_map( array $m, string $inner = '', ?callable $attribute
 		'data-component' => 'map',
 		'class'          => 'map col-center round overflow-hidden',
 		'data-key'       => (string) ( $m['key'] ?? '' ) ?: null,
-		'data-lat'       => (string) (float) ( $m['lat'] ?? 0 ),
-		'data-lng'       => (string) (float) ( $m['lng'] ?? 0 ),
+		'data-latitude'  => (string) (float) ( $m['latitude'] ?? 0 ),
+		'data-longitude' => (string) (float) ( $m['longitude'] ?? 0 ),
 		'data-zoom'      => (string) (int) ( $m['zoom'] ?? 10 ),
 		'data-marker'    => empty( $m['marker'] ) ? null : '',
 		'data-title'     => (string) ( $m['title'] ?? '' ) ?: null,

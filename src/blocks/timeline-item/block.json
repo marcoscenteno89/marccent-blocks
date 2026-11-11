@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/timeline-item",
+	"title": "Timeline item",
+	"category": "marccent",
+	"icon": "marker",
+	"description": "One event of a Timeline: when, what, a line or two, and the icon in its marker.",
+	"keywords": [ "event", "milestone", "date" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"date": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"icon": { "type": "string", "default": "circle" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/timeline" ]
+}

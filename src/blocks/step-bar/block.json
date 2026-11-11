@@ -9,27 +9,11 @@
 	"keywords": [ "steps", "progress", "process", "wizard", "breadcrumb" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"steps": {
-			"type": "array",
-			"default": [
-				{
-					"label": "Order"
-				},
-				{
-					"label": "Pay"
-				},
-				{
-					"label": "Ship"
-				},
-				{
-					"label": "Done"
-				}
-			]
-		},
 		"start": { "type": "number", "default": 0 },
 		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
+	"allowedBlocks": [ "marccent/step-bar-step", "marccent/loop" ],
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"
 }

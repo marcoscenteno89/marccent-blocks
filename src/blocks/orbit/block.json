@@ -9,23 +9,6 @@
 	"keywords": [ "orbit", "circle", "wheel", "clock", "solar system" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"items": {
-			"type": "array",
-			"default": [
-				{
-					"title": "Plan",
-					"text": "We listen first."
-				},
-				{
-					"title": "Build",
-					"text": "Then we make it."
-				},
-				{
-					"title": "Launch",
-					"text": "And ship it."
-				}
-			]
-		},
 		"startAngle": { "type": "number", "default": 0 },
 		"autoPlay": { "type": "boolean", "default": false },
 		"interval": { "type": "number", "default": 4000 },
@@ -33,6 +16,7 @@
 		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
+	"allowedBlocks": [ "marccent/orbit-item", "marccent/loop" ],
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"
 }
