@@ -63,6 +63,9 @@
 				"ratio": "the block's aspect ratio, a style on its wrapper"
 			}
 		},
+		"contact": {
+			"component": "Contact"
+		},
 		"countdown": {
 			"component": "Countdown"
 		},
@@ -180,6 +183,9 @@
 				"recenter": "not offered yet",
 				"overlay": "not offered yet"
 			}
+		},
+		"marquee": {
+			"component": "Marquee"
 		},
 		"menu": {
 			"component": "Menu",
