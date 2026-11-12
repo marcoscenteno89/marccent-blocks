@@ -167,7 +167,7 @@ function marccent_blocks_section( array $a, string $inner, ?callable $attributes
 	$attributes ??= 'marccent_blocks_attributes';
 	$tag   = in_array( $a['as'] ?? '', array( 'section', 'div', 'header', 'footer', 'aside' ), true ) ? $a['as'] : 'section';
 	$image = (string) ( $a['image'] ?? '' );
-	$min   = (string) ( $a['minHeight'] ?? '' );
+	$min   = (string) ( $a['minimumHeight'] ?? '' );
 	// A least height makes the band a one-cell grid, so its content box can center in it (not .grid: that brings columns).
 	$outer = array(
 		'data-theme' => in_array( $a['mode'] ?? '', array( 'light', 'dark' ), true ) ? $a['mode'] : null,
@@ -267,19 +267,19 @@ function marccent_blocks_card( array $a, string $inner, ?callable $attributes = 
 /*
  * The theme's Menu (components/ui/menu.js): its <nav> (a label for screen readers; layout replaces "fixed", equal
  * columns, as "auto-cols cols-center" or "cols-1"; icon only: the links show only their icons, named by aria-label)
- * around its items. Folded (fold): behind a menu button where there's no room, the menu in the button's panel
- * (ToggleButton's panel, a popover; menu.css .menu-fold); id: the panel's (the reference writes id-1).
+ * around its items. Folded (fold): behind a menu button where there's no room, ToggleButton's fold (.toggle-fold,
+ * button.css), the menu (.menu-fold, menu.css) in its panel; id: the panel's (the reference writes id-1).
  */
 function marccent_blocks_menu( array $p ): string {
 	if ( ! empty( $p['fold'] ) ) {
 		$id    = $p['id'] ?? wp_unique_id( 'menu-fold-' );
 		$label = ( $p['label'] ?? '' ) . ' menu';
 		return sprintf(
-			'<div data-component="menu-fold" class="menu-fold"><button type="button" class="btn menu-fold-toggle" data-component="toggle-button" data-icon="bars" data-active-icon="xmark" aria-expanded="false" aria-controls="%1$s" aria-label="%2$s" id="%1$s-toggle" popovertarget="%1$s">%3$s</button><div id="%1$s" data-component="toggle-panel" popover="auto" role="group" aria-label="%2$s" class="toggle-panel bg border round shadow pad-sm">%4$s</div></div>',
+			'<div class="toggle-fold"><button type="button" class="btn menu-fold-toggle" data-component="toggle-button" data-icon="bars" data-active-icon="xmark" aria-expanded="false" aria-controls="%1$s" aria-label="%2$s" id="%1$s-toggle" popovertarget="%1$s">%3$s</button><div id="%1$s" data-component="toggle-panel" popover="auto" role="group" aria-label="%2$s" class="toggle-panel bg border round shadow pad-sm">%4$s</div></div>',
 			esc_attr( $id ),
 			esc_attr( $label ),
 			marccent_blocks_icon( 'bars', 'btn-icon' ),
-			marccent_blocks_menu( array( 'fold' => false ) + $p )
+			marccent_blocks_menu( array( 'fold' => false, 'classes' => marccent_blocks_cx( 'menu-fold', $p['classes'] ?? '' ) ) + $p )
 		);
 	}
 	// --cols only for the fixed layout (one column per item); any other layout sets its own columns (.cols-1, auto-cols).
@@ -439,8 +439,8 @@ function marccent_blocks_map( array $m, string $inner = '', ?callable $attribute
 		'data-component' => 'map',
 		'class'          => 'map col-center round overflow-hidden',
 		'data-key'       => (string) ( $m['key'] ?? '' ) ?: null,
-		'data-lat'       => (string) (float) ( $m['lat'] ?? 0 ),
-		'data-lng'       => (string) (float) ( $m['lng'] ?? 0 ),
+		'data-latitude'  => (string) (float) ( $m['latitude'] ?? 0 ),
+		'data-longitude' => (string) (float) ( $m['longitude'] ?? 0 ),
 		'data-zoom'      => (string) (int) ( $m['zoom'] ?? 10 ),
 		'data-marker'    => empty( $m['marker'] ) ? null : '',
 		'data-title'     => (string) ( $m['title'] ?? '' ) ?: null,

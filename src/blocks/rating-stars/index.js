@@ -11,5 +11,5 @@ islandBlock( metadata, {
 		{ key: 'max', label: 'Out of', type: 'range', min: 1, max: 10 },
 		{ key: 'icon', label: 'Icon', type: 'icon' },
 	],
-	preview: ( p ) => <Stars value={ Math.min( p.value, p.max ) } max={ p.max } icon={ p.icon || 'star' } />,
+	preview: ( p ) => <Stars value={ Math.min( p.value, p.max ) } maximum={ p.max } icon={ p.icon || 'star' } />,
 } );

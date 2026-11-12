@@ -1,12 +1,15 @@
 /*
- * A marccent/tabs block: the theme's TabBar, each tab showing its blocks (the [data-tab-content] of the tab's HTML in
- * the slot; its heading is for the page without JavaScript).
+ * A marccent/tabs block: the theme's TabBar of its tabs, each one's label and icon on the tab and its blocks the panel.
  */
-import { TabBar } from 'marccent-theme/components/widgets/nav';
+import { TabBar, Tab } from 'marccent-theme/components/widgets/nav';
 import { Html } from '../../shared/html';
 
-const contentOf = ( html ) => new DOMParser().parseFromString( html, 'text/html' ).querySelector( '[data-tab-content]' )?.innerHTML ?? html;
-
-export default function TabsIsland( { tabs = [], html = [] } ) {
-	return <TabBar tabs={ tabs.map( ( t, i ) => ( { label: t.label, icon: t.icon || undefined, content: <div className="grid cols-1 gap-sm"><Html html={ contentOf( html[ i ] ?? '' ) } /></div> } ) ) } />;
+export default function TabsIsland( { childBlocks = [] } ) {
+	return (
+		<TabBar>
+			{ childBlocks.map( ( { props: { label = '', icon }, html }, i ) => (
+				<Tab key={ i } label={ label } icon={ icon || undefined }><div className="grid cols-1 gap-sm"><Html html={ html } /></div></Tab>
+			) ) }
+		</TabBar>
+	);
 }

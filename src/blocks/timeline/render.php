@@ -1,10 +1,10 @@
 <?php
 /**
- * Timeline: an island (runtime/islands/timeline.js), its events as a list until it's drawn.
+ * Timeline: an island (runtime/islands/timeline.js) of its Timeline items, saved or from a Loop, which the page
+ * shows as text until it's drawn.
  *
  * @var array    $attributes
  * @var WP_Block $block
  */
 
-$events = array_values( array_filter( (array) $attributes['events'], 'is_array' ) );
-echo marccent_blocks_island( $block, 'timeline', array( 'events' => $events ), marccent_blocks_island_text( $events ) ); // phpcs:ignore WordPress.Security.EscapeOutput
+echo marccent_blocks_island( $block, 'timeline', array(), marccent_blocks_inner( $block ) ); // phpcs:ignore WordPress.Security.EscapeOutput

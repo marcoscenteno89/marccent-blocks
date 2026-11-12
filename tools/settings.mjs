@@ -8,16 +8,15 @@
  * tools/settings-map.json names each block's component and every place WordPress differs, each with its reason:
  *   wordpress: attributes only the block has (a menu's slug, a form's email, content kept in an attribute);
  *   later:     the component's settings the block doesn't offer yet;
- *   rename:    an attribute the block named differently, renamed to the setting's name (old: new; a short prop's
- *              name is found by itself);
+ *   rename:    an attribute the block named differently, renamed to the setting's name (old: new);
  *   differs:   settings the block keeps in its own shape (a list typed as one line of text, a type settings.json
  *              gets wrong), so it isn't silently changed.
  * Anything else not matching fails. Each setting is an attribute of the same full-word name, its type (text: string,
  * list: array) and default; a setting with no default gets the type's empty one ('' or false), so the server never
  * reads a missing key. `version` is the component's settings version, saved with the block: content without it was
- * saved before, and settings-upgrade.json says how to read it (old names, old defaults), in the editor
- * (src/shared/upgrade.js) and on the page (inc/upgrade.php); and, where a setting's name isn't yet its component's
- * prop (padding: pad), the prop, for render.php (marccent_blocks_props).
+ * saved before, content with an older one at that version, and settings-upgrade.json's steps (one a version, "0"
+ * for none) say how to read it (old names, old defaults, a list that became child blocks), in the editor
+ * (src/shared/upgrade.js) and on the page (inc/upgrade.php).
  */
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -76,7 +75,7 @@ for (const [block, m] of Object.entries(map.blocks)) {
   for (const [key, s] of Object.entries(c.settings ?? {})) {
     if (m.later?.[key]) continue;
     if (s.type === 'content') { if (have[key]) want[key] = have[key]; continue; }
-    const named = Object.keys(m.rename ?? {}).find((o) => m.rename[o] === key) ?? s.prop;
+    const named = Object.keys(m.rename ?? {}).find((o) => m.rename[o] === key);
     const old = named && named !== key && named in have && !(key in have) ? named : null;
     if (old) renames[old] = key;
     if (m.differs?.[key]) {
@@ -103,9 +102,11 @@ for (const [block, m] of Object.entries(map.blocks)) {
     if (!isDeepStrictEqual(was, a) && !write) fail(`${block}.${key}: block.json has ${JSON.stringify(was)}, settings.json says ${JSON.stringify(a)}`);
   }
   if (write) {
-    const step = upgrade[json.name]?.[0];
-    if (!step) {
-      // What content saved before the settings meant: the old names, and the old defaults that changed.
+    // The step from the version the block had (none: 0) to today's, if it's new: what content saved then meant, the
+    // old names and the old defaults that changed. A list that became child blocks is added to it by hand
+    // (children: { from, block }).
+    const from = upgrade[json.name]?.version ?? 0;
+    if (!upgrade[json.name]?.[from] && (!upgrade[json.name] || from < c.version)) {
       const defaults = {};
       for (const [key, a] of Object.entries(want)) {
         const oldKey = Object.keys(renames).find((o) => renames[o] === key) ?? key;
@@ -113,12 +114,9 @@ for (const [block, m] of Object.entries(map.blocks)) {
         // null: it had no default then (legacy attributes leave it out; saved content takes today's).
         if (before && !isDeepStrictEqual(before.default, a.default)) defaults[key] = 'default' in before ? before.default : null;
       }
-      upgrade[json.name] = { version: c.version, 0: { rename: renames, defaults } };
+      upgrade[json.name] = { ...upgrade[json.name], [from]: { rename: renames, defaults } };
     }
     upgrade[json.name].version = c.version;
-    // The component's prop where a setting's full-word name differs (PRODUCT-LINE.md 5.4): render.php hands props.
-    const props = Object.fromEntries(Object.entries(c.settings ?? {}).filter(([k, s]) => s.prop && s.prop !== k && k in want).map(([k, s]) => [ k, s.prop ]));
-    if (Object.keys(props).length) upgrade[json.name].props = props; else delete upgrade[json.name].props;
     if (!isDeepStrictEqual(want, have)) writeFileSync(file, withAttributes(readFileSync(file, 'utf8'), want));
   } else if ((upgrade[json.name]?.version ?? null) !== c.version) {
     fail(`${block}: settings-upgrade.json has version ${upgrade[json.name]?.version} for ${json.name}, ${m.component} is ${c.version} (run --write and add the step)`);

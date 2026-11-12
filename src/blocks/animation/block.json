@@ -10,9 +10,9 @@
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"name": { "type": "string", "default": "network-loop" },
-		"fps": { "type": "number", "default": 30 },
+		"frameRate": { "type": "number", "default": 30 },
 		"colors": { "type": "string", "default": "" },
-		"minHeight": { "type": "string", "default": "60vh" },
+		"minimumHeight": { "type": "string", "default": "60vh" },
 		"surface": { "type": "string", "default": "" },
 		"version": { "type": "number" }
 	},

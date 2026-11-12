@@ -1,13 +1,18 @@
 /*
- * An orbit block's component: items on the theme's Orbit (each one's icon an image, or a Font Awesome icon), or its
- * OrbitClock or SolarSystem.
+ * An orbit block's component: its items on the theme's Orbit (each one's icon a Font Awesome icon, or an image), or
+ * its OrbitClock or SolarSystem.
  */
-import { Orbit, OrbitClock, SolarSystem } from 'marccent-theme/components/visuals/effects';
-import { Icon } from 'marccent-theme/components/ui/icon';
+import { Orbit, OrbitItem, OrbitClock, SolarSystem } from 'marccent-theme/components/visuals/effects';
 
-export const OrbitOf = ( { kind = 'items', items = [], startAngle = -90, autoPlay = true, interval = 4000 } ) => {
+export const OrbitOf = ( { kind = 'items', childBlocks = [], startAngle = -90, autoPlay = true, interval = 4000 } ) => {
 	if ( kind === 'clock' ) return <OrbitClock />;
 	if ( kind === 'solar' ) return <SolarSystem />;
-	const list = items.map( ( { image, icon, title = '', text } ) => ( { title, text, icon: image || ( icon ? <Icon name={ icon } /> : undefined ) } ) );
-	return list.length ? <Orbit items={ list } startAngle={ startAngle } autoPlay={ autoPlay } interval={ interval } /> : null;
+	const items = childBlocks.filter( ( { props } ) => props.title );
+	return items.length ? (
+		<Orbit startAngle={ startAngle } autoPlay={ autoPlay } interval={ interval }>
+			{ items.map( ( { props: { image, icon, title, text } }, i ) => (
+				<OrbitItem key={ i } title={ title } text={ text } icon={ image ? <img src={ image } alt="" className="w-100" /> : icon } />
+			) ) }
+		</Orbit>
+	) : null;
 };

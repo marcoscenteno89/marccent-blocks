@@ -4,6 +4,6 @@
  */
 import { TagInput } from 'marccent-theme/components/ui/tag-input';
 
-export default function FormTagsIsland( { name, label, max = 0, suggestions, defaultValue = [] } ) {
-	return <TagInput name={ name } label={ label } max={ max } suggestions={ suggestions || undefined } defaultValue={ defaultValue } className="input" />;
+export default function FormTagsIsland( { name, label, maximum = 0, suggestions, defaultValue = [] } ) {
+	return <TagInput name={ name } label={ label } maximum={ maximum } suggestions={ suggestions || undefined } defaultValue={ defaultValue } className="input" />;
 }

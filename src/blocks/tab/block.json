@@ -9,11 +9,12 @@
 	"keywords": [ "tab", "panel" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"label": { "type": "string", "default": "Tab" },
-		"icon": { "type": "string", "default": "" }
+		"label": { "type": "string", "default": "" },
+		"icon": { "type": "string", "default": "" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
-	"parent": [ "marccent/tabs" ]
+	"ancestor": [ "marccent/tabs" ]
 }

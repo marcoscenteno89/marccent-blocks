@@ -16,7 +16,7 @@
 		"surface": { "type": "string", "default": "" },
 		"mode": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": false },
-		"minHeight": { "type": "string", "default": "" },
+		"minimumHeight": { "type": "string", "default": "" },
 		"image": { "type": "string", "default": "" },
 		"imageAlt": { "type": "string", "default": "" },
 		"shade": { "type": "number", "default": 50 },

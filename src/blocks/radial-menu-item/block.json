@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/radial-menu-item",
+	"title": "Radial menu item",
+	"category": "marccent",
+	"icon": "admin-links",
+	"description": "One round icon on a Radial menu's ring: its name, and the link it opens.",
+	"keywords": [ "link", "icon", "item" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"icon": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"href": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/radial-menu" ]
+}

@@ -9,4 +9,4 @@
 $max   = max( 1, min( 10, (int) $attributes['max'] ) );
 $value = max( 0, min( $max, (float) $attributes['value'] ) );
 /* translators: 1: a score, 2: the highest score */
-echo marccent_blocks_island( $block, 'rating-stars', array( 'value' => $value, 'max' => $max, 'icon' => (string) $attributes['icon'] ?: 'star' ), '<p>' . esc_html( sprintf( __( '%1$s out of %2$s', 'marccent-blocks' ), $value, $max ) ) . '</p>' ); // phpcs:ignore WordPress.Security.EscapeOutput
+echo marccent_blocks_island( $block, 'rating-stars', array( 'value' => $value, 'maximum' => $max, 'icon' => (string) $attributes['icon'] ?: 'star' ), '<p>' . esc_html( sprintf( __( '%1$s out of %2$s', 'marccent-blocks' ), $value, $max ) ) . '</p>' ); // phpcs:ignore WordPress.Security.EscapeOutput

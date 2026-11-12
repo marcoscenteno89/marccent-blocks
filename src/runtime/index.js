@@ -75,7 +75,16 @@ const readIsland = ( el ) => {
 	// Accordion's items from a field group's rows (PRODUCT-LINE.md 6.2).
 	const children = slot ? [ ...slot.children ].flatMap( ( c ) => ( c.matches( '.wp-block-marccent-loop' ) ? [ ...c.children ] : [ c ] ) ) : [];
 	const html = children.map( ( c ) => c.outerHTML );
-	return { el, Component: ISLANDS[ el.dataset.island ], props, html };
+	// Its child components' blocks (a Timeline's items, saved or from a Loop: [data-item], inc/islands.php), each its
+	// props (URLs made safe too) and its own blocks; not those of an island inside it.
+	const childBlocks = slot ? [ ...slot.querySelectorAll( '[data-item]' ) ].filter( ( i ) => i.closest( '[data-island]' ) === el ).map( ( i ) => {
+		let own = {};
+		try {
+			own = cleanProps( JSON.parse( i.dataset.props || '{}' ) );
+		} catch {}
+		return { props: own, html: i.querySelector( ':scope > [data-item-content]' )?.innerHTML ?? '' };
+	} ) : [];
+	return { el, Component: ISLANDS[ el.dataset.island ], props, html, childBlocks };
 };
 
 // The server's markup stays until the component (loaded on demand) has rendered, off the page, into its own box;
@@ -85,11 +94,11 @@ const Swap = ( { el, box, children } ) => {
 	return children;
 };
 
-const Island = ( { el, Component, props, html } ) => {
+const Island = ( { el, Component, props, html, childBlocks } ) => {
 	const [ box ] = useState( () => Object.assign( document.createElement( 'div' ), { style: 'display: contents' } ) );
 	return createPortal(
 		<Suspense fallback={ null }>
-			<Swap el={ el } box={ box }><Component { ...props } html={ html } /></Swap>
+			<Swap el={ el } box={ box }><Component { ...props } html={ html } childBlocks={ childBlocks } /></Swap>
 		</Suspense>,
 		box
 	);

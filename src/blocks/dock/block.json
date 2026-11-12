@@ -9,31 +9,11 @@
 	"keywords": [ "icons", "toolbar", "links", "social", "macos" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"items": {
-			"type": "array",
-			"default": [
-				{
-					"icon": "house",
-					"label": "Home",
-					"href": "/"
-				},
-				{
-					"icon": "envelope",
-					"label": "Contact",
-					"href": "/contact/"
-				},
-				{
-					"icon": "fa-brands fa-github",
-					"label": "GitHub",
-					"href": "https://github.com",
-					"external": true
-				}
-			]
-		},
 		"label": { "type": "string", "default": "Dock" },
 		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
+	"allowedBlocks": [ "marccent/dock-item", "marccent/loop" ],
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"
 }

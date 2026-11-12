@@ -11,7 +11,7 @@ import { ANIMATIONS, SURFACES, cx } from '../../shared/options';
 import metadata from './block.json';
 import deprecated from './deprecated';
 
-const outer = ( a ) => ( { className: cx( 'wrap wrap-fluid pad-0 stack', a.surface ), style: { minHeight: a.minHeight || undefined } } );
+const outer = ( a ) => ( { className: cx( 'wrap wrap-fluid pad-0 stack', a.surface ), style: { minHeight: a.minimumHeight || undefined } } );
 const content = { className: 'col-center pad text-center', style: { position: 'relative', gridTemplateColumns: 'minmax(0, 1fr)' } };
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
@@ -21,8 +21,8 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 			<InspectorControls>
 				<PanelBody title="Animation">
 					<SelectControl label="Animation" value={ a.name } options={ ANIMATIONS } onChange={ ( name ) => set( { name } ) } />
-					<TextControl label="Least height" value={ a.minHeight } onChange={ ( minHeight ) => set( { minHeight } ) } />
-					<RangeControl label="Frames per second" help="Empty: the theme's cap for decorations." value={ a.fps } min={ 5 } max={ 60 } allowReset onChange={ ( fps ) => set( { fps } ) } />
+					<TextControl label="Least height" value={ a.minimumHeight } onChange={ ( minimumHeight ) => set( { minimumHeight } ) } />
+					<RangeControl label="Frames per second" help="Empty: the theme's cap for decorations." value={ a.frameRate } min={ 5 } max={ 60 } allowReset onChange={ ( frameRate ) => set( { frameRate } ) } />
 					<TextControl label="Colors" help="Comma-separated, replacing the theme's: #fff, #1ecbe1" value={ a.colors } onChange={ ( colors ) => set( { colors } ) } />
 					<SelectControl label="Background" value={ a.surface } options={ SURFACES } onChange={ ( surface ) => set( { surface } ) } />
 				</PanelBody>

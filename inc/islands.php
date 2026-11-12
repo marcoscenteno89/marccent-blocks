@@ -8,10 +8,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-function marccent_blocks_island( WP_Block $block, string $name, array $props, string $slot = '', array $extra = array() ): string {
+// $block: the block whose wrapper it is (its anchor and classes); none: the island sits inside the block's own element.
+function marccent_blocks_island( ?WP_Block $block, string $name, array $props, string $slot = '', array $extra = array() ): string {
+	$attributes = fn( $attrs ) => $block ? marccent_blocks_wrapper( $block, $attrs ) : marccent_blocks_attributes( $attrs );
 	return sprintf(
 		'<div %s><div data-slot="">%s</div></div>',
-		marccent_blocks_wrapper( $block, array( 'data-island' => $name, 'data-props' => wp_json_encode( (object) $props, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) ) + $extra ),
+		$attributes( array( 'data-island' => $name, 'data-props' => wp_json_encode( (object) $props, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) ) + $extra ),
 		$slot
 	);
 }
@@ -54,4 +56,26 @@ function marccent_blocks_island_text( $props, int $depth = 0 ): string {
 function marccent_blocks_island_stand_in( array $props ): string {
 	$text = marccent_blocks_island_text( $props );
 	return $text ? '<div data-island-text="">' . $text . '</div>' : '';
+}
+
+/*
+ * One of an island's child components (a Timeline item, a Tab): its props as JSON (data-props), which the island reads
+ * wherever it sits in the slot (saved in the parent, or one of a Loop's items), and in it the props as plain HTML and
+ * its own blocks ([data-item-content]: a Tab's panel), what the page shows until the island is drawn.
+ */
+function marccent_blocks_item( array $props, string $content = '' ): string {
+	return sprintf(
+		'<div data-item="" data-props="%s">%s%s</div>',
+		esc_attr( wp_json_encode( (object) $props, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) ),
+		marccent_blocks_island_text( $props ),
+		'' === $content ? '' : '<div data-item-content="" class="grid cols-1 gap-sm">' . $content . '</div>'
+	);
+}
+
+// A child block's settings as its component's props: what's set (not its version), each {{ token }} filled for the
+// post or row it shows (one of a Loop's items: Marccent Content, marccent_blocks_fill).
+function marccent_blocks_item_props( array $attributes, ?WP_Block $block = null ): array {
+	unset( $attributes['version'] );
+	$fill = fn( $v ) => is_string( $v ) && str_contains( $v, '{{' ) ? trim( (string) apply_filters( 'marccent_blocks_fill', $v, $block ) ) : $v;
+	return array_filter( array_map( $fill, $attributes ), fn( $v ) => '' !== $v && false !== $v && null !== $v );
 }

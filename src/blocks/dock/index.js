@@ -1,18 +1,13 @@
 /*
- * Dock: the theme's Dock (widgets/nav.js) from a list of items, each a link.
+ * Dock: the theme's Dock (widgets/nav.js); its items are Dock item blocks, or a Loop of them (runtime/islands/dock.js).
  */
 import { islandBlock } from '../../shared/island';
-import { Dock } from 'marccent-theme/components/widgets/nav';
 import metadata from './block.json';
+import deprecated from './deprecated';
 
 islandBlock( metadata, {
-	fields: [
-		{ key: 'items', label: 'Items', type: 'list', itemLabel: 'Item', fields: [
-			{ key: 'icon', label: 'Icon', type: 'icon' }, { key: 'label', label: 'Name' }, { key: 'href', label: 'Link', type: 'url' },
-			{ key: 'external', label: 'Opens a new tab', type: 'toggle' },
-		] },
-		{ key: 'label', label: 'Its name (for screen readers)' },
-	],
-	toProps: ( a ) => ( { ...a, items: ( a.items || [] ).filter( ( i ) => i.label && i.icon ) } ),
-	preview: ( p ) => p.items.length > 0 && <Dock items={ p.items } label={ p.label || undefined } />,
+	fields: [ { key: 'label', label: 'Its name (for screen readers)' } ],
+	note: 'Dock: its icons are the items below, or a Loop of them.',
+	inner: { allowedBlocks: metadata.allowedBlocks, template: [ [ 'marccent/dock-item', { icon: 'house', label: 'Home', href: '/' } ], [ 'marccent/dock-item', { icon: 'envelope', label: 'Contact', href: '/contact/' } ], [ 'marccent/dock-item', { icon: 'fa-brands fa-github', label: 'GitHub', href: 'https://github.com', external: true } ] ] },
+	deprecated,
 } );

@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/dock-item",
+	"title": "Dock item",
+	"category": "marccent",
+	"icon": "admin-links",
+	"description": "One round icon in a Dock: its name, and the link it opens.",
+	"keywords": [ "link", "icon", "item" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"icon": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"href": { "type": "string", "default": "" },
+		"external": { "type": "boolean", "default": false },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/dock" ]
+}

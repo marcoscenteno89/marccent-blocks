@@ -11,15 +11,15 @@
 
 $fill = fn( $text ) => str_contains( (string) $text, '{{' ) ? trim( (string) apply_filters( 'marccent_blocks_fill', (string) $text, $block ) ) : (string) $text;
 $map  = apply_filters( 'marccent_blocks_map', array_filter( array(
-	'lat'   => $fill( $attributes['lat'] ),
-	'lng'   => $fill( $attributes['lng'] ),
-	'title' => $fill( $attributes['title'] ),
-	'link'  => $fill( $attributes['link'] ),
+	'latitude'  => $fill( $attributes['lat'] ),
+	'longitude' => $fill( $attributes['lng'] ),
+	'title'     => $fill( $attributes['title'] ),
+	'link'      => $fill( $attributes['link'] ),
 ) ) + array( 'zoom' => $attributes['zoom'], 'marker' => $attributes['marker'] ) );
-if ( ! is_numeric( $map['lat'] ?? '' ) || ! is_numeric( $map['lng'] ?? '' ) || ( 0.0 === (float) $map['lat'] && 0.0 === (float) $map['lng'] ) ) {
+if ( ! is_numeric( $map['latitude'] ?? '' ) || ! is_numeric( $map['longitude'] ?? '' ) || ( 0.0 === (float) $map['latitude'] && 0.0 === (float) $map['longitude'] ) ) {
 	return;
 }
-$map += array( 'embed' => 'https://www.google.com/maps?q=' . rawurlencode( $map['lat'] . ',' . $map['lng'] ) . '&output=embed' );
+$map += array( 'embed' => 'https://www.google.com/maps?q=' . rawurlencode( $map['latitude'] . ',' . $map['longitude'] ) . '&output=embed' );
 $inner = empty( $map['link'] ) ? '' : sprintf( '<a href="%s">%s</a>', esc_url( $map['link'] ), esc_html( sprintf( __( 'Open %s in Google Maps', 'marccent-blocks' ), $map['title'] ?? __( 'the map', 'marccent-blocks' ) ) ) );
 // The pin's data-marker is there with no value; the block wrapper leaves empty values out, so it's added after.
 $attributes_of = fn( $attrs ) => marccent_blocks_wrapper( $block, $attrs ) . ( isset( $attrs['data-marker'] ) ? ' data-marker' : '' );
