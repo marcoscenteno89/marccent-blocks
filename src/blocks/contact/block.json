@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/contact",
+	"title": "Contact",
+	"category": "marccent",
+	"icon": "phone",
+	"description": "A phone number, an email address or a street address, as a link that calls, emails or shows the address, with its icon.",
+	"keywords": [ "phone", "email", "address", "call", "contact" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"kind": { "type": "string", "default": "phone" },
+		"value": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"icon": { "type": "boolean", "default": true },
+		"version": { "type": "number" }
+	},
+	"supports": { "anchor": true, "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/marquee",
+	"title": "Marquee",
+	"category": "marccent",
+	"icon": "leftright",
+	"description": "Its blocks in a row that scrolls sideways without end (client logos, names). It stops on hover, and for visitors who ask for less motion it's a row to scroll by hand.",
+	"keywords": [ "ticker", "logos", "clients", "scroll", "carousel" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"duration": { "type": "number", "default": 30 },
+		"reverse": { "type": "boolean", "default": false },
+		"label": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "anchor": true, "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

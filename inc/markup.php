@@ -514,3 +514,49 @@ function marccent_blocks_countdown( string $id ): string {
 		esc_attr( $id )
 	);
 }
+
+/*
+ * The theme's Contact (components/ui/contact.js): a phone number (a tel: link of its digits), an email address (a
+ * mailto: link) or a street address (<address>), its kind's icon before it unless icon is false.
+ */
+function marccent_blocks_contact( array $c, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$kind  = in_array( $c['kind'] ?? '', array( 'phone', 'email', 'address' ), true ) ? $c['kind'] : 'phone';
+	$value = trim( (string) ( $c['value'] ?? '' ) );
+	$text  = (string) ( $c['label'] ?? '' ) ?: $value;
+	$icon  = $c['icon'] ?? true;
+	$inner = $icon
+		? marccent_blocks_icon( array( 'phone' => 'phone', 'email' => 'envelope', 'address' => 'location-dot' )[ $kind ] ) . '<span>' . esc_html( $text ) . '</span>'
+		: esc_html( $text );
+	$attrs = array( 'data-component' => 'contact' );
+	if ( 'address' !== $kind ) {
+		$attrs['href'] = 'phone' === $kind ? 'tel:' . preg_replace( '/(?!^\+)[^\d]/', '', $value ) : 'mailto:' . $value;
+	}
+	$attrs['class'] = marccent_blocks_cx( $icon ? 'layout-icon d-inline-grid' : '', $c['classes'] ?? '' ) ?: null;
+	$tag = 'address' === $kind ? 'address' : 'a';
+	return sprintf( '<%1$s %2$s>%3$s</%1$s>', $tag, $attributes( $attrs ), $inner );
+}
+
+/*
+ * The theme's Marquee (components/widgets/marquee.js): its items in a row that scrolls sideways without end, the
+ * second copy hidden from screen readers and focus; it stops on hover and for reduced motion (marquee.css).
+ */
+function marccent_blocks_marquee( array $m, string $content, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$label    = (string) ( $m['label'] ?? '' );
+	$duration = (float) ( $m['duration'] ?? 30 );
+	$attrs    = array(
+		'data-component' => 'marquee',
+		'role'           => '' !== $label ? 'group' : null,
+		'aria-label'     => '' !== $label ? $label : null,
+		'class'          => marccent_blocks_cx( 'marquee', $m['classes'] ?? '' ),
+		'data-reverse'   => ! empty( $m['reverse'] ) ? '' : null,
+		'style'          => 30.0 !== $duration ? sprintf( '--marquee-duration:%ss', 0 + $duration ) : null,
+	);
+	return sprintf(
+		'<div %s><div class="marquee-track"><div class="marquee-group">%s</div><div class="marquee-group" aria-hidden="true" inert="">%s</div></div></div>',
+		$attributes( $attrs ),
+		$content,
+		$content
+	);
+}

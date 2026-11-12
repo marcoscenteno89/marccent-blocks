@@ -91,6 +91,13 @@
 		},
 		"version": 1
 	},
+	"marccent/contact": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/countdown": {
 		"0": {
 			"rename": {},
@@ -212,6 +219,13 @@
 		"version": 1
 	},
 	"marccent/map": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/marquee": {
 		"0": {
 			"rename": {},
 			"defaults": {}

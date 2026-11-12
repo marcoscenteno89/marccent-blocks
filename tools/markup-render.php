@@ -68,6 +68,8 @@ $render = array(
 	'tooltip'   => fn( $f ) => marccent_blocks_tooltip( array( 'id' => 'id-1' ) + $f ),
 	'popover'   => fn( $f ) => marccent_blocks_popover( array( 'id' => 'id-1' ) + $f, $f['content'] ),
 	'map'       => fn( $f ) => marccent_blocks_map( $f ),
+	'contact'   => fn( $f ) => marccent_blocks_contact( $f ),
+	'marquee'   => fn( $f ) => marccent_blocks_marquee( $f, $f['content'] ),
 	// The islands' stand-ins: the component's markup before it's drawn.
 	'stars'     => fn( $f ) => marccent_blocks_stars( $f['value'], $f['maximum'], $f['icon'] ),
 	'countdown' => fn( $f ) => marccent_blocks_countdown( 'gooid-1' ),

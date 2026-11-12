@@ -22,6 +22,7 @@ const LABELS = {
 	'hover-none': 'None', ticket: 'Ticket (notches and a tear line)',
 	top: 'Above', bottom: 'Below', start: 'Before (left)', end: 'After (right)',
 	js: 'JavaScript', jsx: 'JSX', css: 'CSS', html: 'HTML', sh: 'Shell',
+	phone: 'Phone number', email: 'Email address', address: 'Street address',
 };
 // What the empty choice means, where it isn't None.
 const EMPTY = { 'Card.hover': 'Default', 'Card.gap': 'Normal', 'Grid.gap': 'Normal', 'Section.gap': 'Normal', 'Grid.alignItems': 'Stretch', 'Menu.gap': 'Normal' };
