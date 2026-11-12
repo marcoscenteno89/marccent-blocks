@@ -12,6 +12,7 @@
 		"icon": { "type": "string", "default": "arrow-right" },
 		"href": { "type": "string", "default": "" },
 		"trace": { "type": "boolean", "default": false },
+		"align": { "type": "string", "default": "" },
 		"label": { "type": "string", "default": "" },
 		"color": { "type": "string", "default": "primary" },
 		"hover": { "type": "string", "default": "" },

@@ -12,11 +12,19 @@ import { BUTTON_COLORS, HOVERS, cx } from '../../shared/options';
 import metadata from './block.json';
 import deprecated from './deprecated';
 
+// The theme's Button align choices (markup/settings.json).
+const ALIGNS = [
+	{ label: 'Default', value: '' },
+	{ label: 'Start', value: 'justify-self-start' },
+	{ label: 'Center', value: 'justify-self-center' },
+	{ label: 'End', value: 'justify-self-end' },
+];
+
 const linkProps = ( a ) => ( a.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {} );
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	// In the editor it's a <button> (no href), so clicking edits the label instead of following the link.
-	const props = useBlockProps( { className: cx( a.color, a.hover ) } );
+	const props = useBlockProps( { className: cx( a.color, a.hover, a.align ) } );
 	return (
 		<>
 			<InspectorControls>
@@ -26,6 +34,7 @@ const Edit = ( { attributes: a, setAttributes: set } ) => {
 					<TextControl label="Icon" help="A Font Awesome name (phone), or full classes (fa-brands fa-facebook). Empty: a text link." value={ a.icon } onChange={ ( icon ) => set( { icon } ) } />
 					<SelectControl label="Color" value={ a.color } options={ BUTTON_COLORS } onChange={ ( color ) => set( { color } ) } />
 					<SelectControl label="Hover effect" value={ a.hover } options={ HOVERS } onChange={ ( hover ) => set( { hover } ) } />
+					<SelectControl label="Place in its cell" help="Where it sits in a grid cell. Default: the cell's width." value={ a.align } options={ ALIGNS } onChange={ ( align ) => set( { align } ) } />
 					<ToggleControl label="Outline for stroke hovers" checked={ a.trace } onChange={ ( trace ) => set( { trace } ) } />
 				</PanelBody>
 			</InspectorControls>

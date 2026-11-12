@@ -22,7 +22,9 @@ function marccent_blocks_menu_tree( string $location ): array {
  * A menu's items (wp_get_nav_menu_items) as a tree: { name, href, icon?, external?, children? }. A dropdown can't be a
  * link itself (it opens on click), so its page comes first among its children. An item's icon is the Font Awesome
  * classes in its CSS Classes field (Screen Options → CSS Classes: fa-brands fa-tiktok), else, for a link to another
- * site, that site's own (marccent_blocks_link_icon); a link to another site opens in a new tab.
+ * site, that site's own (marccent_blocks_link_icon); a link to another site opens in a new tab. An item's Description
+ * field (Screen Options → Description) is the line under its name; a cols-2 … cols-4 class on a dropdown's item lays
+ * its links out in that many columns (the theme's mega menu).
  */
 function marccent_blocks_menu_items_tree( array $items ): array {
 	$by_parent = array();
@@ -35,11 +37,19 @@ function marccent_blocks_menu_items_tree( array $items ): array {
 			$href     = esc_url_raw( $item->url );
 			$external = (bool) preg_match( '#^https?://#', $href ) && ! str_starts_with( $href, home_url() );
 			$icon     = implode( ' ', array_filter( (array) $item->classes, fn( $c ) => str_starts_with( $c, 'fa-' ) ) );
+			$columns  = 0;
+			foreach ( (array) $item->classes as $c ) {
+				if ( preg_match( '/^cols-([2-4])$/', $c, $m ) ) {
+					$columns = (int) $m[1];
+				}
+			}
 			$node     = array_filter( array(
-				'name'     => $item->title,
-				'href'     => $href,
-				'icon'     => $icon ?: ( $external || str_starts_with( $href, 'mailto:' ) ? marccent_blocks_link_icon( $href ) : '' ),
-				'external' => $external,
+				'name'        => $item->title,
+				'href'        => $href,
+				'icon'        => $icon ?: ( $external || str_starts_with( $href, 'mailto:' ) ? marccent_blocks_link_icon( $href ) : '' ),
+				'description' => trim( (string) ( $item->description ?? '' ) ),
+				'external'    => $external,
+				'columns'     => $columns,
 			) );
 			$children = $build( (int) $item->ID );
 			if ( $children ) {
