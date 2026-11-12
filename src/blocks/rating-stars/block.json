@@ -10,8 +10,9 @@
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"value": { "type": "number", "default": 4.5 },
-		"max": { "type": "number", "default": 5 },
-		"icon": { "type": "string", "default": "star" }
+		"maximum": { "type": "number", "default": 5 },
+		"icon": { "type": "string", "default": "star" },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

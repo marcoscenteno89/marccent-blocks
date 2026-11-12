@@ -21,6 +21,9 @@ function esc_html( $s ) {
 function esc_url( $s ) {
 	return preg_match( '#^(https?:|mailto:|tel:|/|\#|\?|$)#i', (string) $s ) ? esc_attr( $s ) : '';
 }
+function __( $s, $domain = '' ) {
+	return $s;
+}
 function wp_strip_all_tags( $s ) {
 	return trim( strip_tags( (string) $s ) );
 }
@@ -65,6 +68,9 @@ $render = array(
 	'tooltip'   => fn( $f ) => marccent_blocks_tooltip( array( 'id' => 'id-1' ) + $f ),
 	'popover'   => fn( $f ) => marccent_blocks_popover( array( 'id' => 'id-1' ) + $f, $f['content'] ),
 	'map'       => fn( $f ) => marccent_blocks_map( $f ),
+	// The islands' stand-ins: the component's markup before it's drawn.
+	'stars'     => fn( $f ) => marccent_blocks_stars( $f['value'], $f['maximum'], $f['icon'] ),
+	'countdown' => fn( $f ) => marccent_blocks_countdown( 'gooid-1' ),
 );
 
 // Run directly: every case of the reference this server renders, as JSON.

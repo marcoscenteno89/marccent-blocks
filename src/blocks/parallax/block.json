@@ -9,7 +9,8 @@
 	"keywords": [ "parallax", "scroll", "depth", "motion" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"speed": { "type": "number", "default": 0.2 }
+		"speed": { "type": "number", "default": 0.2 },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",

@@ -64,8 +64,7 @@
 			}
 		},
 		"countdown": {
-			"component": null,
-			"why": "the theme's Countdown has no entry in settings.json yet (asked: stays or goes?)"
+			"component": "Countdown"
 		},
 		"data-table": {
 			"component": "DataTable",
@@ -231,8 +230,7 @@
 			}
 		},
 		"parallax": {
-			"component": null,
-			"why": "the theme's Parallax has no entry in settings.json yet (asked: stays or goes?)"
+			"component": "Parallax"
 		},
 		"popover": {
 			"component": "Popover",
@@ -247,8 +245,13 @@
 			"component": "RadialMenuItem"
 		},
 		"rating-stars": {
-			"component": null,
-			"why": "the theme's Stars has no entry in settings.json yet (asked: stays or goes?)"
+			"component": "Stars",
+			"rename": {
+				"max": "maximum"
+			},
+			"differs": {
+				"value": "settings.json gives the score no default (it's required); the block starts at 4.5 so a new one shows stars, not 0"
+			}
 		},
 		"scenery": {
 			"component": "Scenery",

@@ -1,12 +1,11 @@
 <?php
 /**
- * Stars: an island (runtime/islands/rating-stars.js), the score as text until the stars are drawn.
+ * Stars: an island (runtime/islands/rating-stars.js), the theme's Stars markup until the island draws them.
  *
  * @var array    $attributes
  * @var WP_Block $block
  */
 
-$max   = max( 1, min( 10, (int) $attributes['max'] ) );
+$max   = max( 1, min( 10, (int) $attributes['maximum'] ) );
 $value = max( 0, min( $max, (float) $attributes['value'] ) );
-/* translators: 1: a score, 2: the highest score */
-echo marccent_blocks_island( $block, 'rating-stars', array( 'value' => $value, 'maximum' => $max, 'icon' => (string) $attributes['icon'] ?: 'star' ), '<p>' . esc_html( sprintf( __( '%1$s out of %2$s', 'marccent-blocks' ), $value, $max ) ) . '</p>' ); // phpcs:ignore WordPress.Security.EscapeOutput
+echo marccent_blocks_island( $block, 'rating-stars', array( 'value' => $value, 'maximum' => $max, 'icon' => (string) $attributes['icon'] ?: 'star' ), marccent_blocks_stars( $value, $max, (string) $attributes['icon'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput

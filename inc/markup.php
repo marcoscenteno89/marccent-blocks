@@ -486,3 +486,31 @@ add_filter( 'render_block_core/table', function ( $html ) {
 	}
 	return $tags->get_updated_html();
 } );
+
+/*
+ * The theme's Stars (components/ui/rating.js): a score as a row of icons, filled to it (--value). The rating-stars
+ * island's stand-in, so the page shows the stars before the island draws the same ones.
+ */
+function marccent_blocks_stars( float $value, int $maximum, string $icon = 'star' ): string {
+	$number = fn( $n ) => (string) ( 0 + $n ); // as JS writes a number: 3.5, 8
+	$row    = str_repeat( marccent_blocks_icon( $icon ?: 'star' ), $maximum );
+	return sprintf(
+		'<span data-component="stars" role="img" aria-label="%s" class="stack d-inline-grid w-max text-nowrap justify-self-start" style="--value:%s%%"><span class="stars-empty">%s</span><span class="stars-fill">%s</span></span>',
+		/* translators: 1: a score, 2: the highest score */
+		esc_attr( sprintf( __( '%1$s out of %2$s', 'marccent-blocks' ), $number( $value ), $maximum ) ),
+		$number( $value / $maximum * 100 ),
+		$row,
+		$row
+	);
+}
+
+/*
+ * The theme's Countdown (components/visuals/effects.js: a GooDigit, its goo filter beside it), before it counts: the
+ * countdown island's stand-in. $id names the filter (the island draws its own).
+ */
+function marccent_blocks_countdown( string $id ): string {
+	return sprintf(
+		'<div data-component="goo-digit" class="countdown" style="filter:url(#%1$s)" data-name="countdown" role="timer"><i></i><i></i><i></i><i></i><i></i></div><svg class="countdown-filter" aria-hidden="true"><filter id="%1$s"><feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"></feGaussianBlur><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 28 -10" result="goo"></feColorMatrix><feComposite in="SourceGraphic" in2="goo" operator="atop"></feComposite></filter></svg>',
+		esc_attr( $id )
+	);
+}
