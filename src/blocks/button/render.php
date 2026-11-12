@@ -15,6 +15,7 @@ echo marccent_blocks_button( // phpcs:ignore WordPress.Security.EscapeOutput -- 
 		'classes' => marccent_blocks_cx( $attributes['color'], $attributes['hover'] ?: marccent_blocks_default_hover() ),
 		'newTab'  => $attributes['newTab'],
 		'trace'   => $attributes['trace'],
+		'align'   => $attributes['align'],
 	),
 	fn( $attrs ) => marccent_blocks_wrapper( $block, $attrs )
 );

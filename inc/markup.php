@@ -76,7 +76,7 @@ function marccent_blocks_button( array $b, ?callable $attributes = null ): strin
 	$tag   = $href ? 'a' : 'button';
 	$attrs = array_merge(
 		$href ? array( 'href' => $href ) : array( 'type' => 'button' ),
-		array( 'class' => marccent_blocks_cx( empty( $b['icon'] ) ? 'btn-link' : 'btn', $b['classes'] ?? '' ) ),
+		array( 'class' => marccent_blocks_cx( empty( $b['icon'] ) ? 'btn-link' : 'btn', $b['align'] ?? '', $b['classes'] ?? '' ) ),
 		! empty( $b['icon'] ) && '' !== $label ? array( 'aria-label' => $label, 'title' => $label ) : array(),
 		array( 'data-component' => 'button' ),
 		! empty( $b['newTab'] ) && $href ? array( 'target' => '_blank', 'rel' => 'noopener noreferrer' ) : array()
@@ -294,19 +294,23 @@ function marccent_blocks_menu( array $p ): string {
 }
 
 /*
- * The theme's Menu's items ({ name, href, icon?, label?, external?, children? }, as marccent_blocks_menu_tree gives
- * them): a link, or a dropdown for an item with children, a submenu inside another.
+ * The theme's Menu's items ({ name, href, icon?, label?, description?, external?, columns?, children? }, as
+ * marccent_blocks_menu_tree gives them): a link (its description a line under its name), or a dropdown for an item with
+ * children, a submenu inside another; a dropdown with columns over 1 is a mega menu (.menu-mega, --cols).
  */
 function marccent_blocks_menu_items( array $items, bool $sub = false, bool $icon_only = false ): string {
 	$html = '';
 	foreach ( $items as $item ) {
-		$icon = ! empty( $item['icon'] ) ? sprintf( '<i class="%s" aria-hidden="true"></i>', esc_attr( $item['icon'] ) ) : '';
+		$icon    = ! empty( $item['icon'] ) ? sprintf( '<i class="%s" aria-hidden="true"></i>', esc_attr( $item['icon'] ) ) : '';
+		$columns = (int) ( $item['columns'] ?? 1 );
+		$mega    = $columns > 1;
 		if ( ! empty( $item['children'] ) ) {
 			$html .= sprintf(
-				'<details data-component="menu-dropdown" class="%s"><summary class="menu-link caret">%s<span class="text-truncate">%s</span></summary><div class="menu-panel bg border round shadow pad grid cols-1 gap-sm">%s</div></details>',
-				$sub ? 'menu-dropdown menu-sub' : 'menu-dropdown',
+				'<details data-component="menu-dropdown" class="%s"><summary class="menu-link caret">%s<span class="text-truncate">%s</span></summary><div class="menu-panel bg border round shadow pad grid cols-1 gap-sm"%s>%s</div></details>',
+				marccent_blocks_cx( 'menu-dropdown', $sub ? 'menu-sub' : '', $mega ? 'menu-mega' : '' ),
 				$icon,
 				esc_html( $item['name'] ),
+				$mega ? sprintf( ' style="--cols:%d"', $columns ) : '',
 				marccent_blocks_menu_items( $item['children'], true )
 			);
 		} else {
@@ -316,7 +320,9 @@ function marccent_blocks_menu_items( array $items, bool $sub = false, bool $icon
 				$icon_only ? sprintf( ' aria-label="%s" title="%s"', esc_attr( $item['label'] ?? $item['name'] ), esc_attr( $item['name'] ) ) : '',
 				! empty( $item['external'] ) ? ' target="_blank" rel="noopener noreferrer"' : '',
 				$icon,
-				$icon_only ? '' : sprintf( '<span class="text-truncate">%s</span>', esc_html( $item['name'] ) )
+				$icon_only ? '' : ( ! empty( $item['description'] )
+					? sprintf( '<span class="menu-link-text"><span>%s</span><small class="opacity-75">%s</small></span>', esc_html( $item['name'] ), esc_html( $item['description'] ) )
+					: sprintf( '<span class="text-truncate">%s</span>', esc_html( $item['name'] ) ) )
 			);
 		}
 	}
