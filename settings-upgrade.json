@@ -91,6 +91,13 @@
 		},
 		"version": 1
 	},
+	"marccent/countdown": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/data-table": {
 		"0": {
 			"rename": {},
@@ -274,6 +281,13 @@
 		},
 		"version": 2
 	},
+	"marccent/parallax": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/popover": {
 		"0": {
 			"rename": {},
@@ -317,6 +331,15 @@
 	"marccent/radial-menu-item": {
 		"0": {
 			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/rating-stars": {
+		"0": {
+			"rename": {
+				"max": "maximum"
+			},
 			"defaults": {}
 		},
 		"version": 1

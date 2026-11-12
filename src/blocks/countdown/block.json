@@ -9,7 +9,8 @@
 	"keywords": [ "countdown", "timer", "digit", "goo" ],
 	"textdomain": "marccent-blocks",
 	"attributes": {
-		"from": { "type": "number", "default": 5 }
+		"from": { "type": "number", "default": 5 },
+		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },
 	"editorScript": "file:./index.js",
