@@ -11,7 +11,9 @@
  *
  *   $parts['business'] = array( 'label' => 'Business details', 'export' => fn() => array(…), 'import' => fn( array $data ) => … );
  *
- * An import callback sanitizes what it's given as its settings screen would, and may return a WP_Error.
+ * An import callback sanitizes what it's given as its settings screen would, and may return a WP_Error. It's also
+ * given the whole file, so it can tell a kit's (a "kit" header: marccent-theme's docs/KITS.md), which adds to the
+ * site's, from a site's own export, which replaces it.
  * The file: { "marccent": 1, "site": "https://…", "exported": "2026-10-30T…", "parts": { "<part>": … } }.
  */
 
@@ -60,7 +62,8 @@ function marccent_import( array $file, ?array $only = null ): array {
 			$done[ $key ] = new WP_Error( 'marccent_import', __( 'Not in the expected shape.', 'marccent-blocks' ) );
 			continue;
 		}
-		$result       = call_user_func( $part['import'], $data );
+		// The whole file too: a kit's (its "kit" header, docs/KITS.md) adds to the site instead of replacing it.
+		$result       = call_user_func( $part['import'], $data, $file );
 		$done[ $key ] = is_wp_error( $result ) ? $result : true;
 	}
 	return $done;
