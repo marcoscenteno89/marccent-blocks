@@ -168,8 +168,7 @@
 		"hex-grid": {
 			"component": "HexGrid",
 			"later": {
-				"at": "placed row by row (perRow) until a placement editor is offered",
-				"gap": "settings.json lists gap classes as its choices while the prop is a scale (0.94): the theme's fix first"
+				"at": "placed row by row (perRow) until a placement editor is offered"
 			}
 		},
 		"html": {

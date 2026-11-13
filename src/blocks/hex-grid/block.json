@@ -10,6 +10,7 @@
 	"textdomain": "marccent-blocks",
 	"attributes": {
 		"perRow": { "type": "number", "default": 5 },
+		"gap": { "type": "number", "default": 0.94 },
 		"version": { "type": "number" }
 	},
 	"supports": { "html": false, "anchor": true },

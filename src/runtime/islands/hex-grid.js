@@ -2,9 +2,9 @@
 import { HexGrid, HexFlip } from 'marccent-theme/components/widgets/layout';
 import { Html } from '../../shared/html';
 
-export default function HexGridIsland( { perRow, childBlocks = [] } ) {
+export default function HexGridIsland( { perRow, gap, childBlocks = [] } ) {
 	return (
-		<HexGrid perRow={ perRow || undefined }>
+		<HexGrid perRow={ perRow || undefined } gap={ gap || undefined }>
 			{ childBlocks.map( ( { props: { back, frontClass, backClass, label }, html }, i ) => (
 				<HexFlip key={ i } front={ <Html html={ html } /> } back={ back } frontClass={ frontClass || undefined } backClass={ backClass || undefined } label={ label || undefined } />
 			) ) }

@@ -8,4 +8,5 @@
  */
 
 $per_row = max( 1, min( 12, (int) $attributes['perRow'] ) );
-echo marccent_blocks_island( $block, 'hex-grid', array( 'perRow' => $per_row ), marccent_blocks_inner( $block ) ); // phpcs:ignore WordPress.Security.EscapeOutput
+$gap     = max( 0.5, min( 1, (float) $attributes['gap'] ) );
+echo marccent_blocks_island( $block, 'hex-grid', array( 'perRow' => $per_row, 'gap' => $gap ), marccent_blocks_inner( $block ) ); // phpcs:ignore WordPress.Security.EscapeOutput
