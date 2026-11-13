@@ -47,6 +47,8 @@ class FrontEndData {
 				compilation.emitAsset( 'settings.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'markup/settings.json' ) ) ) );
 				compilation.emitAsset( 'dividers.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'markup/dividers.json' ) ) ) );
 				compilation.emitAsset( 'theme-defaults.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'lib/theme.defaults.json' ) ) ) );
+				// The theme's typeset rules in PHP (server/typeset.php), so the text blocks arrive set (inc/typeset.php).
+				compilation.emitAsset( 'typeset.php', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'server/typeset.php' ) ) ) );
 				// What the Marccent theme panel offers (inc/theme-panel.php): the design styles with their descriptions
 				// (lib/designs.gen.js's array) and every hover effect in styles/hovers.css.
 				const gen = fs.readFileSync( path.join( PACKAGE, 'lib/designs.gen.js' ), 'utf8' );

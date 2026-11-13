@@ -91,6 +91,9 @@
 				"rows": "admin data: a field group's rows (6.1)"
 			}
 		},
+		"date-time": {
+			"component": "DateTime"
+		},
 		"dock": {
 			"component": "Dock"
 		},
@@ -158,6 +161,16 @@
 		},
 		"grid": {
 			"component": "Grid"
+		},
+		"hex-flip": {
+			"component": "HexFlip"
+		},
+		"hex-grid": {
+			"component": "HexGrid",
+			"later": {
+				"at": "placed row by row (perRow) until a placement editor is offered",
+				"gap": "settings.json lists gap classes as its choices while the prop is a scale (0.94): the theme's fix first"
+			}
 		},
 		"html": {
 			"component": null,
@@ -235,13 +248,7 @@
 				"kind": "items on a ring, or the theme's OrbitClock or SolarSystem"
 			},
 			"later": {
-				"start": "not offered yet",
-				"wheel": "not offered yet",
-				"center": "not offered yet",
-				"hub": "not offered yet",
-				"offset": "not offered yet",
-				"sync": "not offered yet",
-				"positions": "not offered yet"
+				"positions": "Without items: bare positions; the block draws items, or its clock and solar system"
 			}
 		},
 		"orbit-item": {
@@ -258,6 +265,9 @@
 			"wordpress": {
 				"trigger": "the button's text: Popover's children"
 			}
+		},
+		"price": {
+			"component": "Price"
 		},
 		"radar": {
 			"component": "Radar"

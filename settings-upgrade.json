@@ -146,6 +146,13 @@
 		},
 		"version": 1
 	},
+	"marccent/date-time": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/dock": {
 		"0": {
 			"rename": {},
@@ -248,6 +255,20 @@
 		},
 		"version": 2
 	},
+	"marccent/hex-flip": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/hex-grid": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/icon": {
 		"0": {
 			"rename": {
@@ -342,6 +363,13 @@
 		"version": 1
 	},
 	"marccent/popover": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/price": {
 		"0": {
 			"rename": {},
 			"defaults": {}

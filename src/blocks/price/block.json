@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/price",
+	"title": "Price",
+	"category": "marccent",
+	"icon": "money-alt",
+	"description": "An amount as price tags set it ($19⁹⁹), a period after it (/mo) and an old price struck through, in any currency.",
+	"keywords": [ "price", "cost", "plan", "currency", "sale" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"amount": { "type": "number" },
+		"currency": { "type": "string", "default": "USD" },
+		"locale": { "type": "string", "default": "en-US" },
+		"per": { "type": "string", "default": "" },
+		"was": { "type": "number" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

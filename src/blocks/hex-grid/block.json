@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/hex-grid",
+	"title": "Hex grid",
+	"category": "marccent",
+	"icon": "grid-view",
+	"description": "Hexagons in a honeycomb, every other row half a hexagon in; each a Hex flip that turns over on hover (a team, services).",
+	"keywords": [ "hexagon", "honeycomb", "team", "grid" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"perRow": { "type": "number", "default": 5 },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"allowedBlocks": [ "marccent/hex-flip", "marccent/loop" ],
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

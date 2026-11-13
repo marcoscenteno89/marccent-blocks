@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/date-time",
+	"title": "Date",
+	"category": "marccent",
+	"icon": "calendar",
+	"description": "A date, a time or a range (Nov 6 – 8, 2026), or how long ago (3 days ago), in the reader’s language.",
+	"keywords": [ "date", "time", "event", "range", "ago" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"value": { "type": "string", "default": "" },
+		"end": { "type": "string", "default": "" },
+		"show": { "type": "string", "default": "date" },
+		"locale": { "type": "string", "default": "en-US" },
+		"timeZone": { "type": "string", "default": "UTC" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

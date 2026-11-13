@@ -13,6 +13,8 @@ islandBlock( metadata, {
 		kind: { label: 'Show', type: 'select', options: [ [ 'Items on a ring', 'items' ], [ 'The orbit clock', 'clock' ], [ 'A solar system', 'solar' ] ] },
 		startAngle: { type: 'range', min: -180, max: 180 },
 		interval: { type: 'range', min: 1000, max: 10000, step: 500 },
+		wheel: { type: 'image' },
+		center: { type: 'image' },
 	},
 	note: 'Orbit: with Items on a ring, its items are the blocks below, or a Loop of them.',
 	preview: ( p ) => p.kind !== 'items' && <div style={ { maxWidth: 480 } }><OrbitOf { ...p } /></div>,

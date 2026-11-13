@@ -9,5 +9,17 @@
 
 $a     = $attributes;
 $kind  = in_array( $a['kind'], array( 'items', 'clock', 'solar' ), true ) ? $a['kind'] : 'items';
-$props = array( 'kind' => $kind, 'startAngle' => (float) $a['startAngle'], 'autoPlay' => (bool) $a['autoPlay'], 'interval' => max( 1000, (int) $a['interval'] ) );
-echo marccent_blocks_island( $block, 'orbit', $props, 'items' === $kind ? marccent_blocks_inner( $block ) : '' ); // phpcs:ignore WordPress.Security.EscapeOutput
+$props = array(
+	'kind'       => $kind,
+	'start'      => max( 0, (int) $a['start'] ),
+	'startAngle' => (float) $a['startAngle'],
+	'wheel'      => esc_url_raw( (string) $a['wheel'] ),
+	'center'     => esc_url_raw( (string) $a['center'] ),
+	'hub'        => (bool) $a['hub'],
+	'offset'     => (float) $a['offset'],
+	'autoPlay'   => (bool) $a['autoPlay'],
+	'interval'   => max( 1000, (int) $a['interval'] ),
+	'sync'       => (bool) $a['sync'],
+);
+$props = array_filter( $props, fn( $v ) => '' !== $v );
+echo marccent_blocks_island( $block, 'orbit', $props,'items' === $kind ? marccent_blocks_inner( $block ) : '' ); // phpcs:ignore WordPress.Security.EscapeOutput

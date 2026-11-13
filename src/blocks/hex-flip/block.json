@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/hex-flip",
+	"title": "Hex flip",
+	"category": "marccent",
+	"icon": "image-flip-horizontal",
+	"description": "One hexagon of a Hex grid: its blocks on the front, a line on the back it turns over to.",
+	"keywords": [ "hexagon", "flip", "card" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"back": { "type": "string", "default": "" },
+		"frontClass": { "type": "string", "default": "bg-gradient" },
+		"backClass": { "type": "string", "default": "bg-primary-darker" },
+		"label": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false },
+	"ancestor": [ "marccent/hex-grid" ],
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

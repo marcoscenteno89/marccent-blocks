@@ -29,6 +29,7 @@ if ( is_admin() ) {
 require __DIR__ . '/inc/export.php'; // every Marccent plugin's settings as one JSON file (Tools → Marccent export, wp marccent)
 require __DIR__ . '/inc/visibility.php'; // any block shown to whom, when and on which screens; copying a block's style
 require __DIR__ . '/inc/html.php'; // the Custom HTML block's code: saved only by people who may post unfiltered HTML
+require __DIR__ . '/inc/typeset.php'; // the text blocks' typography set on the server, the theme's rules (no shift)
 
 // Blocks: every block.json the build wrote (src/blocks/* → build/blocks/*).
 add_action( 'init', function () {
