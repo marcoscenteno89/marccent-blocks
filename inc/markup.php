@@ -560,3 +560,86 @@ function marccent_blocks_marquee( array $m, string $content, ?callable $attribut
 		$content
 	);
 }
+
+/*
+ * The theme's Price (components/ui/price.js): an amount as price tags set it, its currency sign and cents raised and
+ * small ($19⁹⁹), a period after it (/mo) and an old price struck through, said whole to screen readers. Formatted
+ * by PHP's intl (NumberFormatter) as the theme's Price formats with the browser's Intl; without intl, the amount
+ * with its code (19.99 USD) on the line.
+ */
+function marccent_blocks_price( array $p, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$currency     = strtoupper( (string) ( $p['currency'] ?? '' ) ?: 'USD' );
+	$locale       = (string) ( $p['locale'] ?? '' ) ?: 'en-US';
+	$amount       = (float) ( $p['amount'] ?? 0 );
+	$was          = isset( $p['was'] ) && '' !== $p['was'] && null !== $p['was'] ? (float) $p['was'] : null;
+	$per          = (string) ( $p['per'] ?? '' );
+	// One amount as text, and as parts: [ type, text ] (currency, integer, decimal, fraction, literal), as Intl's
+	// formatToParts. Whole amounts show no cents.
+	$format = function ( float $n ) use ( $currency, $locale ): array {
+		if ( ! class_exists( 'NumberFormatter' ) ) {
+			$text = number_format( $n, floor( $n ) == $n ? 0 : 2 ) . ' ' . $currency;
+			return array( $text, array( array( 'literal', $text ) ) );
+		}
+		$f = new NumberFormatter( str_replace( '-', '_', $locale ), NumberFormatter::CURRENCY );
+		if ( floor( $n ) == $n ) {
+			$f->setAttribute( NumberFormatter::MIN_FRACTION_DIGITS, 0 );
+		}
+		$text    = (string) $f->formatCurrency( $n, $currency );
+		$decimal = $f->getSymbol( NumberFormatter::MONETARY_SEPARATOR_SYMBOL );
+		$group   = $f->getSymbol( NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL );
+		$parts   = array();
+		$after   = false; // past the decimal separator: the digits are the fraction
+		foreach ( preg_split( '//u', $text, -1, PREG_SPLIT_NO_EMPTY ) as $ch ) {
+			if ( preg_match( '/\p{Nd}/u', $ch ) || ( $ch === $group && ! $after && $parts && 'integer' === end( $parts )[0] ) ) {
+				$type = $after ? 'fraction' : 'integer';
+			} elseif ( $ch === $decimal && $parts && 'integer' === end( $parts )[0] ) {
+				$type  = 'decimal';
+				$after = true;
+			} elseif ( preg_match( '/[\s\x{00A0}\x{202F}\-\x{2212}]/u', $ch ) ) {
+				$type = 'literal';
+			} else {
+				$type = 'currency';
+			}
+			if ( $parts && end( $parts )[0] === $type && 'decimal' !== $type ) {
+				$parts[ count( $parts ) - 1 ][1] .= $ch;
+			} else {
+				$parts[] = array( $type, $ch );
+			}
+		}
+		return array( $text, $parts );
+	};
+	// The parts shown: the sign before it and the cents small at the top, a sign after it small on the line.
+	$shown = function ( array $parts ): string {
+		$html = '';
+		foreach ( $parts as $i => [ $type, $text ] ) {
+			if ( 'decimal' === $type ) {
+				continue;
+			}
+			$html .= 'fraction' === $type ? '<span class="fs-50">' . esc_html( $text ) . '</span>'
+				: ( 'currency' === $type ? sprintf( '<span class="%s">%s</span>', $i > 0 ? 'fs-50 self-end' : 'fs-50', esc_html( $text ) ) : esc_html( $text ) );
+		}
+		return $html;
+	};
+	$row = 'd-inline-grid auto-cols gap-0 items-start';
+	[ $now_text, $now_parts ] = $format( $amount );
+	$said = array( $now_text );
+	if ( '' !== $per ) {
+		$said[] = "per $per";
+	}
+	$old = '';
+	if ( null !== $was ) {
+		[ $was_text, $was_parts ] = $format( $was );
+		$said[] = "was $was_text";
+		$old    = sprintf( '<s class="%s fs-50 text-muted" aria-hidden="true">%s</s>', $row, $shown( $was_parts ) );
+	}
+	return sprintf(
+		'<span %s><span class="visually-hidden">%s</span>%s<span class="%s" aria-hidden="true">%s%s</span></span>',
+		$attributes( array( 'data-component' => 'price', 'class' => marccent_blocks_cx( 'd-inline-grid auto-cols gap-x-sm items-end nums-tabular', $p['classes'] ?? '' ) ) ),
+		esc_html( implode( ', ', $said ) ),
+		$old,
+		$row,
+		$shown( $now_parts ),
+		'' !== $per ? '<span class="fs-50 text-muted self-end">/' . esc_html( $per ) . '</span>' : ''
+	);
+}
