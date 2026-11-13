@@ -79,6 +79,9 @@
 				"rows": "admin data: a field group's rows (6.1)"
 			}
 		},
+		"date": {
+			"component": "DateTime"
+		},
 		"dock": {
 			"component": "Dock"
 		},
@@ -243,6 +246,9 @@
 			"wordpress": {
 				"trigger": "the button's text: Popover's children"
 			}
+		},
+		"price": {
+			"component": "Price"
 		},
 		"radial-menu": {
 			"component": "RadialMenu"

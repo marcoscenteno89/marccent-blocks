@@ -114,6 +114,13 @@
 		},
 		"version": 1
 	},
+	"marccent/date": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/dock": {
 		"0": {
 			"rename": {},
@@ -303,6 +310,13 @@
 		"version": 1
 	},
 	"marccent/popover": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/price": {
 		"0": {
 			"rename": {},
 			"defaults": {}
