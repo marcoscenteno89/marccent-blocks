@@ -561,6 +561,23 @@ function marccent_blocks_marquee( array $m, string $content, ?callable $attribut
 	);
 }
 
+/*
+ * The theme's Consent (components/ui/consent.js): the cookie banner, hidden until the theme's engine (core/consent.js)
+ * shows it to a visitor who hasn't answered; its buttons answer, a #cookie-settings link reopens it. Its texts are the
+ * site's (marccent-wp's Tracking and cookies).
+ */
+function marccent_blocks_consent( array $c ): string {
+	$policy = (string) ( $c['policy'] ?? '' );
+	return sprintf(
+		'<div data-component="consent" role="dialog" aria-label="%s" hidden="" class="consent bg border round shadow pad grid cols-1 gap-sm"><p>%s%s</p><div class="row-wrap cols-end gap-sm"><button type="button" class="btn" data-consent="no">%s</button><button type="button" class="btn primary" data-consent="yes">%s</button></div></div>',
+		esc_attr( __( 'Cookies', 'marccent-blocks' ) ),
+		esc_html( (string) ( $c['text'] ?? '' ) ),
+		'' !== $policy ? sprintf( ' <a href="%s">%s</a>', esc_url( $policy ), esc_html( __( 'Privacy policy', 'marccent-blocks' ) ) ) : '',
+		esc_html( (string) ( $c['reject'] ?? '' ) ),
+		esc_html( (string) ( $c['accept'] ?? '' ) )
+	);
+}
+
 // A number as JS writes it: 9400, 12480.52, 0.73 (no trailing zeros, no exponent for the numbers these take).
 function marccent_blocks_js_number( $n ): string {
 	return (string) ( 0 + $n );
