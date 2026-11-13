@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/calendar",
+	"title": "Calendar",
+	"category": "marccent",
+	"icon": "calendar-alt",
+	"description": "A month to pick a day or a range from, with its events as dots, year and decade views and the keyboard.",
+	"keywords": [ "date", "picker", "events", "month", "range" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"mode": { "type": "string", "default": "single" },
+		"events": { "type": "array", "default": [] },
+		"minimum": { "type": "string", "default": "" },
+		"maximum": { "type": "string", "default": "" },
+		"weekStart": { "type": "number", "default": 0 },
+		"weekNumbers": { "type": "boolean", "default": false },
+		"details": { "type": "boolean", "default": true },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

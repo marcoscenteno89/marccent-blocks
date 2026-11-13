@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/radar",
+	"title": "Radar",
+	"category": "marccent",
+	"icon": "chart-area",
+	"description": "Values on three or more axes round a web: skills, scores, a product compared.",
+	"keywords": [ "chart", "spider", "web", "skills", "scores" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"axes": { "type": "array", "default": [] },
+		"maximum": { "type": "number", "default": 100 },
+		"label": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

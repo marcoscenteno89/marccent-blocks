@@ -23,6 +23,9 @@
 				"fps": "frameRate"
 			}
 		},
+		"atom": {
+			"component": "Atom"
+		},
 		"button": {
 			"component": "Button",
 			"wordpress": {
@@ -38,8 +41,14 @@
 				"disabled": "a disabled link isn't one; for buttons in forms, not offered yet"
 			}
 		},
+		"calendar": {
+			"component": "Calendar"
+		},
 		"card": {
 			"component": "Card"
+		},
+		"card-fan": {
+			"component": "CardFan"
 		},
 		"carousel": {
 			"component": "Carousel"
@@ -65,6 +74,9 @@
 		},
 		"contact": {
 			"component": "Contact"
+		},
+		"count-up": {
+			"component": "CountUp"
 		},
 		"countdown": {
 			"component": "Countdown"
@@ -140,6 +152,9 @@
 			"later": {
 				"defaultValue": "starting tags: not offered in forms yet"
 			}
+		},
+		"gauge": {
+			"component": "Gauge"
 		},
 		"grid": {
 			"component": "Grid"
@@ -243,6 +258,9 @@
 			"wordpress": {
 				"trigger": "the button's text: Popover's children"
 			}
+		},
+		"radar": {
+			"component": "Radar"
 		},
 		"radial-menu": {
 			"component": "RadialMenu"

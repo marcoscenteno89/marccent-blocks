@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/card-fan",
+	"title": "Card fan",
+	"category": "marccent",
+	"icon": "images-alt2",
+	"description": "Its cards stacked in one spot, fanned out on hover or focus.",
+	"keywords": [ "cards", "stack", "fan", "deck" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"spread": { "type": "number", "default": 14 },
+		"label": { "type": "string", "default": "Cards" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
