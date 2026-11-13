@@ -721,3 +721,7 @@ function marccent_blocks_card_fan( array $f, array $cards, ?callable $attributes
 	}
 	return sprintf( '<div %s>%s</div>', $attributes( $attrs ), $items );
 }
+
+// A Loop of Accordion items goes into its Accordion as they are, no grid around them (marccent-theme#50): an
+// Accordion of a field group's rows, a FAQ.
+add_filter( 'mcc_loop_bare', fn( $bare, array $inner ) => $bare || ( $inner && ! array_filter( $inner, fn( $b ) => 'marccent/accordion-item' !== ( $b['blockName'] ?? '' ) ) ), 10, 2 );

@@ -8,7 +8,7 @@ import metadata from './block.json';
 
 const Edit = ( { attributes: a, setAttributes: set } ) => {
 	const props = useInnerBlocksProps( useBlockProps( { className: 'accordion grid cols-1 gap-0 divide border round' } ), {
-		allowedBlocks: [ 'marccent/accordion-item' ],
+		allowedBlocks: metadata.allowedBlocks,
 		template: [ [ 'marccent/accordion-item', { header: 'A question' } ], [ 'marccent/accordion-item', { header: 'Another question' } ] ],
 	} );
 	return (

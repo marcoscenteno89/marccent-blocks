@@ -16,5 +16,5 @@
 	"supports": { "html": false },
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
-	"allowedBlocks": [ "marccent/accordion-item" ]
+	"allowedBlocks": [ "marccent/accordion-item", "marccent/loop" ]
 }
