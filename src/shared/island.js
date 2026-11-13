@@ -66,12 +66,13 @@ export const Field = ( { f, value, onChange, values = {} } ) => {
 		case 'image': return <ImageField f={ f } value={ value } onChange={ onChange } />;
 		case 'icon': return <TextControl { ...common } help={ f.help || 'A Font Awesome name: star, phone, fa-brands fa-github…' } value={ value ?? '' } onChange={ onChange } />;
 		case 'url': return <TextControl { ...common } type="url" value={ value ?? '' } onChange={ onChange } />;
+		case 'color': return <TextControl { ...common } type="color" value={ value || '#000000' } onChange={ onChange } />;
 		default: return <TextControl { ...common } value={ value ?? '' } onChange={ onChange } />;
 	}
 };
 
 // A list field: its rows, each folded under its first text, to add, reorder and remove.
-const ListField = ( { f, value, onChange } ) => {
+export const ListField = ( { f, value, onChange } ) => {
 	const rows = Array.isArray( value ) ? value : [];
 	const put = ( i, row ) => onChange( rows.map( ( r, j ) => ( j === i ? row : r ) ) );
 	const move = ( i, by ) => {

@@ -16,6 +16,7 @@ const MARCCENT_BLOCKS_DIR = __DIR__;
 const MARCCENT_BLOCKS_FILE = __FILE__;
 
 require __DIR__ . '/inc/theme.php';  // the site's starting theme, painted on <html> by the server
+require __DIR__ . '/inc/theme-page.php'; // Appearance → Marccent theme: the theme's site settings, drawn and saved
 require __DIR__ . '/inc/keys.php';   // Appearance → Marccent settings: every API key, in one place (marccent_key)
 require __DIR__ . '/inc/assets.php'; // the styles and scripts, only what each page uses
 require __DIR__ . '/inc/menu.php';   // menus in the shape the theme's components take

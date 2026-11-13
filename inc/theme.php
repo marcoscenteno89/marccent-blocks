@@ -69,19 +69,14 @@ add_action( 'template_redirect', function () {
 	}
 } );
 
+// The theme's own rules for the site's colors (marccent-theme's server/palette.php, copied into build/ by webpack): one
+// source with the browser's lib/palette.js (PRODUCT-LINE.md 5.7).
+require_once MARCCENT_BLOCKS_DIR . '/build/palette.php';
+
 // The package's defaults with the site's on top; a site's palettes go before the package's (as lib/defaults.js does).
 function marccent_blocks_theme(): array {
 	static $theme = null;
-	if ( null === $theme ) {
-		$base  = marccent_blocks_theme_base();
-		$site  = marccent_blocks_defaults();
-		$own   = $site['palettes'] ?? array();
-		$ids   = array_column( $own, 'id' );
-		$theme = array_merge( $base, $site, array(
-			'vars'     => array_merge( $base['vars'] ?? array(), $site['vars'] ?? array() ),
-			'palettes' => array_merge( $own, array_values( array_filter( $base['palettes'] ?? array(), fn( $p ) => ! in_array( $p['id'], $ids, true ) ) ) ),
-		) );
-	}
+	$theme ??= \Marccent\effective_theme( marccent_blocks_defaults(), marccent_blocks_theme_base() );
 	return $theme;
 }
 
@@ -126,69 +121,85 @@ function marccent_blocks_design(): string {
 	return (string) ( marccent_blocks_theme()['design'] ?? 'modern' );
 }
 
-/*
- * The colors the runtime puts on <html> (marccent-theme's core/apply.js and lib/theme-scope.js paletteVars), worked out
- * the same way: the palette in use, its shades (the color itself while the package's SHADES is off), the text on each
- * fill (dark or light, whichever has the higher WCAG contrast with it) and the page's dark and light; then the
- * defaults' vars,
- * which go with the default design.
- */
+// The colors the runtime puts on <html>: the theme's (server/palette.php theme_vars, lib/palette.js's twin).
 function marccent_blocks_theme_vars(): array {
-	$t       = marccent_blocks_theme();
-	$palette = null;
-	foreach ( $t['palettes'] ?? array() as $p ) {
-		if ( ( $p['id'] ?? null ) === ( $t['palette'] ?? null ) ) {
-			$palette = $p;
+	return \Marccent\theme_vars( marccent_blocks_theme() );
+}
+
+/*
+ * A site's theme as saved (the marccent_defaults option), checked against the theme's site settings
+ * (build/site-settings.json, marccent-theme's markup/site-settings.json): only what they define, each value of its kind;
+ * a design style or hover the package has (build/theme-options.json). Anything else is dropped. Marccent WP's theme
+ * options page saves through this (PRODUCT-LINE.md 5.7: the theme defines, the admin draws and saves).
+ */
+function marccent_blocks_site_settings(): array {
+	static $schema = null;
+	$schema ??= json_decode( (string) @file_get_contents( MARCCENT_BLOCKS_DIR . '/build/site-settings.json' ), true ) ?: array( 'settings' => array() );
+	return $schema;
+}
+
+function marccent_blocks_site_settings_sanitize( $value ): array {
+	$in      = is_array( $value ) ? $value : json_decode( (string) $value, true );
+	$in      = is_array( $in ) ? $in : array();
+	$options = marccent_blocks_theme_options();
+	$lists   = array( 'designs' => array_column( $options['designs'], 'id' ), 'hovers' => array_merge( array( 'none' ), $options['hovers'] ) );
+	$one     = function ( array $s, $v ) use ( &$one, $lists ) {
+		$hex = fn( $c ) => is_string( $c ) && preg_match( '/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $c ) ? strtolower( $c ) : null;
+		switch ( $s['sanitize'] ?? '' ) {
+			case 'boolean':
+				return (bool) $v;
+			case 'number':
+				return is_numeric( $v ) ? max( $s['minimum'] ?? -INF, min( $s['maximum'] ?? INF, 0 + $v ) ) : null;
+			case 'color':
+				return $hex( $v );
+			case 'class':
+				$v = is_string( $v ) ? sanitize_key( $v ) : '';
+				return '' !== $v && ( ! isset( $s['choicesFrom'] ) || in_array( $v, $lists[ $s['choicesFrom'] ] ?? array(), true ) ) ? $v : null;
+			case 'css variables':
+				$out = array();
+				foreach ( (array) $v as $name => $x ) {
+					if ( preg_match( '/^--[a-z][a-z0-9-]{0,63}$/', (string) $name ) && is_scalar( $x ) && '' !== trim( (string) $x ) && ! preg_match( '/[;{}<>]/', (string) $x ) ) {
+						$out[ $name ] = trim( (string) $x );
+					}
+				}
+				return $out ?: null;
+			case 'each item':
+				$item = function ( $row ) use ( $s, $one ) {
+					$out = array();
+					foreach ( $s['items'] ?? array() as $k => $f ) {
+						$x = isset( $row[ $k ] ) ? $one( $f, $row[ $k ] ) : null;
+						if ( null === $x && 'required' === ( $f['validate'] ?? '' ) ) {
+							return null;
+						}
+						if ( null !== $x ) {
+							$out[ $k ] = $x;
+						}
+					}
+					return $out ?: null;
+				};
+				if ( 'object' === ( $s['type'] ?? '' ) ) {
+					return is_array( $v ) ? $item( $v ) : null;
+				}
+				$rows = array_values( array_filter( array_map( $item, array_filter( (array) $v, 'is_array' ) ) ) );
+				return $rows ? array_slice( $rows, 0, (int) ( $s['maximum'] ?? 100 ) ) : null;
+			default:
+				return is_string( $v ) ? sanitize_text_field( $v ) : null;
 		}
-	}
-	$palette ??= $t['palettes'][0] ?? null;
-	$vars      = array();
-	if ( $palette ) {
-		// WCAG relative luminance of a hex color.
-		$luminance = function ( string $hex ): float {
-			$hex = ltrim( $hex, '#' );
-			if ( strlen( $hex ) <= 4 ) {
-				$hex = implode( '', array_map( fn( $c ) => $c . $c, str_split( $hex ) ) );
+	};
+	$out = array();
+	foreach ( marccent_blocks_site_settings()['settings'] as $key => $s ) {
+		if ( array_key_exists( $key, $in ) ) {
+			$v = $one( $s, $in[ $key ] );
+			if ( null !== $v ) {
+				$out[ $key ] = $v;
 			}
-			$lin = function ( string $pair ): float {
-				$v = hexdec( $pair ) / 255;
-				return $v <= .03928 ? $v / 12.92 : ( ( $v + .055 ) / 1.055 ) ** 2.4;
-			};
-			[ $r, $g, $b ] = array_map( $lin, str_split( substr( $hex, 0, 6 ), 2 ) );
-			return .2126 * $r + .7152 * $g + .0722 * $b;
-		};
-		// Dark text when it contrasts more than light with every color given (the gradient: both ends).
-		$on = function ( string ...$colors ) use ( $luminance ): string {
-			$l = array_map( $luminance, $colors );
-			return min( array_map( fn( $x ) => ( $x + .05 ) / .05, $l ) ) >= min( array_map( fn( $x ) => 1.05 / ( $x + .05 ), $l ) ) ? 'var(--dark)' : 'var(--light)';
-		};
-		$vars = array(
-			'--primary'           => $palette['primary'],
-			'--primary-lighter'   => $palette['primary'],
-			'--primary-darker'    => $palette['primary'],
-			'--secondary'         => $palette['secondary'],
-			'--secondary-lighter' => $palette['secondary'],
-			'--secondary-darker'  => $palette['secondary'],
-			'--gradient'          => 'linear-gradient(to right, var(--primary), var(--secondary))',
-			'--gradient-lighter'  => 'linear-gradient(to right, var(--primary-lighter), var(--secondary-lighter))',
-			'--gradient-darker'   => 'linear-gradient(to right, var(--primary-darker), var(--secondary-darker))',
-			'--primary-text'      => $on( $palette['primary'] ),
-			'--secondary-text'    => $on( $palette['secondary'] ),
-			'--gradient-text'     => $on( $palette['primary'], $palette['secondary'] ),
-		);
-		// Text on the shades' fills (the colors themselves while SHADES is off).
-		foreach ( array( 'primary', 'secondary' ) as $name ) {
-			foreach ( array( 'lighter', 'darker' ) as $side ) {
-				$vars[ "--$name-$side-text" ] = $vars[ "--$name-text" ];
-			}
 		}
 	}
-	foreach ( array( 'dark', 'light' ) as $mode ) {
-		if ( ! empty( $t[ $mode ] ) ) {
-			$vars[ "--$mode" ] = $t[ $mode ];
-		}
+	// A palette is the theme's or one of the site's own.
+	if ( isset( $out['palette'] ) && ! in_array( $out['palette'], array_column( \Marccent\effective_theme( $out, marccent_blocks_theme_base() )['palettes'], 'id' ), true ) ) {
+		unset( $out['palette'] );
 	}
-	return array_merge( $vars, $t['vars'] ?? array() );
+	return $out;
 }
 
 /*

@@ -34,6 +34,99 @@ add_filter( 'marccent_export_parts', function ( $parts ) {
 	return $parts;
 }, 5 );
 
+/*
+ * Patterns and pages (marccent-theme#44): what a kit brings besides its groups (docs/KITS.md), and what a site can carry
+ * to another. Patterns are kept in the marccent_patterns option and registered from it on every load (category
+ * "Marccent", their slug under marccent-kit/); pages are created with their slug and parent. A kit's pages are added:
+ * a page whose slug is taken keeps the site's. A site's own file updates its pages' titles and content too.
+ */
+const MARCCENT_PATTERNS = 'marccent_patterns';
+
+function marccent_patterns_saved(): array {
+	$saved = get_option( MARCCENT_PATTERNS, array() );
+	return is_array( $saved ) ? $saved : array();
+}
+
+add_action( 'init', function () {
+	foreach ( marccent_patterns_saved() as $slug => $p ) {
+		register_block_pattern( 'marccent-kit/' . $slug, array(
+			'title'       => (string) ( $p['title'] ?? $slug ),
+			'description' => (string) ( $p['description'] ?? '' ),
+			'categories'  => array_merge( array( 'marccent' ), array_map( 'sanitize_key', (array) ( $p['categories'] ?? array() ) ) ),
+			'keywords'    => array_map( 'sanitize_text_field', (array) ( $p['keywords'] ?? array() ) ),
+			'content'     => (string) ( $p['content'] ?? '' ),
+		) );
+	}
+}, 20 );
+
+add_filter( 'marccent_export_parts', function ( $parts ) {
+	$parts['patterns'] = array(
+		'label'  => __( 'Patterns (from kits)', 'marccent-blocks' ),
+		'export' => 'marccent_patterns_saved',
+		'import' => function ( array $data, array $file = array() ) {
+			if ( ! current_user_can( 'unfiltered_html' ) && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+				return new WP_Error( 'marccent_patterns', __( 'Only an administrator who can post unfiltered HTML can import patterns.', 'marccent-blocks' ) );
+			}
+			$patterns = array();
+			foreach ( $data as $slug => $p ) {
+				$slug = sanitize_title( (string) $slug );
+				if ( $slug && is_array( $p ) && is_string( $p['content'] ?? null ) ) {
+					$patterns[ $slug ] = array(
+						'title'       => sanitize_text_field( (string) ( $p['title'] ?? $slug ) ),
+						'description' => sanitize_text_field( (string) ( $p['description'] ?? '' ) ),
+						'categories'  => array_values( array_map( 'sanitize_key', (array) ( $p['categories'] ?? array() ) ) ),
+						'keywords'    => array_values( array_map( 'sanitize_text_field', (array) ( $p['keywords'] ?? array() ) ) ),
+						'content'     => $p['content'],
+					);
+				}
+			}
+			// A kit's are added beside the site's (a kit's own slug wins over an older copy of it); a site's file replaces.
+			update_option( MARCCENT_PATTERNS, isset( $file['kit'] ) ? $patterns + marccent_patterns_saved() : $patterns, true );
+		},
+	);
+	$parts['pages'] = array(
+		'label'  => __( 'Pages', 'marccent-blocks' ),
+		'export' => function () {
+			$out = array();
+			foreach ( get_pages( array( 'post_status' => 'publish', 'sort_column' => 'menu_order,post_title' ) ) as $page ) {
+				$parent                      = $page->post_parent ? get_post( $page->post_parent ) : null;
+				$out[ $page->post_name ] = array( 'title' => $page->post_title, 'parent' => $parent ? $parent->post_name : '', 'content' => $page->post_content );
+			}
+			return $out;
+		},
+		'import' => function ( array $data, array $file = array() ) {
+			if ( ! current_user_can( 'edit_pages' ) && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+				return new WP_Error( 'marccent_pages', __( 'Only someone who can edit pages can import them.', 'marccent-blocks' ) );
+			}
+			$kit = isset( $file['kit'] );
+			// Parents first: a page whose parent is in the file waits for it.
+			uasort( $data, fn( $a, $b ) => (int) ( '' !== ( $a['parent'] ?? '' ) ) <=> (int) ( '' !== ( $b['parent'] ?? '' ) ) );
+			foreach ( $data as $slug => $p ) {
+				$slug   = sanitize_title( (string) $slug );
+				$parent = '' !== (string) ( $p['parent'] ?? '' ) ? get_page_by_path( sanitize_title( (string) $p['parent'] ) ) : null;
+				$path   = ( $parent ? get_page_uri( $parent ) . '/' : '' ) . $slug;
+				$have   = get_page_by_path( $path );
+				if ( ! $slug || ! is_array( $p ) || ( $have && $kit ) ) {
+					continue; // a kit adds; the site's page stays
+				}
+				$id = wp_insert_post( array(
+					'ID'           => $have ? $have->ID : 0,
+					'post_type'    => 'page',
+					'post_status'  => 'publish',
+					'post_name'    => $slug,
+					'post_parent'  => $parent ? $parent->ID : 0,
+					'post_title'   => sanitize_text_field( (string) ( $p['title'] ?? $slug ) ),
+					'post_content' => wp_slash( current_user_can( 'unfiltered_html' ) || ( defined( 'WP_CLI' ) && WP_CLI ) ? (string) ( $p['content'] ?? '' ) : wp_kses_post( (string) ( $p['content'] ?? '' ) ) ),
+				), true );
+				if ( is_wp_error( $id ) ) {
+					return $id;
+				}
+			}
+		},
+	);
+	return $parts;
+}, 20 );
+
 function marccent_export( ?array $only = null ): array {
 	$out = array();
 	foreach ( marccent_export_parts() as $key => $part ) {

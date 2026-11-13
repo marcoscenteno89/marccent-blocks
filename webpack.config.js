@@ -49,6 +49,10 @@ class FrontEndData {
 				compilation.emitAsset( 'theme-defaults.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'lib/theme.defaults.json' ) ) ) );
 				// The theme's typeset rules in PHP (server/typeset.php), so the text blocks arrive set (inc/typeset.php).
 				compilation.emitAsset( 'typeset.php', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'server/typeset.php' ) ) ) );
+				// The site-wide settings and the colors they paint, the theme's (PRODUCT-LINE.md 5.7): inc/theme.php reads,
+				// checks and paints them with these, never its own copy.
+				compilation.emitAsset( 'palette.php', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'server/palette.php' ) ) ) );
+				compilation.emitAsset( 'site-settings.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'markup/site-settings.json' ) ) ) );
 				// What the Marccent theme panel offers (inc/theme-panel.php): the design styles with their descriptions
 				// (lib/designs.gen.js's array) and every hover effect in styles/hovers.css.
 				const gen = fs.readFileSync( path.join( PACKAGE, 'lib/designs.gen.js' ), 'utf8' );
@@ -87,6 +91,8 @@ module.exports = {
 	entry: {
 		...defaultConfig.entry(),
 		'runtime/index': './src/runtime/index.js',
+		// Appearance → Marccent theme (Marccent WP's page): the theme's site settings drawn with WordPress's controls.
+		'admin/theme-options': './src/admin/theme-options.js',
 		'styles/core': './src/runtime/styles.js',
 		'styles/icons': path.join( fa.DIR, 'css/all.css' ),
 		'designs/all': path.join( PACKAGE, 'styles/designs.css' ),
