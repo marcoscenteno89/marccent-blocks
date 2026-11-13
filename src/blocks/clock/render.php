@@ -7,4 +7,5 @@
  * @var WP_Block $block
  */
 
-echo marccent_blocks_island( $block, 'clock', array( 'format' => (string) $attributes['format'] ?: 'h:mm:ss A' ) ); // phpcs:ignore WordPress.Security.EscapeOutput
+$face = in_array( $attributes['face'] ?? '', array( 'analog', 'flip' ), true ) ? $attributes['face'] : 'digital';
+echo marccent_blocks_island( $block, 'clock', array( 'face' => $face, 'format' => (string) $attributes['format'] ?: 'h:mm:ss A' ) ); // phpcs:ignore WordPress.Security.EscapeOutput

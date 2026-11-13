@@ -73,6 +73,11 @@ $render = array(
 	// The islands' stand-ins: the component's markup before it's drawn.
 	'stars'     => fn( $f ) => marccent_blocks_stars( $f['value'], $f['maximum'], $f['icon'] ),
 	'countdown' => fn( $f ) => marccent_blocks_countdown( 'gooid-1' ),
+	// Written by the server (T-018): markup and CSS, CountUp counted by the theme's engine.
+	'countUp'   => fn( $f ) => marccent_blocks_count_up( $f ),
+	'gauge'     => fn( $f ) => marccent_blocks_gauge( $f ),
+	'radar'     => fn( $f ) => marccent_blocks_radar( $f ),
+	'cardFan'   => fn( $f ) => marccent_blocks_card_fan( $f, array_map( fn( $title ) => marccent_blocks_card( array( 'center' => true ), '<strong>' . esc_html( $title ) . '</strong>' ), $f['cards'] ) ),
 );
 
 // Run directly: every case of the reference this server renders, as JSON.

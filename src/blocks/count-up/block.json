@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/count-up",
+	"title": "Count up",
+	"category": "marccent",
+	"icon": "chart-line",
+	"description": "A number that counts up from 0 the first time it scrolls into view. The page holds the real number, for search engines and visitors who ask for less motion.",
+	"keywords": [ "number", "counter", "stat", "animate" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"to": { "type": "number" },
+		"decimals": { "type": "number", "default": 0 },
+		"prefix": { "type": "string", "default": "" },
+		"suffix": { "type": "string", "default": "" },
+		"duration": { "type": "number", "default": 1600 },
+		"locale": { "type": "string", "default": "en-US" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

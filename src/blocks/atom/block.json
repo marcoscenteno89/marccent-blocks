@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/atom",
+	"title": "Atom",
+	"category": "marccent",
+	"icon": "superhero",
+	"description": "A nucleus and three electrons circling it on tilted orbits. Square, as wide as its column.",
+	"keywords": [ "science", "animation", "orbit", "decoration" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"speed": { "type": "number", "default": 3 },
+		"label": { "type": "string", "default": "An atom" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

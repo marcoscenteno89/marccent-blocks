@@ -560,3 +560,147 @@ function marccent_blocks_marquee( array $m, string $content, ?callable $attribut
 		$content
 	);
 }
+
+// A number as JS writes it: 9400, 12480.52, 0.73 (no trailing zeros, no exponent for the numbers these take).
+function marccent_blocks_js_number( $n ): string {
+	return (string) ( 0 + $n );
+}
+
+/*
+ * The theme's CountUp (components/ui/count-up.js): the final number, prefix and suffix around it, which the theme's
+ * engine (core/count-up.js) counts up to from 0 the first time it scrolls into view.
+ */
+function marccent_blocks_count_up( array $c, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$to       = (float) ( $c['to'] ?? 0 );
+	$decimals = max( 0, min( 6, (int) ( $c['decimals'] ?? 0 ) ) );
+	$prefix   = (string) ( $c['prefix'] ?? '' );
+	$suffix   = (string) ( $c['suffix'] ?? '' );
+	$duration = (float) ( $c['duration'] ?? 1600 );
+	$locale   = (string) ( $c['locale'] ?? '' ) ?: 'en-US';
+	if ( 'en-US' !== $locale && class_exists( 'NumberFormatter' ) ) {
+		$format = new NumberFormatter( str_replace( '-', '_', $locale ), NumberFormatter::DECIMAL );
+		$format->setAttribute( NumberFormatter::MIN_FRACTION_DIGITS, $decimals );
+		$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, $decimals );
+		$number = $format->format( $to );
+	} else {
+		$number = number_format( $to, $decimals, '.', ',' );
+	}
+	$attrs = array(
+		'data-component' => 'count-up',
+		'class'          => marccent_blocks_cx( 'nums-tabular', $c['classes'] ?? '' ),
+		'data-to'        => marccent_blocks_js_number( $to ),
+		'data-decimals'  => $decimals ? $decimals : null,
+		'data-prefix'    => '' !== $prefix ? $prefix : null,
+		'data-suffix'    => '' !== $suffix ? $suffix : null,
+		'data-duration'  => 1600.0 !== $duration ? marccent_blocks_js_number( $duration ) : null,
+		'data-locale'    => 'en-US' !== $locale ? $locale : null,
+	);
+	return sprintf( '<span %s>%s</span>', $attributes( $attrs ), esc_html( $prefix . $number . $suffix ) );
+}
+
+/*
+ * The theme's Gauge (components/ui/gauge.js): one value on a dial, a ring or a speedometer. Markup and CSS only: the
+ * value is --gauge-value (0 to 1), which gauge.css animates to.
+ */
+function marccent_blocks_gauge( array $g, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$value   = (float) ( $g['value'] ?? 0 );
+	$maximum = (float) ( $g['maximum'] ?? 100 ) ?: 100;
+	$face    = 'speedometer' === ( $g['face'] ?? '' ) ? 'speedometer' : 'ring';
+	$unit    = (string) ( $g['unit'] ?? '' );
+	$label   = (string) ( $g['label'] ?? '' );
+	$attrs   = array(
+		'data-component' => 'gauge',
+		'data-face'      => $face,
+		'class'          => marccent_blocks_cx( 'gauge', "gauge-$face", $g['classes'] ?? '' ),
+		'role'           => 'meter',
+		'aria-valuenow'  => marccent_blocks_js_number( $value ),
+		'aria-valuemin'  => '0',
+		'aria-valuemax'  => marccent_blocks_js_number( $maximum ),
+		'aria-label'     => '' !== $label ? $label : null,
+		'style'          => '--gauge-value:' . marccent_blocks_js_number( round( max( 0, min( 1, $value / $maximum ) ), 4 ) ),
+	);
+	return sprintf(
+		'<div %s><div class="gauge-dial" aria-hidden="true">%s</div><div class="gauge-readout"><span><strong class="%s">%s</strong>%s</span>%s</div></div>',
+		$attributes( $attrs ),
+		'speedometer' === $face ? '<i class="gauge-ticks"></i><i class="gauge-needle"></i><i class="gauge-hub"></i>' : '',
+		'speedometer' === $face ? 'display-sm' : 'fs-lg',
+		esc_html( marccent_blocks_js_number( $value ) ),
+		'' !== $unit ? '<span class="gauge-unit">' . esc_html( $unit ) . '</span>' : '',
+		'' !== $label ? '<small class="gauge-label">' . esc_html( $label ) . '</small>' : ''
+	);
+}
+
+/*
+ * The theme's Radar (components/ui/radar.js): values on three or more axes round a web, as an SVG in a 100-unit box
+ * (the web's radius 40), the points rounded to two decimals as the component rounds them. Fewer than three axes: ''.
+ */
+function marccent_blocks_radar( array $r, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$axes = array_values( array_filter( (array) ( $r['axes'] ?? array() ), fn( $a ) => is_array( $a ) && '' !== trim( (string) ( $a['label'] ?? '' ) ) ) );
+	$n    = count( $axes );
+	if ( $n < 3 ) {
+		return '';
+	}
+	$maximum = (float) ( $r['maximum'] ?? 100 ) ?: 100;
+	$radius  = 40;
+	$point   = function ( float $length, int $i ) use ( $n ): array {
+		$angle = deg2rad( $i * 360 / $n - 90 );
+		return array( round( 50 + $length * cos( $angle ), 2 ), round( 50 + $length * sin( $angle ), 2 ) );
+	};
+	$points  = fn( array $lengths ) => implode( ' ', array_map( fn( $l, $i ) => implode( ',', array_map( 'marccent_blocks_js_number', $point( $l, $i ) ) ), $lengths, array_keys( $lengths ) ) );
+	$said    = implode( ', ', array_map( fn( $a ) => $a['label'] . ' ' . marccent_blocks_js_number( (float) ( $a['value'] ?? 0 ) ), $axes ) );
+	$label   = (string) ( $r['label'] ?? '' );
+	$svg     = '';
+	foreach ( array( 1, .75, .5, .25 ) as $f ) {
+		$svg .= sprintf( '<polygon class="radar-web" points="%s"></polygon>', $points( array_fill( 0, $n, $radius * $f ) ) );
+	}
+	foreach ( $axes as $i => $a ) {
+		[ $x, $y ] = $point( $radius, $i );
+		$svg      .= sprintf( '<line class="radar-web" x1="50" y1="50" x2="%s" y2="%s"></line>', marccent_blocks_js_number( $x ), marccent_blocks_js_number( $y ) );
+	}
+	$svg .= sprintf( '<polygon class="radar-area" points="%s"></polygon>', $points( array_map( fn( $a ) => $radius * max( 0, min( 1, (float) ( $a['value'] ?? 0 ) / $maximum ) ), $axes ) ) );
+	foreach ( $axes as $i => $a ) {
+		[ $x, $y ] = $point( $radius + 8, $i );
+		$svg      .= sprintf(
+			'<text class="radar-label" x="%s" y="%s" text-anchor="%s" dominant-baseline="middle" aria-hidden="true">%s<tspan class="radar-value" dx="1.5">%s</tspan></text>',
+			marccent_blocks_js_number( $x ),
+			marccent_blocks_js_number( $y ),
+			abs( $x - 50 ) < 1 ? 'middle' : ( $x < 50 ? 'end' : 'start' ),
+			esc_html( $a['label'] ),
+			esc_html( marccent_blocks_js_number( (float) ( $a['value'] ?? 0 ) ) )
+		);
+	}
+	$attrs = array(
+		'data-component' => 'radar',
+		'class'          => marccent_blocks_cx( 'radar', $r['classes'] ?? '' ),
+		'viewBox'        => '-12 -6 124 112',
+		'role'           => 'img',
+		'aria-label'     => '' !== $label ? "$label: $said" : $said,
+	);
+	return sprintf( '<svg %s>%s</svg>', $attributes( $attrs ), $svg );
+}
+
+/*
+ * The theme's CardFan (components/widgets/card-fan.js): each card in its place (--i) of the fan (--cards), fanned out on
+ * hover or focus by card-fan.css.
+ */
+function marccent_blocks_card_fan( array $f, array $cards, ?callable $attributes = null ): string {
+	$attributes ??= 'marccent_blocks_attributes';
+	$spread = (float) ( $f['spread'] ?? 14 );
+	$label  = (string) ( $f['label'] ?? '' ) ?: 'Cards';
+	$attrs  = array(
+		'data-component' => 'card-fan',
+		'class'          => marccent_blocks_cx( 'card-fan', $f['classes'] ?? '' ),
+		'role'           => 'group',
+		'aria-label'     => $label,
+		'tabindex'       => '0',
+		'style'          => sprintf( '--cards:%d;--card-fan-spread:%sdeg', count( $cards ), marccent_blocks_js_number( $spread ) ),
+	);
+	$items  = '';
+	foreach ( array_values( $cards ) as $i => $card ) {
+		$items .= sprintf( '<div class="card-fan-item" style="--i:%d">%s</div>', $i, $card );
+	}
+	return sprintf( '<div %s>%s</div>', $attributes( $attrs ), $items );
+}

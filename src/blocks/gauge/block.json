@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/gauge",
+	"title": "Gauge",
+	"category": "marccent",
+	"icon": "dashboard",
+	"description": "One value on a dial: a ring that fills round the number, or a speedometer with a needle.",
+	"keywords": [ "meter", "speedometer", "progress", "ring", "dial" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"value": { "type": "number" },
+		"maximum": { "type": "number", "default": 100 },
+		"face": { "type": "string", "default": "ring" },
+		"unit": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false, "anchor": true },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

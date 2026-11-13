@@ -36,7 +36,21 @@
 		},
 		"version": 2
 	},
+	"marccent/atom": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/button": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/calendar": {
 		"0": {
 			"rename": {},
 			"defaults": {}
@@ -55,6 +69,13 @@
 		},
 		"version": 1
 	},
+	"marccent/card-fan": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/carousel": {
 		"0": {
 			"rename": {},
@@ -67,7 +88,11 @@
 			"rename": {},
 			"defaults": {}
 		},
-		"version": 1
+		"1": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 2
 	},
 	"marccent/code": {
 		"0": {
@@ -92,6 +117,13 @@
 		"version": 1
 	},
 	"marccent/contact": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/count-up": {
 		"0": {
 			"rename": {},
 			"defaults": {}
@@ -194,6 +226,13 @@
 			"rename": {
 				"max": "maximum"
 			},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/gauge": {
+		"0": {
+			"rename": {},
 			"defaults": {}
 		},
 		"version": 1
@@ -303,6 +342,13 @@
 		"version": 1
 	},
 	"marccent/popover": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/radar": {
 		"0": {
 			"rename": {},
 			"defaults": {}
