@@ -5,6 +5,7 @@ import { itemBlock } from '../../shared/item';
 import metadata from './block.json';
 
 itemBlock( metadata, {
-	fields: [ { key: 'date', label: 'When', help: 'A year or a date' }, { key: 'title', label: 'Title' }, { key: 'text', label: 'Text', type: 'textarea' }, { key: 'icon', label: 'Icon', type: 'icon' } ],
+	component: 'TimelineItem',
+	overrides: { text: { type: 'textarea' }, icon: { type: 'icon' } },
 	name: ( a ) => [ a.date, a.title ].filter( Boolean ).join( ': ' ),
 } );

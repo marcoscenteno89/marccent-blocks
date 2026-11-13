@@ -5,6 +5,6 @@ import { itemBlock } from '../../shared/item';
 import metadata from './block.json';
 
 itemBlock( metadata, {
-	fields: [ { key: 'label', label: 'Name' } ],
+	component: 'StepBarStep',
 	name: ( a ) => a.label,
 } );

@@ -1,18 +1,20 @@
 /*
  * A block that is one of a theme component's children (a Timeline item, a Dock item: T-034), inside its parent's
- * block or a Loop there. Its settings are fields as an island's are (shared/island.js), each an attribute and a prop of
+ * block or a Loop there. Its settings are its component's fields as an island's are (shared/island.js: component and
+ * overrides), each an attribute and a prop of
  * the child component; render.php writes them for the parent's island (marccent_blocks_item, inc/islands.php). In the
  * editor it shows as a line: its icon and its name.
  */
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 import { register } from './register';
-import { Field } from './island';
+import { Field, blockFields } from './island';
 
 // A Font Awesome name ("house") or full classes ("fa-brands fa-github"), as the theme's Icon takes them.
 const iconClass = ( icon ) => ( icon.startsWith( 'fa-' ) ? icon : `fa-solid fa-${ icon }` );
 
-export const itemBlock = ( metadata, { fields, name, icon = 'icon' } ) => {
+export const itemBlock = ( metadata, { component, overrides, fields: listed, name, icon = 'icon' } ) => {
+	const fields = component ? blockFields( metadata, component, overrides ) : listed;
 	const Edit = ( { attributes: a, setAttributes: set } ) => (
 		<>
 			<InspectorControls>

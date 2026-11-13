@@ -5,6 +5,7 @@ import { itemBlock } from '../../shared/item';
 import metadata from './block.json';
 
 itemBlock( metadata, {
-	fields: [ { key: 'title', label: 'Title' }, { key: 'text', label: 'Text', type: 'textarea' }, { key: 'icon', label: 'Icon', type: 'icon' }, { key: 'image', label: 'Or an image', type: 'image' } ],
+	component: 'OrbitItem',
+	overrides: { text: { type: 'textarea' }, icon: { type: 'icon' }, image: { label: 'Or an image', type: 'image' } },
 	name: ( a ) => a.title,
 } );

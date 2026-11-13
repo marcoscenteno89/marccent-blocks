@@ -124,6 +124,17 @@ for (const [block, m] of Object.entries(map.blocks)) {
 }
 for (const dir of readdirSync(join(ROOT, 'src/blocks'))) if (!map.blocks[dir]) fail(`${dir}: a block not in tools/settings-map.json`);
 
+// Its editor fields come from its component's settings (PRODUCT-LINE.md 5.6): an island or item block names its
+// component (the map's) and overrides only what a setting can't say, never a field list typed by hand.
+for (const dir of readdirSync(join(ROOT, 'src/blocks'))) {
+  const index = join(ROOT, 'src/blocks', dir, 'index.js');
+  const js = existsSync(index) ? readFileSync(index, 'utf8') : '';
+  if (!/\b(islandBlock|itemBlock)\(/.test(js)) continue;
+  const named = js.match(/component: '(\w+)'/)?.[1];
+  if (/^\tfields:|\{ fields:/m.test(js)) fail(`${dir}: its fields are typed by hand; name its component and override what a setting can't say`);
+  else if (named !== map.blocks[dir]?.component) fail(`${dir}: its fields come from ${named ?? 'no component'}, the map says ${map.blocks[dir]?.component}`);
+}
+
 if (write) writeFileSync(upgradePath, JSON.stringify(Object.fromEntries(Object.entries(upgrade).sort()), null, '\t') + '\n');
 const mapped = Object.values(map.blocks).filter((m) => m.component).length;
 const count = (k) => Object.values(map.blocks).reduce((n, m) => n + Object.keys(m[k] ?? {}).length, 0);

@@ -17,12 +17,12 @@ const parse = ( csv ) => {
 };
 
 islandBlock( metadata, {
-	fields: [
-		{ key: 'csv', label: 'Rows (CSV)', type: 'textarea', help: 'The first line is the headers; then one row per line, values split by commas ("quote" one that has a comma).' },
-		{ key: 'label', label: 'Name (its caption, for screen readers)' },
-		{ key: 'pageSize', label: 'Rows per page (0: all)', type: 'range', min: 0, max: 50 },
-		{ key: 'search', label: 'A search box', type: 'toggle' },
-	],
+	component: 'DataTable',
+	overrides: {
+		csv: { label: 'Rows (CSV)', type: 'textarea', help: 'The first line is the headers; then one row per line, values split by commas ("quote" one that has a comma).' },
+		label: { help: 'Its caption, for screen readers.' },
+		pageSize: { type: 'range', min: 0, max: 50 },
+	},
 	toProps: ( a ) => ( { ...parse( a.csv ), label: a.label, pageSize: a.pageSize, search: a.search } ),
 	preview: ( p ) => <DataTable { ...p } />,
 } );

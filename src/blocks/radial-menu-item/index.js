@@ -5,6 +5,7 @@ import { itemBlock } from '../../shared/item';
 import metadata from './block.json';
 
 itemBlock( metadata, {
-	fields: [ { key: 'icon', label: 'Icon', type: 'icon' }, { key: 'label', label: 'Name' }, { key: 'href', label: 'Link', type: 'url' } ],
+	component: 'RadialMenuItem',
+	overrides: { icon: { type: 'icon' }, href: { type: 'url' } },
 	name: ( a ) => a.label,
 } );

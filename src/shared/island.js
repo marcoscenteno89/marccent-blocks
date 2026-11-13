@@ -1,7 +1,8 @@
 /*
  * A block that is one of the theme's React components (an island: render.php writes data-island and its props, the
- * runtime draws it, src/runtime/islands/<name>.js). Its settings are a list of fields, each an attribute of the
- * block and, as they are, a prop of the component:
+ * runtime draws it, src/runtime/islands/<name>.js). Its settings are its component's (component: its name in the
+ * theme's markup/settings.json; blockFields below), each an attribute of the block and, as they are, a prop of the
+ * component, with overrides by name for what a setting can't say; each field:
  *
  *   { key, label, type, help, options, min, max, step, fields }
  *   type: text, textarea, number, range, toggle, select (options: [ [ label, value ] ]), icon (a Font Awesome name),
@@ -17,6 +18,7 @@ import { InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, useBlock
 import { Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl } from '@wordpress/components';
 import { register } from './register';
 import { CodeField } from './code-field';
+import { settingsFields } from 'marccent-theme/components/theme/settings-panel';
 
 const opt = ( [ label, value ] ) => ( { label, value } );
 
@@ -104,7 +106,28 @@ const ListField = ( { f, value, onChange } ) => {
 // The block's props for the component: its fields' values (toProps reshapes them when the component wants more).
 export const propsOf = ( fields, a ) => Object.fromEntries( fields.map( ( f ) => [ f.key, a[ f.key ] ] ) );
 
-export const islandBlock = ( metadata, { fields = [], preview, toProps, inner, note, deprecated } ) => {
+/*
+ * A block's fields, from its component's settings (PRODUCT-LINE.md 5.6): the theme's settingsFields (label, help, type,
+ * default, choices from markup/settings.json) for each setting the block has as an attribute (one it doesn't offer yet
+ * is in tools/settings-map.json's "later"), with the overrides for what a setting can't say (a range's bounds, an
+ * image or icon picker, a list's item fields, a friendlier label). An override that isn't a setting is the block's own
+ * field (WordPress-only, "wordpress" in the map: a CSV's rows), drawn first. Content and object settings are the
+ * block's inner blocks or its own controls, so they aren't fields; nor is a list without its item fields.
+ * This is the template every admin adapter follows: the theme gives the fields, the admin draws them its own way.
+ */
+export const blockFields = ( metadata, component, overrides = {} ) => {
+	const attributes = metadata.attributes || {};
+	const settings = new Set( settingsFields( component ).map( ( f ) => f.key ) );
+	const own = Object.entries( overrides )
+		.filter( ( [ key, o ] ) => o && ! settings.has( key ) && attributes[ key ] )
+		.map( ( [ key, o ] ) => ( { key, label: key, type: 'text', ...o } ) );
+	const generated = settingsFields( component, overrides )
+		.filter( ( f ) => attributes[ f.key ] && ! [ 'content', 'object' ].includes( f.type ) && ( f.type !== 'list' || f.fields ) );
+	return [ ...own, ...generated ];
+};
+
+export const islandBlock = ( metadata, { component, overrides, fields: listed, preview, toProps, inner, note, deprecated } ) => {
+	const fields = component ? blockFields( metadata, component, overrides ) : listed || [];
 	const Edit = ( { attributes: a, setAttributes: set } ) => {
 		const props = ( toProps || ( ( x ) => propsOf( fields, x ) ) )( a );
 		const blockProps = useBlockProps();
