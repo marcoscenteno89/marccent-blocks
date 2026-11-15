@@ -216,6 +216,20 @@
 		},
 		"version": 2
 	},
+	"marccent/hex-flip": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
+	"marccent/hex-grid": {
+		"0": {
+			"rename": {},
+			"defaults": {}
+		},
+		"version": 1
+	},
 	"marccent/icon": {
 		"0": {
 			"rename": {

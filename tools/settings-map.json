@@ -147,6 +147,16 @@
 		"grid": {
 			"component": "Grid"
 		},
+		"hex-flip": {
+			"component": "HexFlip"
+		},
+		"hex-grid": {
+			"component": "HexGrid",
+			"later": {
+				"at": "not offered yet",
+				"gap": "not offered yet: settings.json types it a number (the component's scale, .94) but lists Grid's gap classes as its choices"
+			}
+		},
 		"html": {
 			"component": null,
 			"why": "WordPress's own: hand-written HTML, no theme component"
