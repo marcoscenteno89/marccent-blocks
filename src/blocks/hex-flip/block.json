@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "marccent/hex-flip",
+	"title": "Hex flip",
+	"category": "marccent",
+	"icon": "image-rotate",
+	"description": "One hexagon of a Hex grid that turns over on hover or focus: its front (initials, a word) and its back (a name and role).",
+	"keywords": [ "hexagon", "flip", "person" ],
+	"textdomain": "marccent-blocks",
+	"attributes": {
+		"front": { "type": "string", "default": "" },
+		"back": { "type": "string", "default": "" },
+		"frontClass": { "type": "string", "default": "bg-gradient" },
+		"backClass": { "type": "string", "default": "bg-primary-darker" },
+		"label": { "type": "string", "default": "" },
+		"version": { "type": "number" }
+	},
+	"supports": { "html": false },
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"ancestor": [ "marccent/hex-grid" ]
+}
