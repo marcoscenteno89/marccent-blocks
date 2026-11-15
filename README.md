@@ -47,6 +47,12 @@ the screen sizes it's hidden on (phones, tablets, computers). Who and when are d
 site use them only on pages the cache skips. A Marccent block's ⋮ menu has Copy style and Paste style: its settings
 without its words, links or pictures, onto other blocks of its kind.
 
+## Text formats
+
+Any text's toolbar (its ▾ menu) has the theme's text formats, from marccent-theme's `markup/formats.json`: Muted
+(`span.text-muted`) and Badge (`span.chip.bg-primary-tint`). Raised is WordPress's own Superscript (`sup`). A format
+the theme adds shows up after the theme pin is bumped and the plugin rebuilt.
+
 ## Forms
 
 The Form block keeps entries (Forms → Entries, Download CSV, filtered by form) and emails them; a webhook posts each
