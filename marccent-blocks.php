@@ -27,6 +27,7 @@ if ( is_admin() ) {
 	require __DIR__ . '/inc/forms-admin.php'; // the entries' screens and Settings → Marccent forms
 }
 require __DIR__ . '/inc/export.php'; // every Marccent plugin's settings as one JSON file (Tools → Marccent export, wp marccent)
+require __DIR__ . '/inc/typeset.php'; // every block's text set on the server (the theme's server/typeset.php); wptexturize off
 require __DIR__ . '/inc/formats.php'; // the theme's text formats (Muted, Badge…) in the editor's toolbar
 require __DIR__ . '/inc/visibility.php'; // any block shown to whom, when and on which screens; copying a block's style
 require __DIR__ . '/inc/html.php'; // the Custom HTML block's code: saved only by people who may post unfiltered HTML
