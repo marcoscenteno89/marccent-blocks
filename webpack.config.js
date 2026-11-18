@@ -8,7 +8,8 @@
  * - styles/icons: every Font Awesome icon, for the editor (a page gets only its own: build/icons.php).
  * - icons.php: every icon's rule by name and the icons the scripts can render; theme-defaults.json: the package's
  *   theme defaults, so PHP can paint the starting colors; dividers.json: the section dividers' shapes, so PHP can
- *   write them; formats.json: the theme's text formats, for the editor's toolbar (inc/formats.php); settings.json: every component's settings (markup/settings.json), for the other plugins' blocks;
+ *   write them; formats.json: the theme's text formats, for the editor's toolbar (inc/formats.php); typeset.php: the theme's
+ *   typesetting in PHP, for every block's text (inc/typeset.php); settings.json: every component's settings (markup/settings.json), for the other plugins' blocks;
  *   theme-options.json: its design styles and hover effects, for the theme's options panel (Marccent WP);
  *   marccent-theme.json: the package's version.
  *
@@ -45,6 +46,7 @@ class FrontEndData {
 					+ `return array( 'all' => ${ phpArray( all ) }, 'runtime' => ${ phpArray( fa.used( code, all ) ) } );\n`;
 				compilation.emitAsset( 'icons.php', new webpack.sources.RawSource( php ) );
 				compilation.emitAsset( 'settings.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'markup/settings.json' ) ) ) );
+				compilation.emitAsset( 'typeset.php', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'server/typeset.php' ) ) ) );
 				compilation.emitAsset( 'formats.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'markup/formats.json' ) ) ) );
 				compilation.emitAsset( 'dividers.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'markup/dividers.json' ) ) ) );
 				compilation.emitAsset( 'theme-defaults.json', new webpack.sources.RawSource( fs.readFileSync( path.join( PACKAGE, 'lib/theme.defaults.json' ) ) ) );
